@@ -16,4 +16,4 @@ if __name__ == '__main__':
     # Utilise le port fourni par Render via la variable d'environnement PORT
     port = int(os.environ.get('PORT', 5000))  # Utilise 5000 comme valeur par défaut si PORT n'est pas défini
     # Lancer l'application avec Flask-SocketIO
-    socketio.run(PMapp, host='0.0.0.0', port=port, debug=True)
+    PMapp.run( host='0.0.0.0', port=port, debug=True)
