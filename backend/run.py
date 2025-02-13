@@ -14,7 +14,6 @@ print(PMapp.url_map)  # Liste toutes les routes connues
 
 if __name__ == '__main__':
     PMapp.run(debug=False, use_reloader=False)
-    # Utilise le port fourni par Render via la variable d'environnement PORT
-    port = int(os.environ.get('PORT', 5000))  # Utilise 5000 comme valeur par défaut si PORT n'est pas défini
-    # Lancer l'application avec Flask-SocketIO
-    socketio.run(PMapp, host='0.0.0.0', port=port, debug=True)
+    from waitress import serve
+    port = int(os.environ.get("PORT", 5000)) 
+    serve(PMapp, host="0.0.0.0", port=5000)
