@@ -1,7 +1,7 @@
 from PMapp import create_app, socketio,db
 from flask_migrate import Migrate
 import os
-from PMapp import app
+from backend.PMapp import app
 
 # Créer l'application Flask
 
