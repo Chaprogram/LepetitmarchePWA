@@ -5,8 +5,7 @@ from flask_mail import Message
 import re  # Pour la validation des emails
 from PMapp import db, socketio, mail
 from PMapp.models import User, Product, Admin, Notification, Reservation
-import smtplib
-from email.mime.text import MIMEText
+
 
 
 
@@ -338,3 +337,25 @@ def commander():
     # Rediriger vers une page de confirmation ou afficher un message
     return render_template('menu.html')
     
+
+
+@main.route('/send_confirmation_email', methods=['POST'])
+def send_confirmation_email():
+    data = request.json  # On récupère les infos envoyées depuis le frontend
+    user_email = data.get("email")
+    order_details = data.get("order_details")  # Les détails de la commande
+
+    if not user_email:
+        return jsonify({"error": "Email requis"}), 400
+
+    try:
+        msg = Message(
+            "Confirmation de votre commande - Le Petit Marché",
+            recipients=[user_email]
+        )
+        msg.body = f"Merci pour votre commande ! Voici un récapitulatif :\n\n{order_details}"
+        mail.send(msg)
+        return jsonify({"message": "E-mail envoyé avec succès !"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500 

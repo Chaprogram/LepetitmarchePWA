@@ -23,19 +23,12 @@ def create_app():
 
 
  #Configuration de Flask-Mail
-    app.config['MAIL_SERVER'] = 'mail.gmail.com'  # Remplace par ton serveur SMTP
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Remplace par ton serveur SMTP
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USE_TLS'] = True
     app.config['MAIL_USERNAME'] = 'charlinec03@gmail.com'  # Remplace par ton email
     app.config['MAIL_PASSWORD'] = 'tonmotdepasse'  # Remplace par ton mot de passe
 
-# Configuration pour Mailtrap
-    app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
-    app.config['MAIL_PORT'] = 587
-    app.config['MAIL_USE_TLS'] = True
-    app.config['MAIL_USERNAME'] = '426445cbd70792'  # Remplace par ton nom d'utilisateur Mailtrap
-    app.config['MAIL_PASSWORD'] = '0ce861deae4d5d'  # Remplace par ton mot de passe Mailtrap
-    app.config['MAIL_DEFAULT_SENDER'] = 'no-reply@lepetitmarche.com'  # Adresse par défaut (utilisée pour l'envoi d'emails)
 
 
     # Initialisation des extensions avec l'application

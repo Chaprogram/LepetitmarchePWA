@@ -5,9 +5,7 @@ from flask_mail import Message
 import re  # Pour la validation des emails
 from PMapp import db, socketio, mail
 from PMapp.models import User, Product,Admin,Notification, Reservation
-#import smtplib et mimetext uniquement pour tester mail à changer
-import smtplib
-from email.mime.text import MIMEText
+
 
 
 
@@ -320,28 +318,9 @@ def cart():
       return render_template('cart.html')
 
 
-@main.route('/commander', methods=['POST'])
-def commander():
-    client_email = request.form['email']
-    # Ici, tu ajoutes la logique pour traiter la commande
 
-    # Créer l'e-mail de confirmation
-    message = Message(
-        'Confirmation de commande',
-        recipients=[client_email]
-    )
-    message.body = 'Merci pour votre commande !'
-  # Envoyer l'email
-  
-    mail.send(message)
 
-    # Rediriger vers une page de confirmation ou afficher un message
-    return render_template('menu.html')
-    
-
-    '''en production :
-
-@app.route('/send_confirmation_email', methods=['POST'])
+@main.route('/send_confirmation_email', methods=['POST'])
 def send_confirmation_email():
     data = request.json  # On récupère les infos envoyées depuis le frontend
     user_email = data.get("email")
@@ -360,4 +339,4 @@ def send_confirmation_email():
         return jsonify({"message": "E-mail envoyé avec succès !"}), 200
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500 '''
+        return jsonify({"error": str(e)}), 500 
