@@ -1,3 +1,5 @@
 web: python3 backend/run.py
-web: gunicorn run:PMapp
+web: waitress-serve --port=$PORT run:PMapp
+
+
 
