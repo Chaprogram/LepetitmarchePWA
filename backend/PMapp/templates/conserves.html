@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conserves - Le Petit Marché</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/produits.css')}}">
+    <script src="{{url_for('static',filename='js/scripts.js')}}" defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Conserves</h1>
+        <a href="{{url_for('main.menu')}}" class="btn-go-home">Retour à la boutique</a>
+    </header>
+
+    <!-- Liste des produits -->
+    <div class="products-container">
+        <div class="product">
+    
+            <h3>Zwanfrank</h3>
+            <p class="price">6,95€</p> 
+            <button class="add-btn" onclick="addProductToCart('Zwanfrank')">+</button>
+        </div>
+        <div class="product">
+            <h3>Panzani Canelloni 400g</h3>
+            <p class="price">7,95€</p> 
+            <button class="add-btn" onclick="addProductToCart('Panzani Canelloni 400g')">+</button>
+        </div>
+        <div class="product">
+            <h3>Zwan Cocktail 230g</h3>
+            <p class="price">4,95€</p> 
+            <button class="add-btn" onclick="addProductToCart('Zwan Cocktail 230g')">+</button>
+        </div>
+    </div>
+
+    <!-- Affichage du panier -->
+    <div class="cart">
+        <a href="{{url_for('main.cart')}}" class="cart-link">Voir mon panier</a>
+    </div>
+    <script>scripts.js</script>
+</body>
+</html>

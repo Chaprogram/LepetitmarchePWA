@@ -1,0 +1,184 @@
+/* Style global */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Conteneur principal */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* En-tête */
+header {
+    text-align: center;
+    background-color: #2e7d32;
+    color: white;
+    padding: 10px 0;
+    margin-bottom: 20px;
+}
+
+header img {
+    margin-top: 10px;
+}
+
+/* Titres */
+h1, h2, h3 {
+    margin: 15px 0;
+    color: #2e7d32;
+    text-align: center;
+}
+
+h2, h3 {
+    font-size: 1.2em;
+}
+
+/* Liste des produits */
+#cart-items {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item .item-name {
+    flex: 2;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.cart-item .item-quantity,
+.cart-item .item-price {
+    flex: 1;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.cart-item .remove-btn {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.cart-item .remove-btn:hover {
+    background-color: #b71c1c;
+}
+
+/* Total */
+#cart-total {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #2e7d32;
+}
+
+/* Boutons principaux */
+button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 1em;
+    color: white;
+    background-color: #2e7d32;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #1b5e20;
+}
+
+button:active {
+    background-color: #144d14;
+}
+
+button[onclick] {
+    background-color: #4caf50;
+}
+
+/* Options de livraison et retrait */
+.delivery-options label {
+    display: block;
+    margin: 10px 0;
+    font-size: 1em;
+}
+
+.hidden {
+    display: none;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"] {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Formulaires */
+#pickup-form, #delivery-form, #payment-form {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f7f7f7;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    font-size: 0.9em;
+    color: #555;
+}
+
+/* Options de paiement */
+#payment-options label {
+    display: block;
+    margin: 10px 0;
+    font-size: 1em;
+}
+
+input[type="radio"] {
+    margin-right: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cart-item .item-quantity,
+    .cart-item .item-price {
+        text-align: left;
+    }
+}

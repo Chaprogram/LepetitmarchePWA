@@ -1,0 +1,13 @@
+[
+    {
+      "id": 1,
+      "user": "Client1",
+      "products": [
+        { "product_id": 1, "quantity": 3 },
+        { "product_id": 2, "quantity": 1 }
+      ],
+      "total_price": 10.5,
+      "status": "pending"
+    }
+  ]
+  

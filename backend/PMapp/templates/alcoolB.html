@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlcoolB - Le Petit Marché</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/produits.css')}}">
+    <script src="{{url_for('static',filename='js/scripts.js')}}" defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Bouteilles d'alcool</h1>
+        <a href="{{url_for('main.menu')}}"class="btn-go-home">Retour à la boutique</a>
+    </header>
+
+    <!-- Liste des produits -->
+    <div class="products-container">
+        <div class="product">
+            
+            <h3>Alsace Pinot Blanc</h3>
+            <p class="price">18,90€</p> 
+            <button class="add-btn" onclick="addProductToCart('Alsace Pinot Blanc')">+</button>
+        </div>
+        <div class="product">
+    
+            <h3>Alsace Gewurztraminer</h3>
+            <p class="price">18,90€</p> 
+            <button class="add-btn" onclick="addProductToCart('Alsace Gewurztraminer')">+</button>
+        </div>
+        <div class="product">
+    
+            <h3>Alsace Sylvaner</h3>
+            <p class="price">18,90€</p> 
+            <button class="add-btn" onclick="addProductToCart('Alsace Sylvaner')">+</button>
+        </div>
+        <div class="product">
+    
+            <h3>Alsace Pinot Noir</h3>
+            <p class="price">18,90€</p> 
+            <button class="add-btn" onclick="addProductToCart('Alsace Pinot Noir')">+</button>
+        </div>
+    </div>
+
+    <!-- Affichage du panier -->
+    <div class="cart">
+        <a href="{{url_for('main.cart')}}" class="cart-link">Voir mon panier</a>
+    </div>
+    
+</body>
+</html>

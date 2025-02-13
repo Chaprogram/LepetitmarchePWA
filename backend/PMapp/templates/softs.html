@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Softs - Le Petit Marché</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/produits.css')}}">
+    <script src="{{url_for('static',filename='js/scripts.js')}}" defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Softs</h1>
+        <a href="{{url_for('main.menu')}}"class="btn-go-home">Retour à la boutique</a>
+    </header>
+
+    <!-- Liste des produits -->
+    <div class="products-container">
+        <div class="product">
+            <h3> Fanta 1,5L </h3>
+            <p class="price">3,95€</p> 
+            <button class="add-btn" onclick="addProductToCart('Fanta 1,5L ')">+</button>
+        </div>
+        <div class="product">
+            <h3>Coca Zero 1,5L </h3>
+            <p class="price">3,95€</p> 
+            <button class="add-btn" onclick="addProductToCart('Coca Zero 1,5L ')">+</button>
+        </div>
+        <div class="product">
+            <h3> Coca 1,5L</h3>
+            <p class="price">3,95€</p> 
+            <button class="add-btn" onclick="addProductToCart('Coca 1,5L ')">+</button>
+        </div>
+    </div>
+
+    <!-- Affichage du panier -->
+    <div class="cart">
+        <a href="{{url_for('main.cart')}}" class="cart-link">Voir mon panier</a>
+    </div>
+    <script>scripts.js</script>
+</body>
+</html>

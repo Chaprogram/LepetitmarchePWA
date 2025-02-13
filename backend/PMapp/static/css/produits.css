@@ -1,0 +1,138 @@
+/* Réinitialisation de la mise en page */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Corps de la page */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header */
+header {
+    background-color: #3c763d;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+header .btn-go-home {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #5a9f72;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+header .btn-go-home:hover {
+    background-color: #4c8d5e;
+}
+
+/* Liste des produits */
+.products-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 30px;
+    justify-items: center;
+}
+
+.product {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.product h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.product .price {
+    font-size: 1.2rem;
+    color: #f05d5e;
+    margin-bottom: 20px;
+}
+
+.product .add-btn {
+    background-color: #5a9f72;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.product .add-btn:hover {
+    background-color: #4c8d5e;
+}
+
+/* Panier */
+.cart {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.cart-link {
+    text-decoration: none;
+    background-color: #f05d5e;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.cart-link:hover {
+    background-color: #e04d4e;
+}
+
+/* Responsivité */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .product h3 {
+        font-size: 1.2rem;
+    }
+
+    .product .price {
+        font-size: 1rem;
+    }
+
+    .product .add-btn {
+        font-size: 0.9rem;
+    }
+
+    .cart-link {
+        font-size: 1rem;
+    }
+}

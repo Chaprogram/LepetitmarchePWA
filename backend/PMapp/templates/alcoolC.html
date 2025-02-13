@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlcoolC - Le Petit Marché</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/produits.css')}}">
+    <script src="{{url_for('static', filename='js/scripts.js')}}"defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Alcools en canettes</h1>
+        <a href="{{url_for('main.menu')}}" class="btn-go-home">Retour à la boutique</a>
+    </header>
+
+    <!-- Liste des produits -->
+    <div class="products-container">
+        <div class="product">
+    
+            <h3>Despe Mojito</h3>
+            <p class="price">4,90€</p> 
+            <button class="add-btn" onclick="addProductToCart('Despe Mojito')">+</button>
+        </div>
+        <div class="product">
+    
+            <h3>Gordon 10</h3>
+            <p class="price">5,50€</p> 
+            <button class="add-btn" onclick="addProductToCart('Gordon 10')">+</button>
+        </div>
+        <div class="product">
+    
+            <h3>Jup 33</h3>
+            <p class="price">2,20€</p> 
+            <button class="add-btn" onclick="addProductToCart('Jup 33')">+</button>
+        </div>
+    </div>
+
+    <!-- Affichage du panier -->
+    <div class="cart">
+        <a href="{{url_for('main.cart')}}" class="cart-link">Voir mon panier</a>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle commande</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .container { background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        h2 { color: #2e7d32; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        p { color: #333; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>📦 Nouvelle commande reçue !</h2>
+        <p><strong>Nom :</strong> {{ name }}</p>
+        <p><strong>Email :</strong> {{ email }}</p>
+        <p><strong>Téléphone :</strong> {{ phone }}</p>
+        
+        <h3>Détails de la commande :</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produit, quantite in commandes %}
+                <tr>
+                    <td>{{ produit }}</td>
+                    <td>{{ quantite }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p>Merci de vérifier cette commande dans l'interface admin.</p>
+    </div>
+
+</body>
+</html>

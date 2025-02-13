@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boutique en ligne</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/menu.css')}}">
+    <link rel="login" href="{{url_for('main.login')}}">
+    <link rel="register" href="{{url_for('main.register')}}">
+   
+</head>
+<header>
+    <div class="auth-buttons">
+        <button onclick="window.location.href='/login'">Se connecter </button>
+        <button onclick="window.location.href='/register'">Créer un compte</button>
+
+    </div>
+     <!-- Ajouter ce bouton dans ton menu.html -->
+     
+     <a href="{{url_for('main.index')}}"> 
+        <img src="{{url_for('static',filename='images/icon-192x192.png')}}" alt="Logo du site Le Petit Marché" width="150">
+        </a>
+    <h1>Boutique</h1>
+    <div class="header-cart">
+       <button onclick="window.location.href='/cart'">🛒 Panier</button>
+    </div>
+</header>
+<body>
+    
+
+    <div class="container">
+        
+
+        <!-- Formulaire pour rechercher un produit -->
+        <form action="{{ url_for('main.search') }}" method="GET">
+            <input type="text" name="query" placeholder="Rechercher un produit..." required>
+            <button type="submit">Rechercher</button>
+        </form>
+        
+        
+
+        <h2>Choisissez vos produits</h2>
+        <div class="categories-container">
+    
+            <div class="category"> 
+                <a href="{{url_for('main.chocolats')}}"> 
+                <img src="{{url_for('static',filename='images/chocolat.png')}}" alt="Chocolat" class="category-img">
+                
+                <p>Chocolat</p> 
+            </div>
+            <div class="category"> 
+                <a href="{{url_for('main.chiques')}}">  
+                    <img src="{{url_for('static',filename='images/chiques.png')}}" alt="Chiques" class="category-img">
+                    <p>Chiques</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.chips')}}"> 
+                        <img src="{{url_for('static',filename='images/chips.png')}}" alt="Chips" class="category-img">
+                        <p>Chips</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.cereales')}}"> 
+                            <img src="{{url_for('static',filename='images/cereales.png')}}" alt="Cereales" class="category-img">
+                            <p>Céréales</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.glaces')}}"> 
+                                <img src="{{url_for('static',filename='images/glaces.png')}}" alt="Glaces" class="category-img">
+                                <p>Glaces</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.surgeles')}}"> 
+                                    <img src="{{url_for('static',filename='images/surgeles.png')}}" alt="Surgeles" class="category-img">
+                                    <p>Surgelés</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.sauces')}}"> 
+                                        <img src="{{url_for('static',filename='images/sauce.png')}}" alt="Sauces" class="category-img">
+                                        <p>Sauces</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.conserves')}}"> 
+                                        <img src="{{url_for('static',filename='images/conserves.png')}}" alt="Conserves" class="category-img">
+                                        <p>Conserves</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.grignotages')}}"> 
+                                        <img src="{{url_for('static',filename='images/grignotage.png')}}" alt="Grignotages" class="category-img">
+                                        
+                                        <p>Grignotages</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.pains')}}"> 
+                <img src="{{url_for('static',filename='images/pains.png')}}" alt="Pains" class="category-img">
+                <p>Pains</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.pates')}}"> 
+                <img src= "{{url_for('static',filename='images/pates.png')}}" alt="Pâtes lovers" class="category-img">
+                <p>Pâtes lovers</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.softs')}}"> 
+                <img src="{{url_for('static',filename='images/soft.png')}}" alt="Softs" class="category-img">
+                <p>Softs</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.alcoolC')}}"> 
+                <img src="{{url_for('static',filename='images/canettes alcool.png')}}"alt="Alcools cannettes" class="category-img">
+                <p>Alcools cannettes</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.alcoolB')}}"> 
+                <img src="{{url_for('static',filename='images/alcool bouteilles.png')}}" alt="Alcools bouteilles" class="category-img">
+                <p>Alcools bouteilles</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.hygienes')}}"> 
+                <img src="{{url_for('static',filename='images/hygiene.png')}}" alt="Hygienes" class="category-img">
+                <p>Hygiènes</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.animaux')}}"> 
+                <img src="{{url_for('static',filename='images/animaux.png')}}" alt="Animaux" class="category-img">
+                <p>Animaux</p> 
+            </div>
+            <div class="category">
+                <a href="{{url_for('main.pellets')}}"> 
+                <img src="{{url_for('static',filename='images/pellets.png')}}" alt="Pellets" class="category-img">
+                <p>Pellets</p> 
+            </div>
+           
+          </div>
+</div>
+        
+
+    <!-- Bouton retour à l'accueil -->
+<a href="{{url_for('main.index')}}" class="btn-go-home">Retour à l'accueil</a>
+
+</div>
+<footer>
+    <p>© 2025 Le Petit Marché</p>
+</footer>
+    <script src="{{url_for('static',filename='js/scripts.js')}}"></script>
+</body>
+</html>

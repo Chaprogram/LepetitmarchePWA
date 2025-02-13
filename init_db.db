@@ -1,0 +1,30 @@
+from PMapp import create_app, db
+import sqlite3
+
+
+# Créez l'application Flask
+app = create_app()
+
+# Initialisez la base de données
+with app.app_context():
+    db.create_all()  # Crée toutes les tables définies dans vos modèles
+    print("Base de données initialisée avec succès !")
+
+
+database_path = "backend/init_db"  # Exemple, modifie selon ton projet
+
+try:
+    conn = sqlite3.connect(database_path)
+    cursor = conn.cursor()
+
+    # Vérifier les tables existantes
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    print("Tables disponibles :", cursor.fetchall())
+
+    # Vérifier les utilisateurs
+    cursor.execute("SELECT * FROM users;")  # Change 'users' si ta table admin a un autre nom
+    print("Utilisateurs :", cursor.fetchall())
+
+    conn.close()
+except Exception as e:
+    print("Erreur :", e)

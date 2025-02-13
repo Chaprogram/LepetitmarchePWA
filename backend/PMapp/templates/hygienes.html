@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hygiènes - Le Petit Marché</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/produits.css')}}">
+    <script src="{{url_for('static',filename='js/scripts.js')}}" defer></script> 
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Hygiène</h1>
+        <a href="{{url_for('main.menu')}}" class="btn-go-home">Retour à la boutique</a>
+    </header>
+
+    <!-- Liste des produits -->
+    <div class="products-container">
+        <div class="product">
+            <h3>Scottex PQ 24</h3>
+            <p class="price">14,95€</p> 
+            <button class="add-btn" onclick="addProductToCart('Scottex PQ 24')">+</button>
+        </div>
+        <div class="product">
+            <h3>Klennex 10 Paquets De Mouchoir</h3>
+            <p class="price">7,45€</p> 
+            <button class="add-btn" onclick="addProductToCart('Klennex 10 Paquets de Mouchoir')">+</button>
+        </div>
+        <div class="product">
+            <h3>Durex Original(10)</h3>
+            <p class="price">15,00€</p> 
+            <button class="add-btn" onclick="addProductToCart('Durex Original(10)')">+</button>
+        </div>
+    </div>
+
+    <!-- Affichage du panier -->
+    <div class="cart">
+        <a href="{{url_for('main.cart')}}"class="cart-link">Voir mon panier</a>
+    </div>
+    <script>scripts.js</script>
+</body>
+</html>

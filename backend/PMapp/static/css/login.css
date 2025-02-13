@@ -1,0 +1,111 @@
+/* Reset des marges et des paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Corps de la page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f9f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header */
+header {
+    background-color: #5cb85c;
+    padding: 20px 40px;
+    text-align: center;
+    color: white;
+}
+
+header h1 {
+    font-size: 2.5em;
+}
+
+/* Section du formulaire de connexion */
+#login-section {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Formulaire */
+#login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#login-form label {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+#login-form input {
+    padding: 12px;
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#login-form button {
+    padding: 15px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#login-form button:hover {
+    background-color: #4cae4c;
+}
+
+/* Lien pour créer un compte */
+#login-section p {
+    text-align: center;
+    font-size: 1.1em;
+}
+
+#login-section a {
+    color: #5cb85c;
+    text-decoration: none;
+}
+
+#login-section a:hover {
+    color: #4cae4c;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+/* Responsivité */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2em;
+    }
+
+    #login-section {
+        width: 90%;
+        padding: 20px;
+    }
+
+    #login-form button {
+        font-size: 1em;
+    }
+}

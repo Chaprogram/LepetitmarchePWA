@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de Réservation - Le Petit Marché</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reservation.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <h1>Merci pour votre commande, {{ name }} !</h1>
+        <p>Un e-mail de confirmation a été envoyé à {{ email }}.</p>
+        <p>Votre numéro de téléphone : {{ phone }}</p>
+    </header>
+
+    <section class="order-summary">
+        <h2>Récapitulatif de votre commande :</h2>
+        <ul>
+            {% for produit, quantite in commandes %}
+                <li>{{ quantite }} x {{ produit }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <div class="button-container">
+        <a href="{{ url_for('main.menu') }}" class="btn-go-home">Retour à la boutique</a>
+    </div>
+
+</body>
+
+</html>

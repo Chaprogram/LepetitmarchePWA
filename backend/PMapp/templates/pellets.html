@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Pellets- Le Petit Marché</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/produits.css')}}">
+    <script src="{{url_for('static',filename='js/scripts.js')}}"defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Pellets</h1>
+        <a href="{{url_for('main.menu')}}" class="btn-go-home">Retour à la boutique</a>
+    </header>
+
+    <!-- Liste des produits -->
+    <div class="products-container">
+        <div class="product">
+            <h3>Pellets 15kg Clean Fire </h3>
+            <p class="price">12,90€</p> 
+            <button class="add-btn" onclick="addProductToCart(' Pellets 15kg Clean Fire')">+</button>
+        </div>
+
+    <!-- Affichage du panier -->
+    <div class="cart">
+        <a href="{{url_for('main.cart')}}" class="cart-link">Voir mon panier</a>
+    </div>
+    <script>scripts.js</script>
+</body>
+</html>

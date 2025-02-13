@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animaux - Le Petit Marché</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/produits.css')}}">
+    <script src="{{url_for('static', filename='js/scripts.js')}}" defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Animaux</h1>
+        <a href="{{url_for('main.menu')}}" class="btn-go-home">Retour à la boutique</a>
+    </header>
+
+    <!-- Liste des produits -->
+    <div class="products-container">
+        <div class="product">
+    
+            <h3>Litère Boni 10L</h3>
+            <p class="price">11,95€</p> 
+            <button class="add-btn" onclick="addProductToCart('Litière Boni 10L')">+</button>
+        </div>
+        <div class="product">
+    
+            <h3>Sheba Classic Terrine Pate</h3>
+            <p class="price">2,50€</p> 
+            <button class="add-btn" onclick="addProductToCart('Sheba Classic Terrine Pate')">+</button>
+        </div>
+        <div class="product">
+    
+            <h3>Rodeo Poulet</h3>
+            <p class="price">4,95€</p> 
+            <button class="add-btn" onclick="addProductToCart('Rodeo Poulet')">+</button>
+        </div>
+    </div>
+
+
+    <!-- Affichage du panier -->
+    <div class="cart">
+        <a href="{{url_for('main.cart')}}" class="cart-link">Voir mon panier</a>
+    </div>
+    <script>scripts.js</script>
+</body>
+</html>

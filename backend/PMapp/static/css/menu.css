@@ -1,0 +1,296 @@
+/* Style général */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #f4f4f4, #e0e0e0); /* Fond avec dégradé */
+    color: #333;
+    padding: 20px;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Conteneur principal pour le header */
+.header-container {
+    display: flex;
+    justify-content: space-between; /* Espace entre les éléments */
+    align-items: center; /* Aligner verticalement les éléments */
+    padding: 10px 20px;
+    position: relative; /* Permet un positionnement absolu du bouton panier */
+}
+
+/* Boutons d'authentification */
+.auth-buttons {
+    display: flex;
+    gap: 15px; /* Espace entre les boutons */
+}
+
+/* Titre principal */
+.header-title {
+    flex-grow: 1; /* Occupe l'espace restant */
+    text-align: center; /* Centrer le titre */
+    font-size: 2.5em;
+    color: #2d3a3a;
+}
+
+/* Bouton panier */
+.header-cart {
+    position: absolute; /* Permet de positionner le bouton à droite */
+    top: 10px; /* Décale légèrement le bouton par rapport au haut */
+    right: 20px; /* Place le bouton à droite */
+}
+
+.cart-btn {
+    background-color: #56cd5a;
+    color: white;
+    font-size: 16px; /* Taille adaptée */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cart-btn:hover {
+    background-color: #abe3ae;
+}
+
+.cart-btn:active {
+    background-color: #d5f3d6;
+}
+
+/* Formulaire de recherche */
+.category-form {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#search-input {
+    padding: 10px;
+    width: 250px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#search-btn {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+#search-btn:hover {
+    background-color: #45a049;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Liste des catégories */
+.categories-list {
+    margin-bottom: 30px;
+}
+
+.categories-list ul {
+    display: flex;
+    justify-content: space-around; /* Espacement égal entre les catégories */
+    list-style: none;
+    padding: 0;
+    flex-wrap: wrap; /* Pour un meilleur affichage sur mobile */
+}
+
+.categories-list ul li {
+    margin-right: 20px; /* Espace entre les catégories */
+}
+
+.categories-list ul li a {
+    text-decoration: none;
+    color: #4CAF50;
+    font-size: 1.1em;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.categories-list ul li a:hover {
+    background-color: #f4f4f4;
+    transform: scale(1.05); /* Légère agrandissement au survol */
+}
+
+/* Sections des produits */
+.categories-products {
+    display: none; /* Par défaut, masqué */
+    margin-bottom: 30px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.category-products.show {
+    display: block;
+    opacity: 1; /* Animation de l'apparition des catégories */
+}
+
+.category-products ul {
+    list-style: none;
+    padding: 0;
+}
+
+.category-products ul li {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.add-btn {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.add-btn:hover {
+    background-color: #45a049;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Bouton retour à l'accueil */
+.btn-go-home {
+    display: block;
+    width: 200px;
+    margin: 30px auto;
+    padding: 10px;
+    background-color: #2d3a3a;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+.btn-go-home:hover {
+    background-color: #333;
+}
+
+/* Style pour le panier */
+.cart {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.cart-link {
+    text-decoration: none;
+    color: #4CAF50;
+    font-size: 1.2em;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.cart-link:hover {
+    background-color: #f4f4f4;
+}
+
+/* Conteneur principal */
+.categories-list {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Conteneur pour les boutons */
+.button-container {
+    display: flex;
+    flex-wrap: wrap; /* Permet d'aller à la ligne si nécessaire */
+    justify-content: center; /* Centre les boutons horizontalement */
+    gap: 10px; /* Espace entre les boutons */
+    margin-top: 20px;
+}
+
+/* Style des boutons pour les catégories avec images */
+.category-btn {
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    padding: 10px;
+    width: 200px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.category-btn img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.category-btn p {
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.category-btn:hover {
+    transform: scale(1.05);
+    background-color: #abe3ae;
+}
+
+/* Style des produits avec images */
+.products-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.product {
+    width: 200px;
+    margin: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.add-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.add-btn:hover {
+    background-color: #45a049;
+}
+

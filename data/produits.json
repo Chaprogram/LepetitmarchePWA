@@ -1,0 +1,23 @@
+[
+    {
+      "id": 1,
+      "name": " grand pain blanc",
+      "price": 2.9,
+      "stock": 100,
+      "description": "Pain frais"
+    },
+    {
+      "id": 2,
+      "name": "petit pain blanc",
+      "price": 2.10,
+      "stock": 50,
+      "description": "Pain frais"
+    },
+    {
+        "id":3,
+        "name": "grand pain gris",
+        "stock":50,
+        "description":"Pain frais"
+    }
+  ]
+  

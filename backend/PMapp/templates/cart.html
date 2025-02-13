@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Panier</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/cart.css')}}">
+    <link rel="menu" href="{{url_for('main.menu')}}">
+</head>
+<header>
+    <a href="{{url_for('main.index')}}"> 
+    <img src="{{url_for('static', filename='images/icon-192x192.png')}}" alt="Logo du site Le Petit Marché" width="150">
+    </a>
+</header>
+<body>
+    <div class="container">
+        <h1>Mon Panier</h1>
+        <ul id="cart-items"></ul>
+        <p>Total : <span id="cart-total">0.00€</span></p>
+        <button id="clear-cart">Vider le panier</button>
+        <button onclick="window.location.href='main.menu'">Retour à la boutique</button>
+    
+        <h2>Informations pour la livraison</h2>
+
+        <div id="delivery-form">
+            <label for="delivery-address">Adresse :</label>
+            <input type="text" id="delivery-address" placeholder="Votre adresse complète" required>
+            
+            <label for="delivery-date">Jour de livraison :</label>
+            <input type="date" id="delivery-date" required>
+            
+            <label for="delivery-time">Heure de livraison :</label>
+            <select id="delivery-time" required>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+                <option value="21:30">21:30</option>
+                <option value="22:00">22:00</option>
+            </select>
+        </div>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Définir la date du jour par défaut
+                document.getElementById("delivery-date").value = new Date().toISOString().split("T")[0];
+            });
+        </script>
+         
+    <!-- Section pour le choix de paiement -->
+    <div id="payment-form" class="hidden">
+        <h3>Choisissez votre mode de paiement</h3>
+        <div id="payment-options"></div>
+    </div>
+
+    <button id="submit-order">Valider la commande</button>
+</div>
+
+    <script src="{{url_for('static', filename='js/cart.js')}}"></script>
+    <script src="{{url_for('static', filename='js/scripts.js')}}"></script>
+</body>
+</html>
