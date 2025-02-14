@@ -2,6 +2,10 @@ from PMapp import db  # Importer `db` directement depuis `PMapp`
 from flask_login import UserMixin
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,6 +29,8 @@ class Product(db.Model):
     category = db.Column(db.String(100))
     stock = db.Column(db.Integer, nullable=False, default=0) 
 
+    def __repr__(self):
+        return f'<Product {self.name}>'
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)

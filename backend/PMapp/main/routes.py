@@ -22,17 +22,10 @@ def index():
 @main.route('/menu')
 def menu():
     products = Product.query.all()
+    print(products)
     return render_template('menu.html', products=products)
 
-@main.route('/search', methods=['GET'])
-def search():
-    query = request.args.get('query')
-    if query:
-        products = Product.query.filter(Product.name.ilike(f"%{query}%")).all()
-    else:
-        products = []
 
-    return render_template('search_results.html', products=products, query=query)
 
 @main.route('/user')
 @login_required
