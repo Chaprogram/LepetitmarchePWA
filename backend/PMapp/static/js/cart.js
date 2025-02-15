@@ -22,7 +22,7 @@ function displayCart() {
         itemDiv.innerHTML = `
             <div class="item-name">${product.name}</div>
             <div class="item-quantity">Quantité : ${product.quantity}</div>
-            <div class="item-price">${(product.price * product.price).toFixed(2) }€ </div>
+            <div class="item-price">${(product.price * product.quantity).toFixed(2)}€</div>
             <button class="remove-btn" data-name="${product.name}">Supprimer</button>
         `;
         cartList.appendChild(itemDiv);
@@ -42,7 +42,7 @@ function addProductToCart(product) {
 
     if (existingProduct) {
         console.log(`Produit existant trouvé : ${existingProduct.name}`); // Debug
-        existingProduct.quantity +=product.quantity;
+        existingProduct.quantity += product.quantity;
     } else {
         console.log(`Ajout d'un nouveau produit : ${product.name}`); // Debug
         cart.push(product);
@@ -182,7 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
 function sendConfirmationEmail(userEmail, orderDetails) {
     fetch('/send_confirmation_email', {
         method: 'POST',
@@ -205,10 +204,10 @@ function sendConfirmationEmail(userEmail, orderDetails) {
     .catch(error => console.error("Erreur :", error));
 }
 
-
 document.getElementById("valider-commande").addEventListener("click", function() {
     let email = document.getElementById("email-client").value;  // Récupère l'email du client
     let orderDetails = "Détails de ta commande ici...";  // À remplacer par les vrais détails du panier
 
     sendConfirmationEmail(email, orderDetails);
 });
+

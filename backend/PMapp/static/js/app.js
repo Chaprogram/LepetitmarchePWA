@@ -141,6 +141,15 @@ const updateOrderStatus = (index, newStatus) => {
   renderOrders(); // Re-render les commandes après mise à jour du statut
 };
 
+const filterElement = document.getElementById('order-status-filter');
+if (filterElement) {
+    filterElement.addEventListener('change', renderOrders);
+} else {
+    console.error('L\'élément #order-status-filter n\'existe pas dans le DOM.');
+}
+
+
+
 
 // Gestion des événements
 document.getElementById('product-form').addEventListener('submit', addProduct);
@@ -173,7 +182,3 @@ document.addEventListener("DOMContentLoaded", manageAccess);
 window.onload = function() {
   document.body.style.overflowY = "scroll"; // Assure le défilement vertical
 };
-
-if (isAdmin) {
-  document.getElementById('admin-button').style.display = 'block'; // Affiche le lien Admin si c'est un admin
-}
