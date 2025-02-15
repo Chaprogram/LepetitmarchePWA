@@ -146,10 +146,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-document.getElementById('login-btn').addEventListener('click', function() {
+document.getElementById('login-form').addEventListener('click', function() {
     window.location.href = 'main.login';
 });
 
-document.getElementById('register-btn').addEventListener('click', function() {
+document.getElementById('registration-form').addEventListener('click', function() {
     window.location.href = 'main.register';
 });
