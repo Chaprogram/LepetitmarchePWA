@@ -135,25 +135,19 @@ const renderOrders = () => {
   });
 };
 
-// Mettre à jour le statut d'une commande
-const updateOrderStatus = (index, newStatus) => {
-  orders[index].status = newStatus;
-  renderOrders(); // Re-render les commandes après mise à jour du statut
-};
-
-const filterElement = document.getElementById('order-status-filter');
-if (filterElement) {
+document.addEventListener('DOMContentLoaded', () => {
+  // Vérifie l'existence de l'élément order-status-filter avant d'ajouter l'écouteur d'événement
+  const filterElement = document.getElementById('order-status-filter');
+  if (filterElement) {
     filterElement.addEventListener('change', renderOrders);
-} else {
+  } else {
     console.error('L\'élément #order-status-filter n\'existe pas dans le DOM.');
-}
+  }
 
-
-
-
-// Gestion des événements
-document.getElementById('product-form').addEventListener('submit', addProduct);
-document.getElementById('place-order').addEventListener('click', placeOrder);
+  // Gestion des événements pour d'autres éléments
+  document.getElementById('product-form').addEventListener('submit', addProduct);
+  document.getElementById('place-order').addEventListener('click', placeOrder);
+});
 
 // Initialiser l'affichage des produits et commandes
 renderProducts();
