@@ -22,7 +22,7 @@ def create_app():
     app = Flask(__name__)
 
     # Configuration de l'application
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", 'sqlite:///C:/Users/Moi/LepetitmarchePWA/backend/instance/site.db')  # Configuration de la base de données
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://username:password@host:port/database_name'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Désactiver le suivi des modifications
     app.config['SECRET_KEY'] = 'votre_clé_secrète'  # À remplacer par une variable d'environnement
     
