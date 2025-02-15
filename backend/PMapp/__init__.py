@@ -38,6 +38,10 @@ def create_app():
    
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'  # Vue de connexion
+    with app.app_context():
+        from PMapp import models  # Import des modèles avant de créer la base
+        db.create_all()  # Crée les tables si elles n'existent pas
+
 
    # Fonction user_loader pour Flask-Login
     @login_manager.user_loader

@@ -22,7 +22,6 @@ def index():
 @main.route('/menu')
 def menu():
     products = Product.query.all()
-    print(products)
     return render_template('menu.html', products=products)
 
 
