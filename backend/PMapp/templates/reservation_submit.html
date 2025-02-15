@@ -25,10 +25,21 @@
         </ul>
     </section>
 
+    <select id="order-status-filter">
+        <option value="all">Toutes les commandes</option>
+        <option value="En attente">En attente</option>
+        <option value="En préparation">En préparation</option>
+        <option value="Terminée">Terminée</option>
+        <option value="Annulée">Annulée</option>
+      </select>
+      
     <div class="button-container">
         <a href="{{ url_for('main.menu') }}" class="btn-go-home">Retour à la boutique</a>
     </div>
 
+
+    <script src="{{url_for('static', filename='js/app.js')}}"></script>
+    
 </body>
 
 </html>
