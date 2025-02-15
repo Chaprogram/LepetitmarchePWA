@@ -22,7 +22,7 @@ def create_app():
     app = Flask(__name__)
 
     # Configuration de l'application
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Users/Moi/LepetitmarchePWA/backend/instance/site.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://username:password@host:port/database_name'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Désactiver le suivi des modifications
     app.config['SECRET_KEY'] = 'votre_clé_secrète'  # À remplacer par une variable d'environnement
     
@@ -32,6 +32,8 @@ def create_app():
     app.config['MAIL_USE_TLS'] = True
     app.config['MAIL_USERNAME'] = 'charlinec03@gmail.com'  # Remplace par ton email
     app.config['MAIL_PASSWORD'] = 'tonmotdepasse'  # Remplace par ton mot de passe
+
+    print(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
     # Initialisation des extensions avec l'application
     db.init_app(app)  # Utilise l'instance de db importée
