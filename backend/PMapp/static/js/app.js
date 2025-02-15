@@ -141,8 +141,6 @@ const updateOrderStatus = (index, newStatus) => {
   renderOrders(); // Re-render les commandes après mise à jour du statut
 };
 
-// Écouter le changement du filtre de statut
-document.getElementById('order-status-filter').addEventListener('change', renderOrders);
 
 // Gestion des événements
 document.getElementById('product-form').addEventListener('submit', addProduct);

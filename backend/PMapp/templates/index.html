@@ -8,9 +8,7 @@
 
   <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }}"> <!-- Liens CSS Flask -->
   <link rel ="user" href="{{ url_for('main.user') }}"> <!-- Si tu as une page utilisateur -->
-  <!-- Page Index -->
-  <a href="{{ url_for('main.admin') }}">Aller à la page administrateur</a> <!-- Route Flask vers la page admin -->
-
+ 
 </head>
 <body>
   <header>
@@ -34,14 +32,14 @@
   </section>
 
   <h3>Commandez vos articles en ligne</h3>
-  <p>Vous pouvez dès à présent commander en ligne vos articles. Vous pouvez choisir de vous les faire livrer ou venir les chercher au magasin.</p>
+  <p>Vous pouvez dès à présent commander en ligne vos articles et les recevoir à la maison et commander vos produits de boulangerie depuis chez vous pour le lendemain. </p>
 
   <footer>
     <p>Magasin Le Petit Marché situé rue de la croix n24 4600 Lixhe.</p>
-    <p>© 2025 Le Petit Marché</p>
+    <p>© Copyright 2025 Le Petit Marché.|Made by Cha.</p>
   </footer>
 
   <!-- Scripts JavaScript -->
-   <script src="{{ url_for('static',filename='js/app.js') }}"></script> Lien dynamique vers le script 
+   <script src="{{ url_for('static',filename='js/app.js') }}"></script>  
 </body>
 </html>
