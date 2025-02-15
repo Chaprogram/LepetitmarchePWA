@@ -4,8 +4,12 @@ from flask_login import LoginManager
 from flask_socketio import SocketIO
 from flask_mail import Mail
 import os
-from PMapp.models import db  # Assure-toi que db est bien défini dans models.py, pas ici
 
+# Initialisation des extensions
+db = SQLAlchemy()
+socketio = SocketIO()
+mail = Mail()
+login_manager = LoginManager()
 
 
 # Initialisation des extensions
