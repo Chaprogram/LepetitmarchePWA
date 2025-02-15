@@ -12,26 +12,23 @@ mail = Mail()
 login_manager = LoginManager()
 
 
-# Initialisation des extensions
-socketio = SocketIO()
-mail = Mail()
-login_manager = LoginManager()
+
 
 def create_app():
     # Créer l'application Flask
     app = Flask(__name__)
 
     # Configuration de l'application
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://username:password@host:port/database_name'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://lepetitmarchedelixhe25:tbzuGTQxH0iJJvq3PXutmcPxbROEk10r@dpg-cuofka8gph6c73dmi630-a/dbpetitmarche'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Désactiver le suivi des modifications
-    app.config['SECRET_KEY'] = 'votre_clé_secrète'  # À remplacer par une variable d'environnement
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_clé_secrète')   # À remplacer par une variable d'environnement
     
     # Configuration de Flask-Mail
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Remplace par ton serveur SMTP
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USE_TLS'] = True
     app.config['MAIL_USERNAME'] = 'charlinec03@gmail.com'  # Remplace par ton email
-    app.config['MAIL_PASSWORD'] = 'tonmotdepasse'  # Remplace par ton mot de passe
+    app.config['MAIL_PASSWORD'] = 'Jesuisprogrammeuse25'  # Remplace par ton mot de passe
 
     print(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
