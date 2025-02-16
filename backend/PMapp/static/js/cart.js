@@ -5,8 +5,8 @@ function displayCart() {
     const cartList = document.getElementById('cart-items');
     const cartTotal = document.getElementById('cart-total');
 
-    if (!cartList) {
-        console.warn("L'élément cart-items est introuvable.");
+    if (!cartList || !cartTotal) {
+        console.warn("Les éléments du panier ne sont pas présents sur cette page.");
         return;
     }
 
@@ -15,7 +15,7 @@ function displayCart() {
 
     if (cart.length === 0) {
         cartList.innerHTML = '<p>Votre panier est vide.</p>';
-        if (cartTotal) cartTotal.textContent = '0.00 €'; // Total vide
+        cartTotal.textContent = '0.00 €'; // Total vide
         return;
     }
 
@@ -36,25 +36,8 @@ function displayCart() {
         total += product.quantity * product.price;
     });
 
-    if (cartTotal) cartTotal.textContent = `${total.toFixed(2)} €`; // Affiche le total
+    cartTotal.textContent = `${total.toFixed(2)} €`; // Affiche le total
     attachRemoveHandlers(); // Ajoute les gestionnaires d'événements pour les boutons "Supprimer"
-}
-
-// Fonction pour ajouter un produit au panier
-function addProductToCart(product) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const existingProduct = cart.find((item) => item.name === product.name);
-
-    if (existingProduct) {
-        console.log(`Produit existant trouvé : ${existingProduct.name}`); // Debug
-        existingProduct.quantity += product.quantity;
-    } else {
-        console.log(`Ajout d'un nouveau produit : ${product.name}`); // Debug
-        cart.push(product);
-    }
-
-    localStorage.setItem('cart', JSON.stringify(cart));
-    displayCart(); // Mettre à jour l'affichage
 }
 
 // Fonction pour supprimer un produit du panier
@@ -87,42 +70,32 @@ function clearCart() {
     alert('Le panier a été vidé.');
 }
 
-// Gestion des options de retrait/livraison
+// Gestion des options de livraison (uniquement livraison)
 function manageDeliveryOptions() {
-    const pickupOption = document.getElementById('pickup-option');
     const deliveryOption = document.getElementById('delivery-option');
-    const pickupForm = document.getElementById('pickup-form');
     const deliveryForm = document.getElementById('delivery-form');
     const paymentForm = document.getElementById('payment-form');
 
-    if (pickupOption && deliveryOption) {
-        pickupOption.addEventListener('change', () => {
-            if (pickupOption.checked) {
-                pickupForm.classList.remove('hidden');
-                deliveryForm.classList.add('hidden');
-                paymentForm.classList.remove('hidden');
-                displayPaymentOptions(['Payconiq', 'Paiement en magasin']);
-            }
-        });
-
-        deliveryOption.addEventListener('change', () => {
-            if (deliveryOption.checked) {
-                deliveryForm.classList.remove('hidden');
-                pickupForm.classList.add('hidden');
-                paymentForm.classList.remove('hidden');
-                displayPaymentOptions(['Cash', 'Payconiq']);
-            }
-        });
-    } else {
-        console.warn("Les options de livraison/retrait ne sont pas présentes sur cette page.");
+    if (!deliveryOption) {
+        console.warn("Les options de livraison ne sont pas présentes sur cette page.");
+        return;
     }
+
+    // Quand l'option de livraison est sélectionnée
+    deliveryOption.addEventListener('change', () => {
+        if (deliveryOption.checked) {
+            deliveryForm?.classList.remove('hidden'); // Affiche le formulaire de livraison
+            paymentForm?.classList.remove('hidden'); // Affiche le formulaire de paiement
+            displayPaymentOptions(['Cash', 'Payconiq']); // Paiements disponibles pour livraison
+        }
+    });
 }
 
 // Afficher les options de paiement dynamiquement
 function displayPaymentOptions(options) {
     const paymentOptions = document.getElementById('payment-options');
     if (!paymentOptions) {
-        console.warn("L'élément payment-options est introuvable.");
+        console.warn("Section des options de paiement introuvable.");
         return;
     }
 
@@ -141,87 +114,46 @@ function displayPaymentOptions(options) {
 // Gestion du bouton "Valider la commande"
 function handleOrderSubmission() {
     const submitOrderButton = document.getElementById('submit-order');
-    if (submitOrderButton) {
-        submitOrderButton.addEventListener('click', () => {
-            const method = document.querySelector('input[name="delivery-option"]:checked');
-            const paymentMethod = document.querySelector('input[name="payment-method"]:checked');
 
-            if (!method) {
-                alert('Veuillez choisir une option de retrait ou de livraison.');
-                return;
-            }
-
-            if (!paymentMethod) {
-                alert('Veuillez choisir une méthode de paiement.');
-                return;
-            }
-
-            let details = {};
-
-            if (method.id === 'pickup-option') {
-                const name = document.getElementById('pickup-name').value;
-                const date = document.getElementById('pickup-date').value;
-
-                if (!name || !date) {
-                    alert('Veuillez remplir toutes les informations pour le retrait.');
-                    return;
-                }
-
-                details = { method: 'Retrait en magasin', name, date, paymentMethod: paymentMethod.value };
-            } else if (method.id === 'delivery-option') {
-                const address = document.getElementById('delivery-address').value;
-                const time = document.getElementById('delivery-time').value;
-
-                if (!address || !time) {
-                    alert('Veuillez remplir toutes les informations pour la livraison.');
-                    return;
-                }
-
-                details = { method: 'Livraison', address, time, paymentMethod: paymentMethod.value };
-            }
-
-            alert(`Commande validée avec succès.\nDétails : ${JSON.stringify(details)}`);
-            clearCart(); // Vide le panier après validation
-        });
-    } else {
-        console.warn("Bouton submit-order introuvable.");
+    if (!submitOrderButton) {
+        console.warn("Bouton valider-commande introuvable.");
+        return;
     }
+
+    submitOrderButton.addEventListener("click", function () {
+        const deliveryAddress = document.getElementById('delivery-address')?.value;
+        const deliveryTime = document.getElementById('delivery-time')?.value;
+        const paymentMethod = document.querySelector('input[name="payment-method"]:checked');
+
+        // Vérifications des informations saisies
+        if (!deliveryAddress || !deliveryTime) {
+            alert('Veuillez remplir toutes les informations pour la livraison.');
+            return;
+        }
+
+        if (!paymentMethod) {
+            alert('Veuillez choisir une méthode de paiement.');
+            return;
+        }
+
+        const details = {
+            method: 'Livraison',
+            address: deliveryAddress,
+            time: deliveryTime,
+            paymentMethod: paymentMethod.value
+        };
+
+        alert(`Commande validée avec succès.\nDétails : ${JSON.stringify(details)}`);
+        clearCart(); // Vide le panier après validation
+    });
 }
 
-// Initialisation
-document.addEventListener('DOMContentLoaded', () => {
-    displayCart();
-    manageDeliveryOptions();
-    handleOrderSubmission();
-
-    const clearCartButton = document.getElementById('clear-cart');
-    if (clearCartButton) {
-        clearCartButton.addEventListener('click', clearCart);
-    }
-
-    const validerCommandeBtn = document.getElementById("valider-commande");
-    if (validerCommandeBtn) {
-        validerCommandeBtn.addEventListener("click", function() {
-            let email = document.getElementById("email-client").value;
-            let orderDetails = "Détails de ta commande ici..."; // À remplacer par les vrais détails
-
-            sendConfirmationEmail(email, orderDetails);
-        });
-    } else {
-        console.warn("Bouton valider-commande introuvable.");
-    }
-});
-
+// Envoi de l'email de confirmation
 function sendConfirmationEmail(userEmail, orderDetails) {
     fetch('/send_confirmation_email', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: userEmail,
-            order_details: orderDetails
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail, order_details: orderDetails })
     })
     .then(response => response.json())
     .then(data => {
@@ -233,3 +165,15 @@ function sendConfirmationEmail(userEmail, orderDetails) {
     })
     .catch(error => console.error("Erreur :", error));
 }
+
+// Initialisation après chargement du DOM
+document.addEventListener('DOMContentLoaded', () => {
+    displayCart();
+    manageDeliveryOptions(); // Affiche uniquement la section livraison
+    handleOrderSubmission();
+
+    const clearCartButton = document.getElementById('clear-cart');
+    if (clearCartButton) {
+        clearCartButton.addEventListener('click', clearCart);
+    }
+});
