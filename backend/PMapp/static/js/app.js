@@ -135,23 +135,6 @@ const renderOrders = () => {
   });
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Vérifie l'existence de l'élément order-status-filter avant d'ajouter l'écouteur d'événement
-  const filterElement = document.getElementById('order-status-filter');
-  if (filterElement) {
-    filterElement.addEventListener('change', renderOrders);
-  } else {
-    console.error('L\'élément #order-status-filter n\'existe pas dans le DOM.');
-  }
-
-  // Gestion des événements pour d'autres éléments
-  document.getElementById('product-form').addEventListener('submit', addProduct);
-  document.getElementById('place-order').addEventListener('click', placeOrder);
-});
-
-// Initialiser l'affichage des produits et commandes
-renderProducts();
-renderOrders(); // Afficher les commandes initiales
 // Simuler la gestion des rôles (remplacez par une vraie requête backend)
 const getUserRole = () => {
   // Exemple : remplacez cette ligne par une requête réelle au serveur
