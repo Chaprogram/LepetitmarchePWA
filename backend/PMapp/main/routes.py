@@ -45,7 +45,7 @@ def login():
 
         flash('Email ou mot de passe incorrect', 'danger')
 
-    return render_template('admin_login.html')
+    return render_template('login.html')
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
