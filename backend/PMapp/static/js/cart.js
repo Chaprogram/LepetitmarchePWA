@@ -71,24 +71,22 @@ function clearCart() {
 }
 
 // Gestion des options de livraison (uniquement livraison)
+// Gestion des options de livraison (uniquement livraison)
 function manageDeliveryOptions() {
-    const deliveryOption = document.getElementById('delivery-option');
     const deliveryForm = document.getElementById('delivery-form');
     const paymentForm = document.getElementById('payment-form');
 
-    if (!deliveryOption) {
-        console.warn("Les options de livraison ne sont pas présentes sur cette page.");
+    if (!deliveryForm || !paymentForm) {
+        console.warn("Les formulaires de livraison ou de paiement sont introuvables.");
         return;
     }
 
-    // Quand l'option de livraison est sélectionnée
-    deliveryOption.addEventListener('change', () => {
-        if (deliveryOption.checked) {
-            deliveryForm?.classList.remove('hidden'); // Affiche le formulaire de livraison
-            paymentForm?.classList.remove('hidden'); // Affiche le formulaire de paiement
-            displayPaymentOptions(['Cash', 'Payconiq']); // Paiements disponibles pour livraison
-        }
-    });
+    // Afficher directement le formulaire de livraison et paiement
+    deliveryForm?.classList.remove('hidden'); // Affiche le formulaire de livraison
+    paymentForm?.classList.remove('hidden'); // Affiche le formulaire de paiement
+
+    // Afficher les options de paiement disponibles pour la livraison
+    displayPaymentOptions(['Cash', 'Payconiq']);
 }
 
 // Afficher les options de paiement dynamiquement
