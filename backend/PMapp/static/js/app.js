@@ -135,26 +135,6 @@ const renderOrders = () => {
   });
 };
 
-// Simuler la gestion des rôles (remplacez par une vraie requête backend)
-const getUserRole = () => {
-  // Exemple : remplacez cette ligne par une requête réelle au serveur
-  return sessionStorage.getItem("role") || "user"; // Peut être "admin" ou "user"
-};
-
-// Gérer l'affichage des boutons
-const manageAccess = () => {
-  const adminButton = document.getElementById("admin-button");
-  const userRole = getUserRole();
-
-  if (userRole === "admin") {
-    adminButton.style.display = "inline-block"; // Afficher le bouton admin
-  } else {
-    adminButton.style.display = "none"; // Cacher le bouton admin
-  }
-};
-
-// Appeler la fonction après le chargement de la page
-document.addEventListener("DOMContentLoaded", manageAccess);
 
 window.onload = function() {
   document.body.style.overflowY = "scroll"; // Assure le défilement vertical

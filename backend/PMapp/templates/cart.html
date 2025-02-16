@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Panier</title>
     <link rel="stylesheet" href="{{url_for('static',filename='css/cart.css')}}">
-    <link rel="menu" href="{{url_for('main.menu')}}">
+    
 </head>
 <header>
     <a href="{{url_for('main.index')}}"> 
@@ -43,11 +43,13 @@
         
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                // Définir la date du jour par défaut
-                document.getElementById("delivery-date").value = new Date().toISOString().split("T")[0];
+                let deliveryDateInput = document.getElementById("delivery-date");
+                if (deliveryDateInput) {
+                    deliveryDateInput.value = new Date().toISOString().split("T")[0];
+                }
             });
         </script>
-         
+        
     <!-- Section pour le choix de paiement -->
     <div id="payment-form" class="hidden">
         <h3>Choisissez votre mode de paiement</h3>
@@ -59,7 +61,7 @@
 
     <script src="{{url_for('static', filename='js/cart.js')}}"></script>
     <script src="{{url_for('static', filename='js/scripts.js')}}"></script>
-    <script src="{{url_for('static', filename='js/=app.js')}}"></script>
+    <script src="{{url_for('static', filename='js/app.js')}}"></script>
     
 </body>
 </html>
