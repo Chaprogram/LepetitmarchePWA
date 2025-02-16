@@ -5,6 +5,11 @@ function displayCart() {
     const cartList = document.getElementById('cart-items');
     const cartTotal = document.getElementById('cart-total');
 
+    if (!cartList) {
+        console.warn("L'élément cart-items est introuvable.");
+        return;
+    }
+
     // Vider l'affichage avant de le remplir
     cartList.innerHTML = '';
 
@@ -90,28 +95,37 @@ function manageDeliveryOptions() {
     const deliveryForm = document.getElementById('delivery-form');
     const paymentForm = document.getElementById('payment-form');
 
-    pickupOption.addEventListener('change', () => {
-        if (pickupOption.checked) {
-            pickupForm.classList.remove('hidden');
-            deliveryForm.classList.add('hidden');
-            paymentForm.classList.remove('hidden');
-            displayPaymentOptions(['Payconiq', 'Paiement en magasin']);
-        }
-    });
+    if (pickupOption && deliveryOption) {
+        pickupOption.addEventListener('change', () => {
+            if (pickupOption.checked) {
+                pickupForm.classList.remove('hidden');
+                deliveryForm.classList.add('hidden');
+                paymentForm.classList.remove('hidden');
+                displayPaymentOptions(['Payconiq', 'Paiement en magasin']);
+            }
+        });
 
-    deliveryOption.addEventListener('change', () => {
-        if (deliveryOption.checked) {
-            deliveryForm.classList.remove('hidden');
-            pickupForm.classList.add('hidden');
-            paymentForm.classList.remove('hidden');
-            displayPaymentOptions(['Cash', 'Payconiq']);
-        }
-    });
+        deliveryOption.addEventListener('change', () => {
+            if (deliveryOption.checked) {
+                deliveryForm.classList.remove('hidden');
+                pickupForm.classList.add('hidden');
+                paymentForm.classList.remove('hidden');
+                displayPaymentOptions(['Cash', 'Payconiq']);
+            }
+        });
+    } else {
+        console.warn("Les options de livraison/retrait ne sont pas présentes sur cette page.");
+    }
 }
 
 // Afficher les options de paiement dynamiquement
 function displayPaymentOptions(options) {
     const paymentOptions = document.getElementById('payment-options');
+    if (!paymentOptions) {
+        console.warn("L'élément payment-options est introuvable.");
+        return;
+    }
+
     paymentOptions.innerHTML = ''; // Vider les options précédentes
 
     options.forEach((option) => {
@@ -127,47 +141,51 @@ function displayPaymentOptions(options) {
 // Gestion du bouton "Valider la commande"
 function handleOrderSubmission() {
     const submitOrderButton = document.getElementById('submit-order');
-    submitOrderButton.addEventListener('click', () => {
-        const method = document.querySelector('input[name="delivery-option"]:checked');
-        const paymentMethod = document.querySelector('input[name="payment-method"]:checked');
+    if (submitOrderButton) {
+        submitOrderButton.addEventListener('click', () => {
+            const method = document.querySelector('input[name="delivery-option"]:checked');
+            const paymentMethod = document.querySelector('input[name="payment-method"]:checked');
 
-        if (!method) {
-            alert('Veuillez choisir une option de retrait ou de livraison.');
-            return;
-        }
-
-        if (!paymentMethod) {
-            alert('Veuillez choisir une méthode de paiement.');
-            return;
-        }
-
-        let details = {};
-
-        if (method.id === 'pickup-option') {
-            const name = document.getElementById('pickup-name').value;
-            const date = document.getElementById('pickup-date').value;
-
-            if (!name || !date) {
-                alert('Veuillez remplir toutes les informations pour le retrait.');
+            if (!method) {
+                alert('Veuillez choisir une option de retrait ou de livraison.');
                 return;
             }
 
-            details = { method: 'Retrait en magasin', name, date, paymentMethod: paymentMethod.value };
-        } else if (method.id === 'delivery-option') {
-            const address = document.getElementById('delivery-address').value;
-            const time = document.getElementById('delivery-time').value;
-
-            if (!address || !time) {
-                alert('Veuillez remplir toutes les informations pour la livraison.');
+            if (!paymentMethod) {
+                alert('Veuillez choisir une méthode de paiement.');
                 return;
             }
 
-            details = { method: 'Livraison', address, time, paymentMethod: paymentMethod.value };
-        }
+            let details = {};
 
-        alert(`Commande validée avec succès.\nDétails : ${JSON.stringify(details)}`);
-        clearCart(); // Vide le panier après validation
-    });
+            if (method.id === 'pickup-option') {
+                const name = document.getElementById('pickup-name').value;
+                const date = document.getElementById('pickup-date').value;
+
+                if (!name || !date) {
+                    alert('Veuillez remplir toutes les informations pour le retrait.');
+                    return;
+                }
+
+                details = { method: 'Retrait en magasin', name, date, paymentMethod: paymentMethod.value };
+            } else if (method.id === 'delivery-option') {
+                const address = document.getElementById('delivery-address').value;
+                const time = document.getElementById('delivery-time').value;
+
+                if (!address || !time) {
+                    alert('Veuillez remplir toutes les informations pour la livraison.');
+                    return;
+                }
+
+                details = { method: 'Livraison', address, time, paymentMethod: paymentMethod.value };
+            }
+
+            alert(`Commande validée avec succès.\nDétails : ${JSON.stringify(details)}`);
+            clearCart(); // Vide le panier après validation
+        });
+    } else {
+        console.warn("Bouton submit-order introuvable.");
+    }
 }
 
 // Initialisation
@@ -179,6 +197,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearCartButton = document.getElementById('clear-cart');
     if (clearCartButton) {
         clearCartButton.addEventListener('click', clearCart);
+    }
+
+    const validerCommandeBtn = document.getElementById("valider-commande");
+    if (validerCommandeBtn) {
+        validerCommandeBtn.addEventListener("click", function() {
+            let email = document.getElementById("email-client").value;
+            let orderDetails = "Détails de ta commande ici..."; // À remplacer par les vrais détails
+
+            sendConfirmationEmail(email, orderDetails);
+        });
+    } else {
+        console.warn("Bouton valider-commande introuvable.");
     }
 });
 
@@ -203,11 +233,3 @@ function sendConfirmationEmail(userEmail, orderDetails) {
     })
     .catch(error => console.error("Erreur :", error));
 }
-
-document.getElementById("valider-commande").addEventListener("click", function() {
-    let email = document.getElementById("email-client").value;  // Récupère l'email du client
-    let orderDetails = "Détails de ta commande ici...";  // À remplacer par les vrais détails du panier
-
-    sendConfirmationEmail(email, orderDetails);
-});
-
