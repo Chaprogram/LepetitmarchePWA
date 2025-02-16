@@ -49,31 +49,38 @@ def login():
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        confirm_password = request.form.get('confirm_password')
+        try:
+            username = request.form.get('username')
+            email = request.form.get('email')
+            password = request.form.get('password')
+            confirm_password = request.form.get('confirm_password')
 
-        if password != confirm_password:
-            flash("Les mots de passe ne correspondent pas", "danger")
+            if password != confirm_password:
+                flash("Les mots de passe ne correspondent pas", "danger")
+                return redirect(url_for('main.register'))
+
+            existing_user = User.query.filter_by(email=email).first()
+            if existing_user:
+                flash("Cet email est déjà utilisé", "danger")
+                return redirect(url_for('main.register'))
+
+            hashed_password = generate_password_hash(password)
+            is_admin = email == 'admin@example.com'
+
+            new_user = User(username=username, email=email, password=hashed_password, is_admin=is_admin)
+            db.session.add(new_user)
+            db.session.commit()
+
+            flash("Compte créé avec succès ! Vous pouvez maintenant vous connecter.", "success")
+            return redirect(url_for('main.login'))
+
+        except Exception as e:
+            print(f"Erreur lors de la création du compte : {e}")
+            flash("Une erreur est survenue lors de la création de votre compte.", "danger")
             return redirect(url_for('main.register'))
-
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            flash("Cet email est déjà utilisé", "danger")
-            return redirect(url_for('main.register'))
-
-        hashed_password = generate_password_hash(password)
-        is_admin = email == 'admin@example.com'
-
-        new_user = User(username=username, email=email, password=hashed_password, is_admin=is_admin)
-        db.session.add(new_user)
-        db.session.commit()
-
-        flash("Compte créé avec succès ! Vous pouvez maintenant vous connecter.", "success")
-        return redirect(url_for('main.login'))
 
     return render_template('register.html')
+
 
 @main.route('/logout')
 def logout():
