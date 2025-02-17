@@ -11,38 +11,40 @@ socketio = SocketIO()
 mail = Mail()
 login_manager = LoginManager()
 
-
-
-
 def create_app():
     # Créer l'application Flask
     app = Flask(__name__)
 
     # Configuration de l'application
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://lepetitmarchedelixhe25:tbzuGTQxH0iJJvq3PXutmcPxbROEk10r@dpg-cuofka8gph6c73dmi630-a.frankfurt-postgres.render.com/dbpetitmarche'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Désactiver le suivi des modifications
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_clé_secrète')   # À remplacer par une variable d'environnement
-    
+    db_url = os.getenv('DATABASE_URL')
+    if db_url and db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)  # Fix PostgreSQL
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_clé_secrète')  
+
     # Configuration de Flask-Mail
-    app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Remplace par ton serveur SMTP
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'  
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USE_TLS'] = True
-    app.config['MAIL_USERNAME'] = 'charlinec03@gmail.com'  # Remplace par ton email
-    app.config['MAIL_PASSWORD'] = 'Jesuisprogrammeuse25'  # Remplace par ton mot de passe
+    app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')  # Utilisation des variables d'environnement
+    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')  
 
     print(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
+    print("DATABASE_URL: ", os.getenv("DATABASE_URL"))
 
-    # Initialisation des extensions avec l'application
-    db.init_app(app)  # Utilise l'instance de db importée
+    # Initialisation des extensions
+    db.init_app(app)  
     socketio.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
-    login_manager.login_view = 'main.login'  # Vue de connexion
+    login_manager.login_view = 'main.login'  
 
     # Création de la base de données (tables)
     with app.app_context():
-        from PMapp import models  # Import des modèles avant de créer la base
-        db.create_all()  # Crée les tables si elles n'existent pas
+        from PMapp import models  
+        db.create_all()  
 
     # Fonction user_loader pour Flask-Login
     @login_manager.user_loader
@@ -51,11 +53,7 @@ def create_app():
         return User.query.get(int(user_id))
 
     # Importation et enregistrement des routes
-    from PMapp.routes import main  # Importer le Blueprint `main`
+    from PMapp.routes import main  
     app.register_blueprint(main)
-
-
-
-    print("DATABASE_URL: ", os.getenv("DATABASE_URL"))
 
     return app
