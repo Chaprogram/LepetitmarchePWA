@@ -15,6 +15,15 @@ from PMapp.models import User, Product, Admin, Notification, Reservation
 # Définir un blueprint
 main = Blueprint('main', __name__)
 
+@main.route('/test_db')
+def test_db():
+    try:
+        db.session.execute('SELECT 1')  # Test simple de connexion
+        return jsonify({"status": "Connexion OK"})
+    except Exception as e:
+        return jsonify({"status": "Erreur", "message": str(e)}), 500
+
+
 @main.route('/')
 def index():
     return render_template('index.html')
