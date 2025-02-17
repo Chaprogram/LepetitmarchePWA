@@ -6,7 +6,7 @@ import re  # Pour la validation des emails
 from PMapp import db, socketio, mail
 from PMapp.models import User, Product, Admin, Notification, Reservation
 
-from sqlalchemy import text
+
 
 
 
@@ -16,14 +16,7 @@ from sqlalchemy import text
 # Définir un blueprint
 main = Blueprint('main', __name__)
 
-@main.route('/test_db')
-def test_db():
-    try:
-        db.session.execute(text("SELECT 1"))
-  # Test simple de connexion
-        return jsonify({"status": "Connexion OK"})
-    except Exception as e:
-        return jsonify({"status": "Erreur", "message": str(e)}), 500
+
 
 
 @main.route('/')
