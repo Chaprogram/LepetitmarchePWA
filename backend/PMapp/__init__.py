@@ -19,7 +19,7 @@ def create_app():
     app = Flask(__name__)
 
     # Configuration de l'application
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://lepetitmarchedelixhe25:tbzuGTQxH0iJJvq3PXutmcPxbROEk10r@dpg-cuofka8gph6c73dmi630-a/dbpetitmarche'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://lepetitmarchedelixhe25:tbzuGTQxH0iJJvq3PXutmcPxbROEk10r@dpg-cuofka8gph6c73dmi630-a.frankfurt-postgres.render.com/dbpetitmarche'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Désactiver le suivi des modifications
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_clé_secrète')   # À remplacer par une variable d'environnement
     
