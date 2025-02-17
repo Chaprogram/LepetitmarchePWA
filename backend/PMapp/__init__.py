@@ -4,8 +4,6 @@ from flask_login import LoginManager
 from flask_socketio import SocketIO
 from flask_mail import Mail
 import os
-from flask_debugtoolbar import DebugToolbarExtension
-
 
 # Initialisation des extensions
 db = SQLAlchemy()
@@ -17,8 +15,6 @@ def create_app():
     # Créer l'application Flask
     app = Flask(__name__)
 
-# the toolbar is only enabled in debug mode:
-    app.debug = True
 
     # Configuration de l'application
     db_url = os.getenv('DATABASE_URL')
@@ -29,7 +25,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_clé_secrète')  
 
-    toolbar = DebugToolbarExtension(app)
+  
 
     # Configuration de Flask-Mail
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'  
@@ -47,7 +43,7 @@ def create_app():
     mail.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'
-    toolbar.init_app(app) 
+  
      
 
 
