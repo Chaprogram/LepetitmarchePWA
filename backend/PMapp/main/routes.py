@@ -14,6 +14,10 @@ from . import main  # Import du Blueprint déclaré dans main/__init__.py
 main = Blueprint('main', __name__)
 
 
+@main.route('/list_tables')
+def list_tables():
+    tables = db.engine.table_names()
+    return jsonify({"tables": tables})
 
 
 @main.route('/')

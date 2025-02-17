@@ -16,7 +16,10 @@ from PMapp.models import User, Product, Admin, Notification, Reservation
 # Définir un blueprint
 main = Blueprint('main', __name__)
 
-
+@main.route('/list_tables')
+def list_tables():
+    tables = db.engine.table_names()
+    return jsonify({"tables": tables})
 
 
 @main.route('/')
