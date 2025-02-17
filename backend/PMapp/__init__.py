@@ -15,17 +15,14 @@ def create_app():
     # Créer l'application Flask
     app = Flask(__name__)
 
-
     # Configuration de l'application
-    db_url = os.getenv('DATABASE_URL')
+    db_url = os.getenv('DATABASE_URL')  # Utilisation de DATABASE_URL
     if db_url and db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://", 1)  # Fix PostgreSQL
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url  # Utilisation de DATABASE_URL dans SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_clé_secrète')  
-
-  
 
     # Configuration de Flask-Mail
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'  
@@ -43,9 +40,6 @@ def create_app():
     mail.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'
-  
-     
-
 
     # Création de la base de données (tables)
     with app.app_context():
