@@ -16,11 +16,6 @@ from PMapp.models import User, Product, Admin, Notification, Reservation
 # Définir un blueprint
 main = Blueprint('main', __name__)
 
-@main.route('/list_tables')
-def list_tables():
-    tables = db.engine.table_names()
-    return jsonify({"tables": tables})
-
 
 @main.route('/')
 def index():
@@ -71,8 +66,8 @@ def register():
                 flash("Cet email est déjà utilisé", "danger")
                 return redirect(url_for('main.register'))
 
-            hashed_password = generate_password_hash(password)
-            is_admin = email == 'admin@example.com'
+            hashed_password = generate_password_hash("admin")
+            is_admin = email == 'faux_admin@example.com'
 
             new_user = User(username=username, email=email, password=hashed_password, is_admin=is_admin)
             db.session.add(new_user)

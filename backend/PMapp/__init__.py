@@ -51,7 +51,7 @@ def create_app():
     # Création de la base de données (tables)
     with app.app_context():
         from PMapp import models  
-        db.create_all()
+       
 
     # Fonction user_loader pour Flask-Login
     @login_manager.user_loader
