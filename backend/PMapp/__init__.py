@@ -4,7 +4,9 @@ from flask_login import LoginManager
 from flask_socketio import SocketIO
 from flask_mail import Mail
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 # Initialisation des extensions
 db = SQLAlchemy()
 socketio = SocketIO()
