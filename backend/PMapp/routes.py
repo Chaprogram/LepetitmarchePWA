@@ -102,7 +102,7 @@ def login():
         if user:
             print(f"User trouvé : {user.username}")  # Débogage : Vérifie si l'utilisateur est trouvé
             
-            if check_password_hash(user.password, password):
+            if user.check_password(password):
                 print("Mot de passe correct")  # Débogage : Vérifie que le mot de passe est correct
                 login_user(user)
                 return redirect(url_for('main.admin' if user.is_admin else 'main.menu'))
