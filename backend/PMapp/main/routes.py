@@ -63,6 +63,7 @@ def register():
             email = request.form.get('email')
             password = request.form.get('password')
             confirm_password = request.form.get('confirm_password')
+            print(f"Form Data: {request.form}")
 
             # Vérification des mots de passe
             if password != confirm_password:
