@@ -80,6 +80,7 @@ def register():
 @main.route('/admin')
 @login_required
 def admin():
+    print(f"Utilisateur connecté : {current_user.username}")  # Debug
     if not current_user.is_admin:
         flash("Accès non autorisé", "danger")
         return redirect(url_for('main.index'))
