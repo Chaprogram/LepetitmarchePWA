@@ -77,6 +77,14 @@ def register():
     return render_template('register.html')
 
 
+@main.route('/admin')
+@login_required
+def admin():
+    if not current_user.is_admin:
+        flash("Accès non autorisé", "danger")
+        return redirect(url_for('main.index'))
+    return render_template('admin.html')
+
 @main.route('/logout')
 def logout():
     logout_user()
