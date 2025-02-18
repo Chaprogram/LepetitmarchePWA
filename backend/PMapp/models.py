@@ -15,7 +15,7 @@ class User(db.Model, UserMixin):
     is_admin = db.Column(db.Boolean, default=False)  # Champ pour distinguer les administrateurs
 
     def __repr__(self):
-        return f"User('{self.name}', '{self.email}', admin={self.is_admin})"
+        return f"User('{self.username}', '{self.email}', admin={self.is_admin})"
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
