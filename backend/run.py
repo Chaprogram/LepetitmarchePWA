@@ -2,6 +2,8 @@ from PMapp import create_app,db
 from flask_migrate import Migrate
 import os
 from waitress import serve
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 # Créer l'application Flask
 
