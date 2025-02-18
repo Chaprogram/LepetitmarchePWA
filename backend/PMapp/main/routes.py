@@ -38,15 +38,21 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        print(f"Email : {email}")  # Débogage : Vérifie que l'email est bien récupéré
         
         user = User.query.filter_by(email=email).first()
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            return redirect(url_for('main.admin' if user.is_admin else 'main.menu'))
+        if user:
+            print(f"User trouvé : {user.username}")  # Débogage : Vérifie si l'utilisateur est trouvé
+            
+            if check_password_hash(user.password, password):
+                print("Mot de passe correct")  # Débogage : Vérifie que le mot de passe est correct
+                login_user(user)
+                return redirect(url_for('main.admin' if user.is_admin else 'main.menu'))
 
         flash('Email ou mot de passe incorrect', 'danger')
 
     return render_template('login.html')
+
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
