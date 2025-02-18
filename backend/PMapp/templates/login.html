@@ -15,7 +15,7 @@
 
   {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-          <ul>
+          <ul style="color: red;">
           {% for category, message in messages %}
               <li>{{ message }}</li>
           {% endfor %}
@@ -23,7 +23,7 @@
       {% endif %}
   {% endwith %}
 
-  <form method="POST">
+  <form method="POST" action="{{ url_for('main.login') }}">
       <label for="email">Email :</label>
       <input type="email" name="email" required><br>
 
@@ -33,8 +33,7 @@
       <button type="submit">Se connecter</button>
   </form>
 
-    <p>Pas encore de compte ? <a href="{{url_for('main.register')}}">Créer un compte</a></p>
-  </section>
+  <p>Pas encore de compte ? <a href="{{url_for('main.register')}}">Créer un compte</a></p>
 
   <footer>
     <p>© 2025 Le Petit Marché</p>

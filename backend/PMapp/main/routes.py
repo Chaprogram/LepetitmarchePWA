@@ -47,6 +47,7 @@ def login():
             if user.check_password(password):
                 print("Mot de passe correct")  # Débogage : Vérifie que le mot de passe est correct
                 login_user(user)
+                flash('Connexion réussie', 'success')
                 return redirect(url_for('main.admin' if user.is_admin else 'main.menu'))
 
         flash('Email ou mot de passe incorrect', 'danger')
@@ -75,10 +76,10 @@ def register():
                 return redirect(url_for('main.register'))
 
             # Hashage du mot de passe de l'utilisateur
-            hashed_password = generate_password_hash(password)
+            hashed_password = generate_password_hash(password, method='sha256')  # Spécifier sha256
 
             # Vérification si c'est un admin basé sur l'email
-            is_admin = email == 'faux_admin@example.com'
+            is_admin = email == 'faux_admin@example.com'  # Modifie l'email admin selon besoin
 
             # Création de l'utilisateur
             new_user = User(username=username, email=email, password=hashed_password, is_admin=is_admin)
