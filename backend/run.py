@@ -1,4 +1,4 @@
-from PMapp import create_app, socketio,db
+from PMapp import create_app,db
 from flask_migrate import Migrate
 import os
 from waitress import serve
