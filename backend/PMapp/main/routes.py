@@ -57,18 +57,24 @@ def register():
             password = request.form.get('password')
             confirm_password = request.form.get('confirm_password')
 
+            # Vérification des mots de passe
             if password != confirm_password:
                 flash("Les mots de passe ne correspondent pas", "danger")
                 return redirect(url_for('main.register'))
 
+            # Vérification de l'email existant
             existing_user = User.query.filter_by(email=email).first()
             if existing_user:
                 flash("Cet email est déjà utilisé", "danger")
                 return redirect(url_for('main.register'))
 
-            hashed_password = generate_password_hash("admin")
+            # Hashage du mot de passe de l'utilisateur
+            hashed_password = generate_password_hash(password)
+
+            # Vérification si c'est un admin basé sur l'email
             is_admin = email == 'faux_admin@example.com'
 
+            # Création de l'utilisateur
             new_user = User(username=username, email=email, password=hashed_password, is_admin=is_admin)
             db.session.add(new_user)
             db.session.commit()
@@ -82,7 +88,6 @@ def register():
             return redirect(url_for('main.register'))
 
     return render_template('register.html')
-
 
 @main.route('/logout')
 def logout():
