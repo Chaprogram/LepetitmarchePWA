@@ -16,11 +16,18 @@ def create_app():
     app = Flask(__name__)
 
     # Configuration de l'application
-    db_url = os.getenv('DATABASE_URL')  # Utilisation de DATABASE_URL
+    db_url = os.getenv('DATABASE_URL','postgresql://lepetitmarchedelixhe25:tbzuGTQxH0iJJvq3PXutmcPxbROEk10r@dpg-cuofka8gph6c73dmi630-a.frankfurt-postgres.render.com:5432/dbpetitmarche')  # Utilisation de DATABASE_URL
     if db_url and db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://", 1)  # Fix PostgreSQL
 
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url  # Utilisation de DATABASE_URL dans SQLALCHEMY_DATABASE_URI
+    try:
+          with db.engine.connect() as connection:
+             print("✅ Connexion à PostgreSQL réussie !")
+    except Exception as e:
+             print("❌ Erreur de connexion à PostgreSQL :", e)
+
+
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_clé_secrète')  
 
@@ -44,7 +51,7 @@ def create_app():
     # Création de la base de données (tables)
     with app.app_context():
         from PMapp import models  
-        db.create_all()  
+        db.create_all()
 
     # Fonction user_loader pour Flask-Login
     @login_manager.user_loader
