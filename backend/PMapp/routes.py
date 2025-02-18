@@ -33,20 +33,7 @@ def user():
     products = Product.query.all()
     return render_template('user.html', products=products)
 
-@main.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        
-        user = User.query.filter_by(email=email).first()
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            return redirect(url_for('main.admin' if user.is_admin else 'main.menu'))
 
-        flash('Email ou mot de passe incorrect', 'danger')
-
-    return render_template('login.html')
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
