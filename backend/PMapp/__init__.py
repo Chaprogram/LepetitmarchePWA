@@ -59,7 +59,7 @@ def create_app():
         return User.query.get(int(user_id))
 
     # Importation et enregistrement des routes
-    from PMapp.routes import main  
+    from .routes import main  
     app.register_blueprint(main)
 
     return app
