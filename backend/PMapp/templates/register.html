@@ -11,6 +11,17 @@
     <h1>Créer un Compte</h1>
   </header>
 
+  <!-- Affichage des messages flash -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
   <!-- Formulaire d'inscription -->
   <section id="registration-form">
     <form action="{{ url_for('main.register') }}" method="POST">
@@ -23,8 +34,6 @@
   
     <p>Vous avez déjà un compte ? <a href="{{url_for('main.login')}}">Se connecter</a></p>
   </section>
-
-  <div id="form-errors"></div>
 
   <footer>
     <p>© 2025 Le Petit Marché</p>
