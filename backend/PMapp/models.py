@@ -13,7 +13,7 @@ class User(db.Model,UserMixin):
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    is_admin = db.Column('is_admin',db.Boolean, default=False)  # Ajoute cette ligne pour l'attribut is_admin
+    is_admin = db.Column(db.Boolean, default=False)  # Ajoute cette ligne pour l'attribut is_admin
    
 
     def get_id(self):
@@ -26,10 +26,7 @@ class User(db.Model,UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
-    @property
-    def is_admin(self):
-        # Implémente la logique de l'admin ici
-        return self._is_admin 
+    
 
 
 class Product(db.Model):
