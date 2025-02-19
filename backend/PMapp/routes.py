@@ -10,9 +10,6 @@ from PMapp.models import User, Product, Admin, Notification, Reservation
 
 
 
-
-
-
 # Définir un blueprint
 main = Blueprint('main', __name__)
 
@@ -37,49 +34,32 @@ def user():
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        try:
-            username = request.form.get('username')
-            email = request.form.get('email')
-            password = request.form.get('password')
-            confirm_password = request.form.get('confirm_password')
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
 
-            print(f"Form Data: {request.form}")  # Debugging : Affiche les données du formulaire
-
-            # Vérification des mots de passe
-            if password != confirm_password:
-                flash("Les mots de passe ne correspondent pas", "danger")
-                print("Mots de passe non identiques")  # Debugging
-                return redirect(url_for('main.register'))
-
-            # Vérification de l'email existant
-            existing_user = User.query.filter_by(email=email).first()
-            if existing_user:
-                flash("Cet email est déjà utilisé", "danger")
-                print(f"Email déjà utilisé : {email}")  # Debugging
-                return redirect(url_for('main.register'))
-
-            # Hashage du mot de passe de l'utilisateur
-            hashed_password = generate_password_hash(password, method='sha256')
-
-            # Vérification si c'est un admin basé sur l'email
-            is_admin = email == 'faux_admin@example.com'  # Modifie l'email admin selon besoin
-
-            # Création de l'utilisateur
-            new_user = User(username=username, email=email, password=hashed_password, is_admin=is_admin)
-            db.session.add(new_user)
-            db.session.commit()
-            print("Utilisateur créé avec succès")  # Debugging
-
-            flash("Compte créé avec succès ! Vous pouvez maintenant vous connecter.", "success")
-            return redirect(url_for('main.login'))
-
-        except Exception as e:
-            print(f"Erreur lors de la création du compte : {e}")
-            flash("Une erreur est survenue lors de la création de votre compte.", "danger")
+        # Vérification des mots de passe
+        if password != confirm_password:
+            flash("Les mots de passe ne correspondent pas.", 'error')
             return redirect(url_for('main.register'))
 
-    return render_template('register.html')
+        # Vérification que l'email et le nom d'utilisateur sont uniques
+        user_exists = User.query.filter_by(email=email).first()
+        if user_exists:
+            flash("Cet email est déjà utilisé.", 'error')
+            return redirect(url_for('main.register'))
 
+        new_user = User(username=username, email=email)
+        new_user.set_password(password)
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash("Compte créé avec succès ! Vous pouvez maintenant vous connecter.", 'success')
+        return redirect(url_for('main.login'))
+
+    return render_template('register.html')
 
 @main.route('/admin')
 @login_required
