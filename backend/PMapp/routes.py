@@ -46,7 +46,10 @@ def login():
                 print("Mot de passe correct")  # Débogage : Vérifie que le mot de passe est correct
                 login_user(user)
                 flash('Connexion réussie', 'success')
-                return redirect(url_for('main.admin' if user.is_admin else 'main.menu'))
+                return redirect(url_for('main.admin'))
+            else:  # Si l'utilisateur n'est pas un administrateur
+                return redirect(url_for('main.menu'))
+
 
         flash('Email ou mot de passe incorrect', 'danger')
 
