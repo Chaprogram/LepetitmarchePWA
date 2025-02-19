@@ -43,40 +43,38 @@ def register():
             password = request.form.get('password')
             confirm_password = request.form.get('confirm_password')
 
-            print("✅ Requête POST reçue")
-            print(f"📌 Données reçues: username={username}, email={email}")
+            print(f"Form Data: {request.form}")  # Debugging : Affiche les données du formulaire
 
             # Vérification des mots de passe
             if password != confirm_password:
-                print("❌ Erreur : les mots de passe ne correspondent pas")
                 flash("Les mots de passe ne correspondent pas", "danger")
+                print("Mots de passe non identiques")  # Debugging
                 return redirect(url_for('main.register'))
 
             # Vérification de l'email existant
             existing_user = User.query.filter_by(email=email).first()
             if existing_user:
-                print("❌ Erreur : Cet email est déjà utilisé")
                 flash("Cet email est déjà utilisé", "danger")
+                print(f"Email déjà utilisé : {email}")  # Debugging
                 return redirect(url_for('main.register'))
 
             # Hashage du mot de passe de l'utilisateur
             hashed_password = generate_password_hash(password, method='sha256')
 
             # Vérification si c'est un admin basé sur l'email
-            is_admin = email == 'faux_admin@example.com' 
+            is_admin = email == 'faux_admin@example.com'  # Modifie l'email admin selon besoin
 
             # Création de l'utilisateur
-            print("✅ Création de l'utilisateur en cours...")
             new_user = User(username=username, email=email, password=hashed_password, is_admin=is_admin)
             db.session.add(new_user)
             db.session.commit()
-            print("✅ Utilisateur enregistré avec succès !")
+            print("Utilisateur créé avec succès")  # Debugging
 
             flash("Compte créé avec succès ! Vous pouvez maintenant vous connecter.", "success")
             return redirect(url_for('main.login'))
 
         except Exception as e:
-            print(f"❌ Erreur lors de la création du compte : {e}")
+            print(f"Erreur lors de la création du compte : {e}")
             flash("Une erreur est survenue lors de la création de votre compte.", "danger")
             return redirect(url_for('main.register'))
 
