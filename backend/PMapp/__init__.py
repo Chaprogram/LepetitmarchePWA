@@ -5,6 +5,8 @@ from flask_socketio import SocketIO
 from flask_mail import Mail
 import os
 from dotenv import load_dotenv
+from .routes import main
+from . import db
 
 load_dotenv()
 # Initialisation des extensions
@@ -59,7 +61,7 @@ def create_app():
         return User.query.get(int(user_id))
 
     # Importation et enregistrement des routes
-    from .routes import main  
+   
     app.register_blueprint(main)
 
     return app
