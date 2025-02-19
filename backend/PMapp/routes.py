@@ -38,24 +38,29 @@ def login():
         password = request.form['password']
         print(f"Email : {email}")  # Débogage : Vérifie que l'email est bien récupéré
         
-    user = User.query.filter_by(email=email).first()
-    if user:
+        user = User.query.filter_by(email=email).first()
+        if user:
             print(f"User trouvé : {user.username}")  # Débogage : Vérifie si l'utilisateur est trouvé
             
-            if user and user.check_password(password):
+            # Vérification du mot de passe
+            if user.check_password(password):
                 print("Mot de passe correct")  # Débogage : Vérifie que le mot de passe est correct
                 login_user(user)
                 flash('Connexion réussie', 'success')
-                return redirect(url_for('main.admin'))
-            if user.is_admin:
-                return redirect(url_for('main.admin'))
-            else:  
-                return "Invalid username or password",401
-
-
-    flash('Email ou mot de passe incorrect', 'danger')
-
+                
+                # Vérification du rôle d'admin après la connexion
+                if user.is_admin:
+                    return redirect(url_for('main.admin'))
+                else:
+                    return redirect(url_for('main.menu'))  # Redirection vers la page de menu pour les utilisateurs non-admin
+                
+            else:
+                flash('Email ou mot de passe incorrect', 'danger')
+        else:
+            flash('Email ou mot de passe incorrect', 'danger')
+        
     return render_template('login.html')
+
 
 
 @main.route('/register', methods=['GET', 'POST'])
