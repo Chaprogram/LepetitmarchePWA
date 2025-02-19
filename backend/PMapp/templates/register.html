@@ -24,6 +24,9 @@
 
   <!-- Formulaire d'inscription -->
   <section id="registration-form">
+    <!-- Conteneur pour afficher les erreurs -->
+    <div id="form-errors"></div>
+
     <form action="{{ url_for('main.register') }}" method="POST">
       <input type="text" name="username" placeholder="Nom d'utilisateur" autocomplete="username" required>
       <input type="email" name="email" placeholder="Email" autocomplete="email" required>
