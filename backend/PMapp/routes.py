@@ -9,7 +9,8 @@ from PMapp.models import User, Product, Admin, Notification, Reservation
 
 
 
-
+from . import main  # Import du Blueprint déclaré dans main/__init__.py
+ # Définir un blueprint
 # Définir un blueprint
 main = Blueprint('main', __name__)
 
