@@ -3,7 +3,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
 import re  # Pour la validation des emails
-from . import db, socketio, mail
+from PMapp import db, socketio, mail
 from PMapp.models import User, Product, Admin, Notification, Reservation
 
 
@@ -24,11 +24,33 @@ def menu():
     return render_template('menu.html', products=products)
 
 
+
 @main.route('/user')
 @login_required
 def user():
     products = Product.query.all()
     return render_template('user.html', products=products)
+
+@main.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        print(f"Email : {email}")  # Débogage : Vérifie que l'email est bien récupéré
+        
+        user = User.query.filter_by(email=email).first()
+        if user:
+            print(f"User trouvé : {user.username}")  # Débogage : Vérifie si l'utilisateur est trouvé
+            
+            if user.check_password(password):
+                print("Mot de passe correct")  # Débogage : Vérifie que le mot de passe est correct
+                login_user(user)
+                flash('Connexion réussie', 'success')
+                return redirect(url_for('main.admin' if user.is_admin else 'main.menu'))
+
+        flash('Email ou mot de passe incorrect', 'danger')
+
+    return render_template('login.html')
 
 
 @main.route('/register', methods=['GET', 'POST'])
@@ -61,6 +83,12 @@ def register():
 
     return render_template('register.html')
 
+
+@main.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('main.index'))
+
 @main.route('/admin')
 @login_required
 def admin():
@@ -70,31 +98,6 @@ def admin():
         return redirect(url_for('main.index'))
     return render_template('admin.html')
 
-@main.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('main.index'))
-
-@main.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        print(f"Email : {email}")  # Débogage : Vérifie que l'email est bien récupéré
-        
-        user = User.query.filter_by(email=email).first()
-        if user:
-            print(f"User trouvé : {user.username}")  # Débogage : Vérifie si l'utilisateur est trouvé
-            
-            if user.check_password(password):
-                print("Mot de passe correct")  # Débogage : Vérifie que le mot de passe est correct
-                login_user(user)
-                flash('Connexion réussie', 'success')
-                return redirect(url_for('main.admin' if user.is_admin else 'main.menu'))
-
-        flash('Email ou mot de passe incorrect', 'danger')
-
-    return render_template('login.html')
 
 
 @main.route("/add_product", methods=["POST"])
