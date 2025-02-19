@@ -44,13 +44,15 @@ def login():
         if user:
             print(f"User trouvé : {user.username}")  # Débogage : Vérifie si l'utilisateur est trouvé
             
-            if user.check_password(password):
+            if user and user.check_password(password):
                 print("Mot de passe correct")  # Débogage : Vérifie que le mot de passe est correct
                 login_user(user)
                 flash('Connexion réussie', 'success')
                 return redirect(url_for('main.admin'))
-            else:  # Si l'utilisateur n'est pas un administrateur
-                return redirect(url_for('main.menu'))
+            if user.is_admin:
+                return redirect(url_for('main.admin'))
+            else:  
+                return "Invalid username or password",401
 
         flash('Email ou mot de passe incorrect', 'danger')
 
