@@ -4,15 +4,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
 import re  # Pour la validation des emails
 from PMapp import db, socketio, mail
-from PMapp.models import User, Product, Admin, Notification, Reservation
+from PMapp.models import User, Product,Admin,Notification, Reservation
 
 
 
 
 from . import main  # Import du Blueprint déclaré dans main/__init__.py
  # Définir un blueprint
-# Définir un blueprint
 main = Blueprint('main', __name__)
+
+
 
 
 @main.route('/')
@@ -25,11 +26,33 @@ def menu():
     return render_template('menu.html', products=products)
 
 
+
 @main.route('/user')
 @login_required
 def user():
     products = Product.query.all()
     return render_template('user.html', products=products)
+
+@main.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        print(f"Email : {email}")  # Débogage : Vérifie que l'email est bien récupéré
+        
+        user = User.query.filter_by(email=email).first()
+        if user:
+            print(f"User trouvé : {user.username}")  # Débogage : Vérifie si l'utilisateur est trouvé
+            
+            if user.check_password(password):
+                print("Mot de passe correct")  # Débogage : Vérifie que le mot de passe est correct
+                login_user(user)
+                flash('Connexion réussie', 'success')
+                return redirect(url_for('main.admin' if user.is_admin else 'main.menu'))
+
+        flash('Email ou mot de passe incorrect', 'danger')
+
+    return render_template('login.html')
 
 
 @main.route('/register', methods=['GET', 'POST'])
@@ -62,6 +85,12 @@ def register():
 
     return render_template('register.html')
 
+
+@main.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('main.index'))
+
 @main.route('/admin')
 @login_required
 def admin():
@@ -70,33 +99,6 @@ def admin():
         flash("Accès non autorisé", "danger")
         return redirect(url_for('main.index'))
     return render_template('admin.html')
-
-@main.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('main.index'))
-
-@main.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        print(f"Email : {email}")  # Débogage : Vérifie que l'email est bien récupéré
-        
-        user = User.query.filter_by(email=email).first()
-        if user:
-            print(f"User trouvé : {user.username}")  # Débogage : Vérifie si l'utilisateur est trouvé
-            
-            if user.check_password(password):
-                print("Mot de passe correct")  # Débogage : Vérifie que le mot de passe est correct
-                login_user(user)
-                flash('Connexion réussie', 'success')
-                return redirect(url_for('main.admin' if user.is_admin else 'main.menu'))
-
-        flash('Email ou mot de passe incorrect', 'danger')
-
-    return render_template('login.html')
-
 
 @main.route("/add_product", methods=["POST"])
 def add_product():
@@ -196,7 +198,6 @@ def reservation_submit():
         return redirect(url_for('main.reservation'))
 
     return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
-
 
 @main.route('/pains')
 def pains():
@@ -319,25 +320,7 @@ def surgeles():
 def cart():
       return render_template('cart.html')
 
-@main.route('/commander', methods=['POST'])
-def commander():
-    client_email = request.form['email']
-    # Ici, tu ajoutes la logique pour traiter la commande
 
-    # Créer l'e-mail de confirmation
-    message = Message(
-        'Confirmation de commande',
-        recipients=[client_email]
-    )
-    message.body = 'Merci pour votre commande !'
-
-# Envoyer l'email
-  
-    mail.send(message)
-
-    # Rediriger vers une page de confirmation ou afficher un message
-    return render_template('menu.html')
-    
 
 
 @main.route('/send_confirmation_email', methods=['POST'])
