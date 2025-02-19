@@ -3,7 +3,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
 import re  # Pour la validation des emails
-from PMapp import db, socketio, mail
+from . import db, socketio, mail
 from PMapp.models import User, Product, Admin, Notification, Reservation
 
 
