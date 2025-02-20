@@ -5,6 +5,7 @@ from flask_mail import Message
 import re  # Pour la validation des emails
 from PMapp import db, socketio, mail
 from PMapp.models import User, Product, Admin, Notification, Reservation
+from datetime import datetime
 
 
 
@@ -62,36 +63,45 @@ def login():
     return render_template('login.html')
 
 
-
-@main.route('/register', methods=['GET', 'POST'])
-def register():
+@main.route('/reservation', methods=['GET', 'POST'])
+def reservation():
     if request.method == 'POST':
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        confirm_password = request.form.get('confirm_password')
+        # Récupérer les données du formulaire
+        first_name = request.form['name']  # Nom
+        email = request.form['email']  # Email
+        phone_number = request.form['phone']  # Numéro de téléphone
+        
+        # Récupérer les quantités des produits
+        order_details = []
+        products = Product.query.all()  # On récupère tous les produits de la base de données
 
-        # Vérification des mots de passe
-        if password != confirm_password:
-            flash("Les mots de passe ne correspondent pas.", 'error')
-            return redirect(url_for('main.register'))
+        for product in products:
+            quantity = int(request.form.get(f'quantity_{product.id}', 0))  # Récupérer la quantité pour chaque produit
+            if quantity > 0:
+                order_details.append(f"{quantity} x {product.name}")
+        
+        # Enregistrer la réservation dans la base de données
+        reservation = Reservation(
+            first_name=first_name,
+            last_name=email,  # Associer l'email au nom de famille pour le moment
+            phone_number=phone_number,
+            order_details=", ".join(order_details),  # Les produits commandés
+            reservation_date=datetime.utcnow(),
+            user_id=current_user.id if current_user.is_authenticated else None  # Si l'utilisateur est connecté
+        )
 
-        # Vérification que l'email et le nom d'utilisateur sont uniques
-        user_exists = User.query.filter_by(email=email).first()
-        if user_exists:
-            flash("Cet email est déjà utilisé.", 'error')
-            return redirect(url_for('main.register'))
-
-        new_user = User(username=username, email=email)
-        new_user.set_password(password)
-
-        db.session.add(new_user)
+        db.session.add(reservation)
         db.session.commit()
 
-        flash("Compte créé avec succès ! Vous pouvez maintenant vous connecter.", 'success')
-        return redirect(url_for('main.login'))
+        # Rediriger l'utilisateur vers la page de confirmation ou une autre page
+        return redirect(url_for('main.reservation_confirm'))
 
-    return render_template('register.html')
+    return render_template('reservation.html')
+
+# Optionnel : Route pour afficher une confirmation après la soumission
+@main.route('/reservation_confirm')
+def reservation_confirm():
+    return render_template('reservation_confirm.html')
 
 
 @main.route('/logout')

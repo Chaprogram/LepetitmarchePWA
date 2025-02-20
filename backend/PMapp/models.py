@@ -2,13 +2,15 @@ from PMapp import db  # Importer `db` directement depuis `PMapp`
 from flask_login import UserMixin
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 
 
 
 
 class User(db.Model,UserMixin):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
@@ -48,14 +50,17 @@ class Notification(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
 
 class Reservation(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    client_name = db.Column(db.String(100), nullable=False)
-    product_name = db.Column(db.String(100), nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
-    date = db.Column(db.Date, nullable=False)   
+    __tablename__ = 'reservations'
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String(50), nullable=False)
+    last_name = Column(String(50), nullable=False)
+    phone_number = Column(String(20), nullable=False)
+    order_details = Column(String, nullable=False)  # Contient les détails de la commande (produits)
+    reservation_date = Column(DateTime, default=datetime.utcnow)
 
-    def __repr__(self):
-        return f'<Product {self.name}>'
+    # Lien avec un utilisateur (si tu veux associer une réservation à un utilisateur)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User', backref='reservations')
 
 class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
