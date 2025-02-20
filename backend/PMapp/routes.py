@@ -152,51 +152,7 @@ def get_notifications():
     except Exception as e:
         return jsonify({"message": f"Erreur : {str(e)}"}), 500
 
-@main.route("/reservations", methods=["GET"])
-def get_reservations():
-    try:
-        reservations = Reservation.query.all()
-        data = [
-            {
-                "client": res.client_name,
-                "produit": res.product_name,
-                "quantite": res.quantity,
-                "date": res.date.strftime("%Y-%m-%d")
-            }
-            for res in reservations
-        ]
-        return jsonify(data)
-    except Exception as e:
-        return jsonify({"message": f"Erreur : {str(e)}"}), 500
 
-@main.route('/reservation', methods=['GET', 'POST'])
-def reservation():
-    if request.method == 'POST':
-        name = request.form.get('name', 'Client inconnu')
-        email = request.form.get('email')
-        phone = request.form.get('phone')
-
-        commandes = [
-            (key.replace('produit_', ''), int(value))
-            for key, value in request.form.items() if key.startswith('produit_') and int(value) > 0
-        ]
-
-        if not name or not email or not phone:
-            flash("Veuillez remplir tous les champs.", "danger")
-            return redirect(url_for('main.reservation'))
-
-        if not commandes:
-            flash("Veuillez sélectionner au moins un produit.", "warning")
-            return redirect(url_for('main.reservation'))
-
-        socketio.emit('nouvelle_commande', {'name': name, 'email': email, 'phone': phone, 'commandes': commandes}, namespace='/admin')
-
-        session.update({'name': name, 'email': email, 'phone': phone, 'commandes': commandes})
-
-        envoyer_email_admin(name, email, phone, commandes)
-        return redirect(url_for('main.reservation_submit'))
-
-    return render_template('reservation.html')
 
 def envoyer_email_admin(name, email, phone, commandes):
     with main.app_context():
