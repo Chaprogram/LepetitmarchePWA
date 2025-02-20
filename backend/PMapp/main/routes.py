@@ -190,14 +190,14 @@ def reservation():
         db.session.commit()
 
         # Rediriger l'utilisateur vers la page de confirmation ou une autre page
-        return redirect(url_for('main.reservation_confirm'))
+        return redirect(url_for('main.reservation_submit'))
 
     return render_template('reservation.html')
 
 # Optionnel : Route pour afficher une confirmation après la soumission
-@main.route('/reservation_confirm')
+@main.route('/reservation_submit')
 def reservation_confirm():
-    return render_template('reservation_confirm.html')
+    return render_template('reservation_submit.html')
 
 def envoyer_email_admin(name, email, phone, commandes):
     with main.app_context():
