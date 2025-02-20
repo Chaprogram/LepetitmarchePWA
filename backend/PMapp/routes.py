@@ -26,6 +26,37 @@ def menu():
 
 
 
+@main.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+
+        # Vérification des mots de passe
+        if password != confirm_password:
+            flash("Les mots de passe ne correspondent pas.", 'error')
+            return redirect(url_for('main.register'))
+
+        # Vérification que l'email et le nom d'utilisateur sont uniques
+        user_exists = User.query.filter_by(email=email).first()
+        if user_exists:
+            flash("Cet email est déjà utilisé.", 'error')
+            return redirect(url_for('main.register'))
+
+        new_user = User(username=username, email=email)
+        new_user.set_password(password)
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash("Compte créé avec succès ! Vous pouvez maintenant vous connecter.", 'success')
+        return redirect(url_for('main.login'))
+
+    return render_template('register.html')
+
+
 @main.route('/user')
 @login_required
 def user():
