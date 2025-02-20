@@ -30,13 +30,14 @@ header {
     width: 90%;
     max-width: 400px;
     text-align: center;
+    box-sizing: border-box;
 }
 
 /* Champs de formulaire */
 input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
+    width: 90%;           /* ✅ Champs plus petits à l'intérieur du formulaire */
+    padding: 10px;        /* 🟢 Réduit la hauteur des champs */
+    margin: 8px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -47,10 +48,10 @@ button {
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 12px;
-    width: 100%;
+    padding: 10px;
+    width: 90%;          /* ✅ Bouton aligné avec les champs */
     border-radius: 5px;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -109,5 +110,9 @@ footer {
 @media (max-width: 600px) {
     #registration-form {
         width: 95%;
+    }
+
+    input, button {
+        width: 95%;  /* ✅ Meilleure adaptation sur mobile */
     }
 }
