@@ -5,7 +5,7 @@ from flask_mail import Message
 import re  # Pour la validation des emails
 from PMapp import db, socketio, mail
 from PMapp.models import User, Product,Admin,Notification, Reservation
-
+from datetime import datetime 
 
 
 
@@ -162,31 +162,42 @@ def get_reservations():
 @main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
     if request.method == 'POST':
-        name = request.form.get('name', 'Client inconnu')
-        email = request.form.get('email')
-        phone = request.form.get('phone')
+        # Récupérer les données du formulaire
+        first_name = request.form['name']  # Nom
+        email = request.form['email']  # Email
+        phone_number = request.form['phone']  # Numéro de téléphone
+        
+        # Récupérer les quantités des produits
+        order_details = []
+        products = Product.query.all()  # On récupère tous les produits de la base de données
 
-        commandes = [
-            (key.replace('produit_', ''), int(value))
-            for key, value in request.form.items() if key.startswith('produit_') and int(value) > 0
-        ]
+        for product in products:
+            quantity = int(request.form.get(f'quantity_{product.id}', 0))  # Récupérer la quantité pour chaque produit
+            if quantity > 0:
+                order_details.append(f"{quantity} x {product.name}")
+        
+        # Enregistrer la réservation dans la base de données
+        reservation = Reservation(
+            first_name=first_name,
+            last_name=email,  # Associer l'email au nom de famille pour le moment
+            phone_number=phone_number,
+            order_details=", ".join(order_details),  # Les produits commandés
+            reservation_date=datetime.utcnow(),
+            user_id=current_user.id if current_user.is_authenticated else None  # Si l'utilisateur est connecté
+        )
 
-        if not name or not email or not phone:
-            flash("Veuillez remplir tous les champs.", "danger")
-            return redirect(url_for('main.reservation'))
+        db.session.add(reservation)
+        db.session.commit()
 
-        if not commandes:
-            flash("Veuillez sélectionner au moins un produit.", "warning")
-            return redirect(url_for('main.reservation'))
-
-        socketio.emit('nouvelle_commande', {'name': name, 'email': email, 'phone': phone, 'commandes': commandes}, namespace='/admin')
-
-        session.update({'name': name, 'email': email, 'phone': phone, 'commandes': commandes})
-
-        envoyer_email_admin(name, email, phone, commandes)
-        return redirect(url_for('main.reservation_submit'))
+        # Rediriger l'utilisateur vers la page de confirmation ou une autre page
+        return redirect(url_for('main.reservation_confirm'))
 
     return render_template('reservation.html')
+
+# Optionnel : Route pour afficher une confirmation après la soumission
+@main.route('/reservation_confirm')
+def reservation_confirm():
+    return render_template('reservation_confirm.html')
 
 def envoyer_email_admin(name, email, phone, commandes):
     with main.app_context():

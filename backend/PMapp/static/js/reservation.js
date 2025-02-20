@@ -27,3 +27,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+
+document.addEventListener("DOMContentLoaded", function () {
+    const products = document.querySelectorAll(".product");
+    
+    products.forEach(product => {
+        const increaseButton = product.querySelector(".increase");
+        const decreaseButton = product.querySelector(".decrease");
+        const quantityElement = product.querySelector(".quantity");
+        const productId = product.dataset.productId;
+        const hiddenInput = document.getElementById(`quantity_${productId}`);
+        
+        increaseButton.addEventListener("click", function () {
+            let quantity = parseInt(quantityElement.textContent);
+            quantity++;
+            quantityElement.textContent = quantity;
+            hiddenInput.value = quantity;
+        });
+
+        decreaseButton.addEventListener("click", function () {
+            let quantity = parseInt(quantityElement.textContent);
+            if (quantity > 0) {
+                quantity--;
+                quantityElement.textContent = quantity;
+                hiddenInput.value = quantity;
+            }
+        });
+    });
+});
+
