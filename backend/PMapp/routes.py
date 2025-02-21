@@ -125,7 +125,7 @@ def reservation():
         db.session.commit()
 
         # Rediriger l'utilisateur vers la page de confirmation ou une autre page
-        return redirect(url_for('main.reservation_submit'))
+        return redirect(url_for('main.reservation_confirm'))
 
     return render_template('reservation.html')
 
