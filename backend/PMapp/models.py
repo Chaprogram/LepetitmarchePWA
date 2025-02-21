@@ -52,15 +52,16 @@ class Notification(db.Model):
 class Reservation(db.Model):
     __tablename__ = 'reservations'
     id = Column(Integer, primary_key=True)
-    first_name = Column(String(50), nullable=False)
-    last_name = Column(String(50), nullable=False)
+    name = Column(String(50), nullable=False)
     phone_number = Column(String(20), nullable=False)
     order_details = Column(String, nullable=False)  # Contient les détails de la commande (produits)
-    reservation_date = Column(DateTime, default=datetime.utcnow)
+    
 
     # Lien avec un utilisateur (si tu veux associer une réservation à un utilisateur)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', backref='reservations')
+
+
 
 class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
