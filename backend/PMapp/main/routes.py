@@ -143,6 +143,17 @@ def get_notifications():
         return jsonify({"message": f"Erreur : {str(e)}"}), 500
 
 
+def send_confirmation_email(customer_email, first_name, order_details):
+    # Créer le message
+    msg = Message("Confirmation de votre commande",
+                  recipients=[customer_email])
+
+    # Générer un contenu HTML pour l'email (tu peux personnaliser la template)
+    msg.html = render_template('email_reservation.html', name=first_name, order_details=order_details)
+
+    # Envoyer l'email
+    mail.send(msg)
+
 
 @main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
@@ -175,14 +186,18 @@ def reservation():
         db.session.commit()
 
         # Rediriger l'utilisateur vers la page de confirmation ou une autre page
-        return redirect(url_for('main.reservation_confirm'))
+        return redirect(url_for('main.reservation_confirm', name=first_name, email=email, phone=phone_number, commandes=order_details))
 
     return render_template('reservation.html')
 
 # Optionnel : Route pour afficher une confirmation après la soumission
 @main.route('/reservation_submit')
 def reservation_confirm():
-    return render_template('reservation_submit.html')
+     name = request.args.get('name')
+     email = request.args.get('email')
+     phone = request.args.get('phone')
+     commandes = request.args.getlist('commandes') 
+     return render_template('reservation_submit.html')
 
 def envoyer_email_admin(name, email, phone, commandes):
     with main.app_context():
