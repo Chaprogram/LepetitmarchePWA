@@ -196,15 +196,7 @@ def envoyer_email_admin(name, email, phone, commandes):
         except Exception as e:
             print(f"Erreur lors de l'envoi de l'e-mail : {e}")
 
-@main.route('/reservation_submit')
-def reservation_submit():
-    name, email, phone, commandes = session.get('name'), session.get('email'), session.get('phone'), session.get('commandes', [])
 
-    if not name or not email or not phone or not commandes:
-        flash("Informations manquantes pour confirmation.", "danger")
-        return redirect(url_for('main.reservation'))
-
-    return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
 
 
 @main.route('/pains')

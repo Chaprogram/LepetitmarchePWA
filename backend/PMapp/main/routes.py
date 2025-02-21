@@ -142,22 +142,7 @@ def get_notifications():
     except Exception as e:
         return jsonify({"message": f"Erreur : {str(e)}"}), 500
 
-@main.route("/reservations", methods=["GET"])
-def get_reservations():
-    try:
-        reservations = Reservation.query.all()
-        data = [
-            {
-                "client": res.client_name,
-                "produit": res.product_name,
-                "quantite": res.quantity,
-                "date": res.date.strftime("%Y-%m-%d")
-            }
-            for res in reservations
-        ]
-        return jsonify(data)
-    except Exception as e:
-        return jsonify({"message": f"Erreur : {str(e)}"}), 500
+
 
 @main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
