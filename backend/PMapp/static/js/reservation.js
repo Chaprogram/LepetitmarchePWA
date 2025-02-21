@@ -40,3 +40,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+
+
+// static/js/reservation_submit.js
+
+document.addEventListener('DOMContentLoaded', function() {
+    alert('Merci pour votre réservation ! Vous recevrez bientôt un e-mail de confirmation.');
+});

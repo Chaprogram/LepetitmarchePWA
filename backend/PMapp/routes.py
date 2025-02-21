@@ -95,13 +95,13 @@ def login():
 
 
 
-def send_confirmation_email(customer_email, first_name, order_details):
+def send_confirmation_email(customer_email, name, order_details):
     # Créer le message
     msg = Message("Confirmation de votre commande",
                   recipients=[customer_email])
 
     # Générer un contenu HTML pour l'email (tu peux personnaliser la template)
-    msg.html = render_template('email_reservation.html', name=first_name, order_details=order_details)
+    msg.html = render_template('email_reservation.html', name=name, order_details=order_details)
 
     # Envoyer l'email
     mail.send(msg)
@@ -110,7 +110,7 @@ def send_confirmation_email(customer_email, first_name, order_details):
 def reservation():
     if request.method == 'POST':
         # Récupérer les données du formulaire
-        first_name = request.form['name']  # Nom
+        name = request.form['name']  # Nom
         email = request.form['email']  # Email
         phone_number = request.form['phone']  # Numéro de téléphone
         
@@ -125,11 +125,9 @@ def reservation():
         
         # Enregistrer la réservation dans la base de données
         reservation = Reservation(
-            first_name=first_name,
-            last_name=email,  # Associer l'email au nom de famille pour le moment
+            name= name,
             phone_number=phone_number,
             order_details=", ".join(order_details),  # Les produits commandés
-            reservation_date=datetime.utcnow(),
             user_id=current_user.id if current_user.is_authenticated else None  # Si l'utilisateur est connecté
         )
 
@@ -137,7 +135,7 @@ def reservation():
         db.session.commit()
 
         # Rediriger l'utilisateur vers la page de confirmation ou une autre page
-        return redirect(url_for('main.reservation_confirm', name=first_name, email=email, phone=phone_number, commandes=order_details))
+        return redirect(url_for('main.reservation_confirm', name=name, email=email, phone=phone_number, commandes=order_details))
 
     return render_template('reservation.html')
 
