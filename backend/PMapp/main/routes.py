@@ -222,13 +222,27 @@ def reservation():
 
     # Rediriger vers la page de confirmation avec les détails
     return redirect(url_for('main.reservation_submit', 
-        name=name, 
-        email=email, 
-        phone_number=phone_number, 
-        commandes=order_details, 
-        total=total
-    ))
-
+    name=name, 
+    email=email, 
+    phone_number=phone_number, 
+    commandes=','.join(order_details), 
+    total=total
+))  
+# Route pour afficher la page de confirmation de réservation
+@main.route('/reservation_submit')
+def reservation_submit():
+    name = request.args.get('name')
+    email = request.args.get('email')
+    phone_number = request.args.get('phone_number')
+    commandes = request.args.get('commandes')
+    total = request.args.get('total')
+    
+    return render_template('reservation_submit.html', 
+                           name=name, 
+                           email=email, 
+                           phone_number=phone_number, 
+                           commandes=commandes, 
+                           total=total)
 
 
 
