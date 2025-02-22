@@ -102,7 +102,11 @@ def show_reservation_form():
 # Route pour soumettre la réservation (POST)
 @main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
-    # Récupérer les informations du formulaire
+    # Si la méthode est GET, on affiche simplement le formulaire
+    if request.method == 'GET':
+        return render_template('reservation.html')
+
+    # Récupérer les informations du formulaire (pour POST)
     name = request.form.get('name')
     email = request.form.get('email')
     phone_number = request.form.get('phone')
@@ -172,11 +176,6 @@ def reservation():
         commandes=order_details, 
         total=total
     ))
-
-# Cette ligne ne doit pas être ici, elle doit être à la fin du bloc.
-# return render_template('reservation.html')  # Si c'est un GET, affiche le formulaire de réservation
-
-
 
 
 
