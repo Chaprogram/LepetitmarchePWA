@@ -56,6 +56,7 @@ class Reservation(db.Model):
     phone_number = Column(String(20), nullable=False)
     email = Column(String(120), nullable=False)
     order_details = Column(String, nullable=False)  # Contient les détails de la commande (produits)
+    new_column = Column(String(255))
     
 
     # Lien avec un utilisateur (si tu veux associer une réservation à un utilisateur)
