@@ -158,7 +158,7 @@ def send_confirmation_email(customer_email, name, order_details):
 def reservation():
     name = request.form.get('name')
     email = request.form.get('email')
-    phone = request.form.get('phone')
+    phone_number = request.form.get('phone_number')
 
     # ✅ Récupérer les quantités depuis les inputs cachés
     order_details = []  # Correspond aux noms des inputs cachés
@@ -183,7 +183,7 @@ def reservation():
     print("Commande du client :", order_details)
 
     # Ajoute la commande dans la base de données si besoin
-    new_reservation = Reservation(name=name, email=email, phone=phone, order=", ".join(order_details))
+    new_reservation = Reservation(name=name, email=email, phone_number=phone_number, order=", ".join(order_details))
     db.session.add(new_reservation)
     db.session.commit()
 
@@ -196,9 +196,9 @@ def reservation():
 def reservation_confirm():
     name = request.args.get('name')
     email = request.args.get('email')
-    phone = request.args.get('phone')
+    phone_number = request.args.get('phone_number')
     commandes = request.args.get('commandes', '').split(',')  # On divise la chaîne pour recréer la liste
-    return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
+    return render_template('reservation_submit.html', name=name, email=email, phone_number=phone_number, commandes=commandes)
 
 
 
