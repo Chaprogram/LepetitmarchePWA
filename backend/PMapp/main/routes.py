@@ -227,26 +227,7 @@ def reservation():
         total=total
     )
 
-# Route pour afficher la page de confirmation après la réservation
-@main.route('/reservation_submit', methods=['GET', 'POST'])
-def reservation_confirm():
-    if request.method == 'POST':
-        # Récupérer les données du formulaire
-        name = request.form.get('name')
-        email = request.form.get('email')
-        phone = request.form.get('phone')
-        order_details = request.form.getlist('order_details')  # Assure-toi de récupérer les bonnes données
-        
-        # Logique de confirmation ou envoi de mail
 
-        return render_template('reservation_submit.html', 
-                               name=name, 
-                               email=email, 
-                               phone=phone, 
-                               commandes=order_details)
-
-    # Si ce n'est pas un POST, redirige ou affiche un message d'erreur
-    return redirect(url_for('main.reservation_form'))
 
 
 
