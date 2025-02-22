@@ -143,22 +143,17 @@ def get_notifications():
         return jsonify({"message": f"Erreur : {str(e)}"}), 500
 
 
-def send_confirmation_email(customer_email, name, order_details):
-    # Créer le message
-    msg = Message("Confirmation de votre commande",
-                  recipients=[customer_email])
-
-    # Générer un contenu HTML pour l'email (tu peux personnaliser la template)
-    msg.html = render_template('email_reservation.html', name=name, order_details=order_details)
-
-    # Envoyer l'email
-    mail.send(msg)
-
 @main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
+    # Récupérer les informations du formulaire
     name = request.form.get('name')
     email = request.form.get('email')
     phone_number = request.form.get('phone_number')
+
+    # Vérification des champs obligatoires
+    if not name or not email or not phone_number:
+        flash('Veuillez remplir tous les champs obligatoires !', 'error')
+        return redirect(url_for('main.menu'))  # Rediriger vers la page d'accueil ou un formulaire de réservation
 
     # Récupérer les quantités depuis les inputs cachés
     order_details = []  # Correspond aux noms des inputs cachés
@@ -197,16 +192,6 @@ def reservation():
 
     flash('Votre réservation a bien été enregistrée !')
     return redirect(url_for('main.menu'))
-
-# Optionnel : Route pour afficher une confirmation après la soumission
-@main.route('/reservation_submit')
-def reservation_confirm():
-    name = request.args.get('name')
-    email = request.args.get('email')
-    phone_number = request.args.get('phone_number')
-    commandes = request.args.get('commandes', '').split(',')  # On divise la chaîne pour recréer la liste
-    return render_template('reservation_submit.html', name=name, email=email, phone_number=phone_number, commandes=commandes)
-
 
 
 def envoyer_email_admin(name, email, phone, commandes):
