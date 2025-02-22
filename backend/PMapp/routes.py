@@ -146,7 +146,7 @@ def reservation():
     send_confirmation_email(email, name, ", ".join(order_details))
 
     flash('Votre réservation a bien été enregistrée !')
-    return redirect(url_for('main.reservation'))
+    return redirect(url_for('main.reservation_submit'))
 
 
 
