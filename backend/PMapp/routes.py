@@ -6,7 +6,7 @@ import re  # Pour la validation des emails
 from PMapp import db, socketio, mail
 from PMapp.models import User, Product, Admin, Notification, Reservation
 from datetime import datetime
-
+from urllib.parse import quote
 
 
 
@@ -151,7 +151,10 @@ def reservation():
     flash('Votre réservation a bien été enregistrée !')
 
     # Rediriger vers la page de confirmation avec les détails
-    return redirect(url_for('main.reservation_confirm', name=name, email=email, order_details=", ".join(order_details)))
+    return redirect(url_for('main.reservation_confirm', 
+                        name=quote(name), 
+                        email=quote(email), 
+                        order_details=quote(", ".join(order_details))))
 
 
 # Route pour afficher la page de confirmation après la réservation
