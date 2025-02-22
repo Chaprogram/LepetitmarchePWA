@@ -106,42 +106,41 @@ def send_confirmation_email(customer_email, name, order_details):
     # Envoyer l'email
     mail.send(msg)
 
-@main.route('/reservation', methods=['GET', 'POST'])
+@main.route('/reservation', methods=['POST'])
 def reservation():
-    if request.method == 'POST':
-        # Récupérer les données du formulaire
-        name = request.form['name']  # Nom
-        email = request.form['email']  # Email
-        phone_number = request.form['phone']  # Numéro de téléphone
-        
-        # Récupérer les quantités des produits
-        order_details = []
-        products = Product.query.all()  # On récupère tous les produits de la base de données
+    name = request.form.get('name')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
 
-        for product in products:
-            quantity = int(request.form.get(f'quantity_{product.id}', 0))  # Récupérer la quantité pour chaque produit
-            if quantity > 0:
-                order_details.append(f"{quantity} x {product.name}")
-        
-        # Enregistrer la réservation dans la base de données
-        reservation = Reservation(
-            name= name,
-            phone_number=phone_number,
-            order_details=", ".join(order_details),  # Les produits commandés
-            user_id=current_user.id if current_user.is_authenticated else None  # Si l'utilisateur est connecté
-        )
+    # ✅ Récupérer les quantités depuis les inputs cachés
+    order_details = []  # Correspond aux noms des inputs cachés
+    quantities = {
+        "Petit Pain Blanc": int(request.form.get('quantity_petit_pain_blanc', 0)),
+        "Petit Pain Gris": int(request.form.get('quantity_petit_pain_gris', 0)),
+        "Grand Pain Blanc": int(request.form.get('quantity_grand_pain_blanc', 0)),
+        "Grand Pain Gris": int(request.form.get('quantity_grand_pain_gris', 0)),
+        "Baguette": int(request.form.get('quantity_baguette', 0)),
+        "Miche": int(request.form.get('quantity_miche', 0)),
+        "Croissant Nature": int(request.form.get('quantity_croissant_nature', 0)),
+        "Croissant Au Sucre": int(request.form.get('quantity_croissant_au_sucre', 0)),
+        "Pain au Chocolat": int(request.form.get('quantity_pain_au_chocolat', 0))
+    }
 
-        db.session.add(reservation)
-        db.session.commit()
+    # ✅ Ajouter uniquement les produits dont la quantité > 0
+    for product_name, quantity in quantities.items():
+        if quantity > 0:
+            order_details.append(f"{quantity} x {product_name}")
 
-        # Rediriger l'utilisateur vers la page de confirmation ou une autre page
-        return redirect(url_for('main.reservation_confirm', 
-                        name=name, 
-                        email=email, 
-                        phone=phone_number, 
-                        commandes=",".join(order_details)))  # On transforme la liste en une chaîne séparée par ";"
+    # ✅ Affiche la commande dans la console pour vérifier
+    print("Commande du client :", order_details)
 
-    return render_template('reservation.html')
+    # Ajoute la commande dans la base de données si besoin
+    new_reservation = Reservation(name=name, email=email, phone=phone, order=", ".join(order_details))
+    db.session.add(new_reservation)
+    db.session.commit()
+
+    flash('Votre réservation a bien été enregistrée !')
+    return redirect(url_for('main.menu'))
 
 # Optionnel : Route pour afficher une confirmation après la soumission
 @main.route('/reservation_submit')

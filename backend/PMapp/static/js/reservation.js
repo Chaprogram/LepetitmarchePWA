@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const products = document.querySelectorAll(".product");
     const totalPriceElement = document.getElementById("total-price");
 
+    // Fonction pour mettre à jour le total
     function updateTotal() {
         let total = 0;
         products.forEach(p => {
@@ -12,12 +13,12 @@ document.addEventListener("DOMContentLoaded", function () {
         totalPriceElement.textContent = total.toFixed(2) + "€";
     }
 
+    // Gestion des boutons de chaque produit
     products.forEach(product => {
         const increaseButton = product.querySelector(".increase");
         const decreaseButton = product.querySelector(".decrease");
         const quantityElement = product.querySelector(".quantity");
-        const productId = product.dataset.productId; // Récupère l'ID unique du produit
-        const hiddenInput = document.getElementById(`quantity_${productId}`); // Associe l'input caché
+        const hiddenInput = product.querySelector("input[type='hidden']"); // ✅ Récupère l'input caché directement
 
         let quantity = 0;
 
@@ -25,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
         increaseButton.addEventListener("click", function () {
             quantity++;
             quantityElement.textContent = quantity;
-            if (hiddenInput) hiddenInput.value = quantity; // Met à jour l'input caché
+            if (hiddenInput) hiddenInput.value = quantity; // ✅ Met à jour l'input caché
             updateTotal();
         });
 
@@ -34,17 +35,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (quantity > 0) {
                 quantity--;
                 quantityElement.textContent = quantity;
-                if (hiddenInput) hiddenInput.value = quantity;
+                if (hiddenInput) hiddenInput.value = quantity; // ✅ Met à jour l'input caché
                 updateTotal();
             }
         });
     });
-});
-
-
-
-// static/js/reservation_submit.js
-
-document.addEventListener('DOMContentLoaded', function() {
-    alert('Merci pour votre réservation ! Vous recevrez bientôt un e-mail de confirmation.');
 });
