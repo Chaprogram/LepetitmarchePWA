@@ -187,7 +187,7 @@ def reservation():
                         name=name, 
                         email=email, 
                         phone=phone_number, 
-                        commandes=";".join(order_details)))  # On transforme la liste en une chaîne séparée par ";"
+                        commandes=",".join(order_details)))  # On transforme la liste en une chaîne séparée par ";"
 
     return render_template('reservation.html')
 
@@ -197,7 +197,7 @@ def reservation_confirm():
     name = request.args.get('name')
     email = request.args.get('email')
     phone = request.args.get('phone')
-    commandes = request.args.get('commandes', '').split(';')  # On divise la chaîne pour recréer la liste
+    commandes = request.args.get('commandes', '').split(',')  # On divise la chaîne pour recréer la liste
     return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
 
 
