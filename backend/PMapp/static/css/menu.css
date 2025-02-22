@@ -20,8 +20,10 @@ header {
     top: 0;
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap; /* Permet de passer à la ligne sur mobile */
 }
 
+/* Titre principal du header */
 header h1 {
     color: white;
     font-size: 24px;
@@ -31,6 +33,12 @@ header h1 {
 }
 
 /* Boutons connexion et panier */
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
 .auth-buttons button, .header-cart button {
     background-color: white;
     border: none;
@@ -51,6 +59,7 @@ header h1 {
 header img {
     border-radius: 10px;
     transition: transform 0.3s ease;
+    max-width: 100px; /* Taille par défaut */
 }
 
 header img:hover {
@@ -153,6 +162,30 @@ footer {
     .categories-container {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    header h1 {
+        font-size: 22px;
+    }
+
+    header img {
+        max-width: 80px; /* Logo plus petit sur tablette */
+        margin-bottom: 10px;
+    }
+
+    .auth-buttons {
+        order: 1;
+        margin-bottom: 10px;
+    }
+
+    .header-cart {
+        order: 3;
+    }
 }
 
 @media (max-width: 480px) {
@@ -162,5 +195,14 @@ footer {
 
     header h1 {
         font-size: 20px;
+    }
+
+    header img {
+        max-width: 60px; /* Logo encore plus petit sur petit mobile */
+    }
+
+    .auth-buttons button, .header-cart button {
+        font-size: 12px;
+        padding: 6px 10px;
     }
 }
