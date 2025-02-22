@@ -101,7 +101,7 @@ def show_reservation_form():
 
 
 # Route pour soumettre la réservation (POST)
-@main.route('/reservation', methods=['POST'])
+@main.route('/reservation', methods=['GET','POST'])
 def reservation():
     # Récupérer les informations du formulaire
     name = request.form.get('name')
