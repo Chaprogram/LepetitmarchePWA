@@ -94,12 +94,14 @@ def login():
     return render_template('login.html')
 
 
-@main.route('/reservation')
+# Route pour afficher le formulaire de réservation
+@main.route('/reservation_form')
 def show_reservation_form():
     return render_template('reservation.html')
 
 
-@main.route('/reservation', methods=['GET', 'POST'])
+# Route pour soumettre la réservation (POST)
+@main.route('/reservation', methods=['POST'])
 def reservation():
     # Récupérer les informations du formulaire
     name = request.form.get('name')
@@ -147,10 +149,12 @@ def reservation():
     send_confirmation_email(email, name, ", ".join(order_details))
 
     flash('Votre réservation a bien été enregistrée !')
+
     # Rediriger vers la page de confirmation avec les détails
     return redirect(url_for('main.reservation_confirm', name=name, email=email, order_details=", ".join(order_details)))
 
 
+# Route pour afficher la page de confirmation après la réservation
 @main.route('/reservation_submit')
 def reservation_confirm():
     name = request.args.get('name')
@@ -158,8 +162,6 @@ def reservation_confirm():
     order_details = request.args.get('order_details', '').split(',')  # Diviser la chaîne pour recréer la liste
 
     return render_template('reservation_submit.html', name=name, email=email, order_details=order_details)
-
-
 
 
 
