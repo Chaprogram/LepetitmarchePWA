@@ -154,7 +154,7 @@ def send_confirmation_email(customer_email, name, order_details):
     # Envoyer l'email
     mail.send(msg)
 
-@main.route('/reservation', methods=['POST'])
+@main.route('/reservation', methods=['GET','POST'])
 def reservation():
     name = request.form.get('name')
     email = request.form.get('email')
