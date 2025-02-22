@@ -110,7 +110,7 @@ def send_confirmation_email(customer_email, name, order_details):
 def reservation():
     name = request.form.get('name')
     email = request.form.get('email')
-    phone = request.form.get('phone')
+    phone_number = request.form.get('phone_number')
 
     # ✅ Récupérer les quantités depuis les inputs cachés
     order_details = []  # Correspond aux noms des inputs cachés
@@ -135,7 +135,7 @@ def reservation():
     print("Commande du client :", order_details)
 
     # Ajoute la commande dans la base de données si besoin
-    new_reservation = Reservation(name=name, email=email, phone=phone, order=", ".join(order_details))
+    new_reservation = Reservation(name=name, email=email, phone_number=phone_number, order=", ".join(order_details))
     db.session.add(new_reservation)
     db.session.commit()
 
