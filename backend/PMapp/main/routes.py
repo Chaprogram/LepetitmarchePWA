@@ -144,11 +144,6 @@ def get_notifications():
         return jsonify({"message": f"Erreur : {str(e)}"}), 500
 
 
-@main.route('/reservation')
-def show_reservation_form():
-    return render_template('reservation.html')
-
-
 @main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
     # Récupérer les informations du formulaire
@@ -159,7 +154,7 @@ def reservation():
     # Vérification des champs obligatoires
     if not name or not email or not phone_number:
         flash('Veuillez remplir tous les champs obligatoires !', 'error')
-        return redirect(url_for('main.show_reservation_form'))  # Rediriger vers la page d'accueil ou un formulaire de réservation
+        return redirect(url_for('main.show_reservation_form'))  # Rediriger vers le formulaire de réservation
 
     # Récupérer les quantités depuis les inputs cachés
     order_details = []  # Correspond aux noms des inputs cachés
@@ -197,7 +192,18 @@ def reservation():
     send_confirmation_email(email, name, ", ".join(order_details))
 
     flash('Votre réservation a bien été enregistrée !')
-    return redirect(url_for('main.reservation_submit'))
+    # Rediriger vers la page de confirmation avec les détails
+    return redirect(url_for('main.reservation_submit', name=name, email=email, order_details=", ".join(order_details)))
+
+
+@main.route('/reservation_submit')
+def reservation_confirm():
+    name = request.args.get('name')
+    email = request.args.get('email')
+    order_details = request.args.get('order_details', '').split(',')  # Diviser la chaîne pour recréer la liste
+
+    return render_template('reservation_submit.html', name=name, email=email, order_details=order_details)
+
 
 
 def envoyer_email_admin(name, email, phone, commandes):
