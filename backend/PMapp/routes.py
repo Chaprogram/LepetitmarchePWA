@@ -93,6 +93,12 @@ def login():
         
     return render_template('login.html')
 
+
+@main.route('/reservation')
+def show_reservation_form():
+    return render_template('reservation.html')
+
+
 @main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
     # Récupérer les informations du formulaire
