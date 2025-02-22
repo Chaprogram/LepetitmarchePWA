@@ -151,7 +151,7 @@ def reservation():
     flash('Votre réservation a bien été enregistrée !')
 
     # Rediriger vers la page de confirmation avec les détails
-    return redirect(url_for('main.reservation_confirm', 
+    return redirect(url_for('main.reservation_ok', 
                         name=quote(name), 
                         email=quote(email), 
                         order_details=quote(", ".join(order_details))))
@@ -159,7 +159,7 @@ def reservation():
 
 # Route pour afficher la page de confirmation après la réservation
 @main.route('/reservation_submit',methods=['GET', 'POST'])
-def reservation_confirm():
+def reservation_ok():
     name = request.args.get('name')
     email = request.args.get('email')
     order_details = request.args.get('order_details', '').split(',')  # Diviser la chaîne pour recréer la liste
