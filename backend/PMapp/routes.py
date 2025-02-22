@@ -105,7 +105,7 @@ def reservation():
     # Vérification des champs obligatoires
     if not name or not email or not phone_number:
         flash('Veuillez remplir tous les champs obligatoires !', 'error')
-        return redirect(url_for('main.menu'))  # Rediriger vers la page d'accueil ou un formulaire de réservation
+        return redirect(url_for('main.reservation'))  # Rediriger vers la page d'accueil ou un formulaire de réservation
 
     # Récupérer les quantités depuis les inputs cachés
     order_details = []  # Correspond aux noms des inputs cachés
@@ -143,7 +143,7 @@ def reservation():
     send_confirmation_email(email, name, ", ".join(order_details))
 
     flash('Votre réservation a bien été enregistrée !')
-    return redirect(url_for('main.menu'))
+    return redirect(url_for('main.reservation'))
 
 
 
