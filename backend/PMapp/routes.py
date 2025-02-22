@@ -94,6 +94,10 @@ def login():
     return render_template('login.html')
 
 
+# Route pour afficher le formulaire de réservation
+@main.route('/reservation_form', methods=['GET'])
+def show_reservation_form():
+    return render_template('reservation.html')
 
 # Route pour soumettre la réservation (POST)
 @main.route('/reservation', methods=['GET', 'POST'])
@@ -161,14 +165,17 @@ def reservation():
     flash('Votre réservation a bien été enregistrée !')
 
     # Rediriger vers la page de confirmation avec les détails
-    return render_template(
-        'reservation_submit.html', 
+    return redirect(url_for('main.reservation_submit', 
         name=name, 
         email=email, 
         phone_number=phone_number, 
         commandes=order_details, 
         total=total
-    )
+    ))
+
+# Cette ligne ne doit pas être ici, elle doit être à la fin du bloc.
+# return render_template('reservation.html')  # Si c'est un GET, affiche le formulaire de réservation
+
 
 
 
