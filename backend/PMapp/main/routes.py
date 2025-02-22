@@ -183,7 +183,11 @@ def reservation():
         db.session.commit()
 
         # Rediriger l'utilisateur vers la page de confirmation ou une autre page
-        return redirect(url_for('main.reservation_confirm', name=name, email=email, phone=phone_number, commandes=order_details))
+        return redirect(url_for('main.reservation_confirm', 
+                        name=name, 
+                        email=email, 
+                        phone=phone_number, 
+                        commandes=";".join(order_details)))  # On transforme la liste en une chaîne séparée par ";"
 
     return render_template('reservation.html')
 
@@ -193,9 +197,8 @@ def reservation_confirm():
     name = request.args.get('name')
     email = request.args.get('email')
     phone = request.args.get('phone')
-    commandes = request.args.getlist('commandes') 
-    return render_template('reservation_submit.html')
-
+    commandes = request.args.get('commandes', '').split(';')  # On divise la chaîne pour recréer la liste
+    return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
 
 
 
