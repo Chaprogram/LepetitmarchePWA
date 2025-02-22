@@ -106,13 +106,13 @@ def send_confirmation_email(customer_email, name, order_details):
     # Envoyer l'email
     mail.send(msg)
 
-@main.route('/reservation', methods=['GET','POST'])
+@main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
     name = request.form.get('name')
     email = request.form.get('email')
     phone_number = request.form.get('phone_number')
 
-    # ✅ Récupérer les quantités depuis les inputs cachés
+    # Récupérer les quantités depuis les inputs cachés
     order_details = []  # Correspond aux noms des inputs cachés
     quantities = {
         "Petit Pain Blanc": int(request.form.get('quantity_petit_pain_blanc', 0)),
@@ -126,18 +126,26 @@ def reservation():
         "Pain au Chocolat": int(request.form.get('quantity_pain_au_chocolat', 0))
     }
 
-    # ✅ Ajouter uniquement les produits dont la quantité > 0
+    # Ajouter uniquement les produits dont la quantité > 0
     for product_name, quantity in quantities.items():
         if quantity > 0:
             order_details.append(f"{quantity} x {product_name}")
 
-    # ✅ Affiche la commande dans la console pour vérifier
+    # Afficher la commande dans la console pour vérifier
     print("Commande du client :", order_details)
 
-    # Ajoute la commande dans la base de données si besoin
-    new_reservation = Reservation(name=name, email=email, phone_number=phone_number, order=", ".join(order_details))
+    # Ajouter la commande dans la base de données
+    new_reservation = Reservation(
+        name=name,
+        email=email,
+        phone_number=phone_number,
+        order_details=", ".join(order_details)  # Convertir la liste en chaîne
+    )
     db.session.add(new_reservation)
     db.session.commit()
+
+    # Envoyer l'email de confirmation
+    send_confirmation_email(email, name, ", ".join(order_details))
 
     flash('Votre réservation a bien été enregistrée !')
     return redirect(url_for('main.menu'))
@@ -147,9 +155,12 @@ def reservation():
 def reservation_confirm():
     name = request.args.get('name')
     email = request.args.get('email')
-    phone = request.args.get('phone')
+    phone_number = request.args.get('phone_number')
     commandes = request.args.get('commandes', '').split(',')  # On divise la chaîne pour recréer la liste
-    return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
+    return render_template('reservation_submit.html', name=name, email=email, phone_number=phone_number, commandes=commandes)
+
+
+
 
 
 
