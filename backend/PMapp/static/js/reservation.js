@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const decreaseButton = product.querySelector(".decrease");
         const quantityElement = product.querySelector(".quantity");
         const hiddenInput = product.querySelector("input[type='hidden']"); // ✅ Récupère l'input caché directement
-
+        const pricePerUnit = parseFloat(product.getAttribute("data-price"));
         let quantity = 0;
 
         // ➕ Augmenter la quantité

@@ -153,12 +153,12 @@ def show_reservation_form():
 
 
 # Route pour soumettre la réservation (POST)
-@main.route('/reservation', methods=['GET','POST'])
+@main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
     # Récupérer les informations du formulaire
     name = request.form.get('name')
     email = request.form.get('email')
-    phone_number = request.form.get('phone_number')
+    phone_number = request.form.get('phone')
 
     # Vérification des champs obligatoires
     if not name or not email or not phone_number:
@@ -166,7 +166,6 @@ def reservation():
         return redirect(url_for('main.show_reservation_form'))  # Rediriger vers le formulaire de réservation
 
     # Récupérer les quantités depuis les inputs cachés
-    order_details = []  # Correspond aux noms des inputs cachés
     quantities = {
         "Petit Pain Blanc": int(request.form.get('quantity_petit_pain_blanc', 0)),
         "Petit Pain Gris": int(request.form.get('quantity_petit_pain_gris', 0)),
@@ -180,9 +179,25 @@ def reservation():
     }
 
     # Ajouter uniquement les produits dont la quantité > 0
+    order_details = []
+    total = 0  # Variable pour calculer le total de la commande
+
     for product_name, quantity in quantities.items():
         if quantity > 0:
             order_details.append(f"{quantity} x {product_name}")
+            # Calculer le total (ajuster le prix selon le produit)
+            product_prices = {
+                "Petit Pain Blanc": 2.10,
+                "Petit Pain Gris": 2.10,
+                "Grand Pain Blanc": 2.90,
+                "Grand Pain Gris": 2.90,
+                "Baguette": 1.90,
+                "Miche": 1.50,
+                "Croissant Nature": 1.50,
+                "Croissant Au Sucre": 1.70,
+                "Pain au Chocolat": 1.70
+            }
+            total += quantity * product_prices[product_name]
 
     # Afficher la commande dans la console pour vérifier
     print("Commande du client :", order_details)
@@ -203,10 +218,14 @@ def reservation():
     flash('Votre réservation a bien été enregistrée !')
 
     # Rediriger vers la page de confirmation avec les détails
-    return redirect(url_for('main.reservation_ok', 
-                        name=quote(name), 
-                        email=quote(email), 
-                        order_details=quote(", ".join(order_details))))
+    return render_template(
+        'reservation_submit.html', 
+        name=name, 
+        email=email, 
+        phone_number=phone_number, 
+        commandes=order_details, 
+        total=total
+    )
 
 # Route pour afficher la page de confirmation après la réservation
 @main.route('/reservation_submit', methods=['GET', 'POST'])
