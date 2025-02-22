@@ -99,9 +99,6 @@ def login():
 def show_reservation_form():
     return render_template('reservation.html')
 
-
-
-
 # Route pour soumettre la réservation (POST)
 @main.route('/reservation', methods=['GET','POST'])
 def reservation():
@@ -162,17 +159,23 @@ def reservation():
 # Route pour afficher la page de confirmation après la réservation
 @main.route('/reservation_submit', methods=['GET', 'POST'])
 def reservation_confirm():
-    name = request.args.get('name')
-    email = request.args.get('email')
-    phone = request.args.get('phone')  # Ajoute la variable phone
-    order_details = request.args.get('order_details', '').split(',')  # Divise la chaîne pour recréer la liste
+    if request.method == 'POST':
+        # Récupérer les données du formulaire
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        order_details = request.form.getlist('order_details')  # Assure-toi de récupérer les bonnes données
+        
+        # Logique de confirmation ou envoi de mail
 
-    return render_template('reservation_submit.html', 
-                           name=name, 
-                           email=email, 
-                           phone=phone,  # Passe la variable phone au modèle
-                           commandes=order_details)  # Passe les détails de la commande
+        return render_template('reservation_submit.html', 
+                               name=name, 
+                               email=email, 
+                               phone=phone, 
+                               commandes=order_details)
 
+    # Si ce n'est pas un POST, redirige ou affiche un message d'erreur
+    return redirect(url_for('main.reservation_form'))
 
 
 
