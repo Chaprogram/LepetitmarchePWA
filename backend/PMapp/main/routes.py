@@ -145,11 +145,6 @@ def get_notifications():
         return jsonify({"message": f"Erreur : {str(e)}"}), 500
 
 
-# Route pour afficher le formulaire de réservation
-@main.route('/reservation_form', methods=['GET'])
-def show_reservation_form():
-    return render_template('reservation.html')
-
 
 
 # Route pour soumettre la réservation (POST)
@@ -163,7 +158,7 @@ def reservation():
     # Vérification des champs obligatoires
     if not name or not email or not phone_number:
         flash('Veuillez remplir tous les champs obligatoires !', 'error')
-        return redirect(url_for('main.show_reservation_form'))  # Rediriger vers le formulaire de réservation
+        return redirect(url_for('main.reservation'))  # Rediriger vers le formulaire de réservation
 
     # Récupérer les quantités depuis les inputs cachés
     quantities = {
