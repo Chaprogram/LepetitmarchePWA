@@ -54,6 +54,7 @@ class Reservation(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     phone_number = Column(String(20), nullable=False)
+    email = Column(String(120), nullable=False)
     order_details = Column(String, nullable=False)  # Contient les détails de la commande (produits)
     
 
