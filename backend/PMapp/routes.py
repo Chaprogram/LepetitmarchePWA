@@ -158,7 +158,7 @@ def reservation():
 
 
 # Route pour afficher la page de confirmation après la réservation
-@main.route('/reservation_submit')
+@main.route('/reservation_submit',methods=['GET', 'POST'])
 def reservation_confirm():
     name = request.args.get('name')
     email = request.args.get('email')
