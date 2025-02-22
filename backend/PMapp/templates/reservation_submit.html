@@ -19,10 +19,11 @@
     <section class="order-summary">
         <h2>Récapitulatif de votre commande :</h2>
         <ul>
-            {% for produit, quantite in commandes %}
-                <li>{{ quantite }} x {{ produit }}</li>
+            {% for commande in commandes %}
+                <li>{{ commande }}</li>
             {% endfor %}
         </ul>
+        
     </section>
 
     <div class="button-container">
