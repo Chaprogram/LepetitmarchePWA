@@ -95,13 +95,13 @@ def login():
 
 
 # Route pour afficher le formulaire de réservation
-@main.route('/reservation_form')
+@main.route('/reservation_form',methods=['GET'])
 def show_reservation_form():
     return render_template('reservation.html')
 
 
 # Route pour soumettre la réservation (POST)
-@main.route('/reservation', methods=['GET','POST'])
+@main.route('/reservation', methods=['POST'])
 def reservation():
     # Récupérer les informations du formulaire
     name = request.form.get('name')
