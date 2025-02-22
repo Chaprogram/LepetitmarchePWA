@@ -63,6 +63,10 @@ def login():
         
     return render_template('login.html')
 
+@main.route('/reservation')
+def show_reservation_form():
+    return render_template('reservation.html')
+
 
 
 @main.route('/register', methods=['GET', 'POST'])
@@ -76,7 +80,7 @@ def register():
         # Vérification des mots de passe
         if password != confirm_password:
             flash("Les mots de passe ne correspondent pas.", 'error')
-            return redirect(url_for('main.register'))
+            return redirect(url_for('main.show_reservation_form'))
 
         # Vérification que l'email et le nom d'utilisateur sont uniques
         user_exists = User.query.filter_by(email=email).first()
