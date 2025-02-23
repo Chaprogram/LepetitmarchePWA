@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, session,jsonify, current_app
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session,jsonify, current_app,render_template_string
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
@@ -186,9 +186,13 @@ def reservation():
 
             # Envoi de l'e-mail de confirmation
             try:
+                # Charger le template HTML pour l'email
+                html_content = render_template_string(
+                      render_template('email_reservation.html', name=name, commandes=commandes)
+                )
                 msg = Message(
                     'Confirmation de votre commande - Le Petit Marché',
-                    sender='noreply@lepetitmarche.com',  # Remplace avec l'adresse de ton expéditeur
+                    sender='charlinec03@gmail.com',  # Remplace avec l'adresse de ton expéditeur
                     recipients=[email]
                 )
                 msg.body = f"Bonjour {name},\n\nMerci pour votre commande !\n\nDétails de votre commande :\n" + "\n".join(commandes)
