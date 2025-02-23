@@ -132,7 +132,7 @@ def reservation():
             db.session.commit()
 
             # Redirection vers la page de confirmation
-            return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
+            return redirect (url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=commandes))
 
         except Exception as e:
             db.session.rollback()
@@ -141,6 +141,15 @@ def reservation():
             return redirect(url_for('main.reservation'))
 
     return render_template('reservation.html')
+
+@main.route('/reservation_submit')
+def reservation_submit():
+    name = request.args.get('name')
+    email = request.args.get('email')
+    phone = request.args.get('phone')
+    commandes = request.args.get('commandes', '').split('|')
+    
+    return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
 
 
 @main.route('/logout')
