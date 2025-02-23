@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, session,jsonify
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session,jsonify,current_app
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
@@ -132,7 +132,17 @@ def reservation():
             db.session.commit()
 
             # Envoi de l'e-mail de confirmation
-            
+            try:
+                msg = Message(
+                    'Confirmation de votre commande - Le Petit Marché',
+                    sender='noreply@lepetitmarche.com',  # Remplace avec l'adresse de ton expéditeur
+                    recipients=[email]
+                )
+                msg.body = f"Bonjour {name},\n\nMerci pour votre commande !\n\nDétails de votre commande :\n" + "\n".join(commandes)
+                mail.send(msg)  # Envoie l'email
+            except Exception as e:
+                print(f"Erreur lors de l'envoi de l'e-mail : {e}")
+                flash("Une erreur s'est produite lors de l'envoi de l'e-mail de confirmation.", "warning")
 
             # Redirection vers la page de confirmation
             return redirect(url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=", ".join(commandes)))
