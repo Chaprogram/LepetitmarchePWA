@@ -94,38 +94,53 @@ def login():
     return render_template('login.html')
 
 
-@main.route('/reservation', methods=['GET','POST'])
+@main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
     if request.method == 'POST':
-        # Récupérer les données du formulaire
-        name = request.form.get('name')
-        email = request.form.get('email')
-        phone = request.form.get('phone')
+        try:
+            name = request.form.get('name')
+            email = request.form.get('email')
+            phone = request.form.get('phone')
 
-        # Liste des produits
-        produits = {
-            'Petit Pain Blanc': request.form.get('quantity_petit_pain_blanc', type=int),
-            'Petit Pain Gris': request.form.get('quantity_petit_pain_gris', type=int),
-            'Grand Pain Blanc': request.form.get('quantity_grand_pain_blanc', type=int),
-            'Grand Pain Gris': request.form.get('quantity_grand_pain_gris', type=int),
-            'Baguette': request.form.get('quantity_baguette', type=int),
-            'Miche': request.form.get('quantity_miche', type=int),
-            'Croissant Nature': request.form.get('quantity_croissant_nature', type=int),
-            'Croissant Au Sucre': request.form.get('quantity_croissant_au_sucre', type=int),
-            'Pain au Chocolat': request.form.get('quantity_pain_au_chocolat', type=int)
-        }
+            # Construction de la liste des commandes
+            produits = {
+                "Petit Pain Blanc": "quantity_petit_pain_blanc",
+                "Petit Pain Gris": "quantity_petit_pain_gris",
+                "Grand Pain Blanc": "quantity_grand_pain_blanc",
+                "Grand Pain Gris": "quantity_grand_pain_gris",
+                "Baguette": "quantity_baguette",
+                "Miche": "quantity_miche",
+                "Croissant Nature": "quantity_croissant_nature",
+                "Croissant Au Sucre": "quantity_croissant_au_sucre",
+                "Pain au Chocolat": "quantity_pain_au_chocolat"
+            }
 
-        # Filtrer pour ne garder que les produits commandés (> 0)
-        commandes = [f"{quantite} x {produit}" for produit, quantite in produits.items() if quantite > 0]
+            commandes = []
+            for nom_produit, champ in produits.items():
+                quantite = int(request.form.get(champ, 0))
+                if quantite > 0:
+                    commandes.append(f"{quantite} x {nom_produit}")
 
-        # Vérifier si au moins un produit a été commandé
-        if not commandes:
-            flash("Veuillez sélectionner au moins un produit avant de valider la commande.")
+            # Sauvegarde dans la base de données
+            new_reservation = Reservation(
+                name=name,
+                email=email,
+                phone_number=phone,
+                order_details=", ".join(commandes)  # Stocke sous forme de chaîne
+            )
+            db.session.add(new_reservation)
+            db.session.commit()
+
+            # Redirection vers la page de confirmation
+            return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
+
+        except Exception as e:
+            db.session.rollback()
+            print(str(e))
+            flash("Une erreur s'est produite. Veuillez réessayer.", "danger")
             return redirect(url_for('main.reservation'))
 
-        # Redirection vers la page de confirmation
-        return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
-
+    return render_template('reservation.html')
 
 
 @main.route('/logout')
