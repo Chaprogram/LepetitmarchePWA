@@ -144,7 +144,7 @@ def get_notifications():
     except Exception as e:
         return jsonify({"message": f"Erreur : {str(e)}"}), 500
 
-@main.route('/reservation', methods=['POST'])
+@main.route('/reservation', methods=['GET','POST'])
 def reservation():
     if request.method == 'POST':
         # Récupérer les données du formulaire
