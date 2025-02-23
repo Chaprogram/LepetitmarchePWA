@@ -187,7 +187,7 @@ def reservation():
             mail.send(msg)  # Envoi de l'e-mail
 
             # Redirection vers la page de confirmation
-            return redirect(url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=commandes))
+            return redirect(url_for('main.email_reservation', name=name, email=email, phone=phone, commandes=", ".join(commandes)))
 
         except Exception as e:
             db.session.rollback()
@@ -206,6 +206,20 @@ def reservation_submit():
     
     return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
 
+
+@main.route('/email_reservation/<name>/<email>/<phone>/<commandes>', methods=['GET'])
+def email_reservation(name, email, phone, commandes):
+    try:
+        # Construction du message à envoyer
+        msg = Message('Confirmation de votre commande - Le Petit Marché', recipients=[email])
+        msg.html = render_template('email_reservation.html', name=name, email=email, phone=phone, commandes=commandes)
+        
+        # Envoi de l'e-mail
+        mail.send(msg)
+        return "E-mail envoyé avec succès !", 200
+    except Exception as e:
+        print(str(e))
+        return "Une erreur s'est produite lors de l'envoi de l'e-mail", 500
 
 
 def envoyer_email_admin(name, email, phone, commandes):
