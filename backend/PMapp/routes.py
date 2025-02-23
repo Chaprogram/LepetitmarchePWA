@@ -126,15 +126,15 @@ def reservation():
                 name=name,
                 email=email,
                 phone_number=phone,
-                order_details=", ".join(commandes)
+                order_details=", ".join(commandes)  # Stocke sous forme de chaîne
             )
             db.session.add(new_reservation)
             db.session.commit()
 
-            # ✅ Envoi de l'e-mail de confirmation
+            # Envoi de l'e-mail de confirmation
             msg = Message('Confirmation de votre commande - Le Petit Marché', recipients=[email])
             msg.html = render_template('email_reservation.html', name=name, email=email, phone=phone, commandes=commandes)
-            mail.send(msg)
+            mail.send(msg)  # Envoi de l'e-mail
 
             # Redirection vers la page de confirmation
             return redirect(url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=commandes))
@@ -146,6 +146,7 @@ def reservation():
             return redirect(url_for('main.reservation'))
 
     return render_template('reservation.html')
+
 
 @main.route('/reservation_submit')
 def reservation_submit():
