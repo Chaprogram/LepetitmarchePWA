@@ -132,9 +132,7 @@ def reservation():
             db.session.commit()
 
             # Envoi de l'e-mail de confirmation
-            msg = Message('Confirmation de votre commande - Le Petit Marché', recipients=[email])
-            msg.html = render_template('email_reservation.html', name=name, email=email, phone=phone, commandes=commandes)
-            mail.send(msg)  # Envoi de l'e-mail
+            
 
             # Redirection vers la page de confirmation
             return redirect(url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=", ".join(commandes)))
