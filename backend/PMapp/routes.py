@@ -126,13 +126,18 @@ def reservation():
                 name=name,
                 email=email,
                 phone_number=phone,
-                order_details=", ".join(commandes)  # Stocke sous forme de chaîne
+                order_details=", ".join(commandes)
             )
             db.session.add(new_reservation)
             db.session.commit()
 
+            # ✅ Envoi de l'e-mail de confirmation
+            msg = Message('Confirmation de votre commande - Le Petit Marché', recipients=[email])
+            msg.html = render_template('email_reservation.html', name=name, email=email, phone=phone, commandes=commandes)
+            mail.send(msg)
+
             # Redirection vers la page de confirmation
-            return redirect (url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=commandes))
+            return redirect(url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=commandes))
 
         except Exception as e:
             db.session.rollback()

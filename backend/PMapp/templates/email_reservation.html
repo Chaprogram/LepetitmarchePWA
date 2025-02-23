@@ -1,30 +1,23 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation de Commande</title>
+    <title>Confirmation de commande</title>
 </head>
+<body style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+    <h1 style="color: #4CAF50;">Merci pour votre commande, {{ name }} !</h1>
+    <p>Nous avons bien reçu votre commande. Voici le récapitulatif :</p>
 
-<body>
-
-    <h1>Merci pour votre commande, {{ name }} !</h1>
-    <p>Nous avons bien reçu votre commande et elle est en cours de préparation.</p>
-    
-    <h2>Détails de votre commande :</h2>
     <ul>
-        {% for produit, quantite in order_details %}
-            <li>{{ quantite }} x {{ produit }}</li>
+        {% for commande in commandes %}
+            <li>{{ commande }}</li>
         {% endfor %}
     </ul>
 
-    <p>Vous recevrez une autre notification lorsque votre commande sera prête à être retirée.</p>
+    <p>📞 Téléphone : {{ phone }}</p>
+    <p>📧 Email : {{ email }}</p>
 
-    <footer>
-        <p>Le Petit Marché - Merci de nous avoir choisis !</p>
-    </footer>
-
+    <p>À bientôt !<br>L'équipe du Petit Marché</p>
 </body>
-
 </html>
+
