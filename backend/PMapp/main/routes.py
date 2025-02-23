@@ -144,106 +144,37 @@ def get_notifications():
     except Exception as e:
         return jsonify({"message": f"Erreur : {str(e)}"}), 500
 
-
-# Route pour afficher le formulaire de réservation
-# Route pour afficher le formulaire de réservation
-@main.route('/reservation_form', methods=['GET'])
-def show_reservation_form():
-    return render_template('reservation.html')
-
-# Route pour soumettre la réservation (POST)
-@main.route('/reservation', methods=['GET', 'POST'])
+@main.route('/reservation', methods=['POST'])
 def reservation():
-    # Si la méthode est GET, on affiche simplement le formulaire
-    if request.method == 'GET':
-        return render_template('reservation.html')
+    if request.method == 'POST':
+        # Récupérer les données du formulaire
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
 
-    # Récupérer les informations du formulaire (pour POST)
-    name = request.form.get('name')
-    email = request.form.get('email')
-    phone_number = request.form.get('phone')
+        # Liste des produits
+        produits = {
+            'Petit Pain Blanc': request.form.get('quantity_petit_pain_blanc', type=int),
+            'Petit Pain Gris': request.form.get('quantity_petit_pain_gris', type=int),
+            'Grand Pain Blanc': request.form.get('quantity_grand_pain_blanc', type=int),
+            'Grand Pain Gris': request.form.get('quantity_grand_pain_gris', type=int),
+            'Baguette': request.form.get('quantity_baguette', type=int),
+            'Miche': request.form.get('quantity_miche', type=int),
+            'Croissant Nature': request.form.get('quantity_croissant_nature', type=int),
+            'Croissant Au Sucre': request.form.get('quantity_croissant_au_sucre', type=int),
+            'Pain au Chocolat': request.form.get('quantity_pain_au_chocolat', type=int)
+        }
 
-    # Vérification des champs obligatoires
-    if not name or not email or not phone_number:
-        flash('Veuillez remplir tous les champs obligatoires !', 'error')
-        return redirect(url_for('main.reservation'))  # Rediriger vers le formulaire de réservation
+        # Filtrer pour ne garder que les produits commandés (> 0)
+        commandes = [f"{quantite} x {produit}" for produit, quantite in produits.items() if quantite > 0]
 
-    # Récupérer les quantités depuis les inputs cachés
-    quantities = {
-        "Petit Pain Blanc": int(request.form.get('quantity_petit_pain_blanc', 0)),
-        "Petit Pain Gris": int(request.form.get('quantity_petit_pain_gris', 0)),
-        "Grand Pain Blanc": int(request.form.get('quantity_grand_pain_blanc', 0)),
-        "Grand Pain Gris": int(request.form.get('quantity_grand_pain_gris', 0)),
-        "Baguette": int(request.form.get('quantity_baguette', 0)),
-        "Miche": int(request.form.get('quantity_miche', 0)),
-        "Croissant Nature": int(request.form.get('quantity_croissant_nature', 0)),
-        "Croissant Au Sucre": int(request.form.get('quantity_croissant_au_sucre', 0)),
-        "Pain au Chocolat": int(request.form.get('quantity_pain_au_chocolat', 0))
-    }
+        # Vérifier si au moins un produit a été commandé
+        if not commandes:
+            flash("Veuillez sélectionner au moins un produit avant de valider la commande.")
+            return redirect(url_for('main.reservation'))
 
-    # Ajouter uniquement les produits dont la quantité > 0
-    order_details = []
-    total = 0  # Variable pour calculer le total de la commande
-
-    for product_name, quantity in quantities.items():
-        if quantity > 0:
-            order_details.append(f"{quantity} x {product_name}")
-            # Calculer le total (ajuster le prix selon le produit)
-            product_prices = {
-                "Petit Pain Blanc": 2.10,
-                "Petit Pain Gris": 2.10,
-                "Grand Pain Blanc": 2.90,
-                "Grand Pain Gris": 2.90,
-                "Baguette": 1.90,
-                "Miche": 1.50,
-                "Croissant Nature": 1.50,
-                "Croissant Au Sucre": 1.70,
-                "Pain au Chocolat": 1.70
-            }
-            total += quantity * product_prices[product_name]
-
-    # Afficher la commande dans la console pour vérifier
-    print("Commande du client :", order_details)
-
-    # Ajouter la commande dans la base de données
-    new_reservation = Reservation(
-        name=name,
-        email=email,
-        phone_number=phone_number,
-        order_details=", ".join(order_details)  # Convertir la liste en chaîne
-    )
-    db.session.add(new_reservation)
-    db.session.commit()
-
-    # Envoyer l'email de confirmation
-    send_confirmation_email(email, name, ", ".join(order_details))
-
-    flash('Votre réservation a bien été enregistrée !')
-
-    # Rediriger vers la page de confirmation avec les détails
-    return redirect(url_for('main.reservation_submit', 
-    name=name, 
-    email=email, 
-    phone_number=phone_number, 
-    commandes=','.join(order_details), 
-    total=total
-))  
-# Route pour afficher la page de confirmation de réservation
-@main.route('/reservation_submit')
-def reservation_submit():
-    name = request.args.get('name')
-    email = request.args.get('email')
-    phone_number = request.args.get('phone_number')
-    commandes = request.args.get('commandes')
-    total = request.args.get('total')
-    
-    return render_template('reservation_submit.html', 
-                           name=name, 
-                           email=email, 
-                           phone_number=phone_number, 
-                           commandes=commandes, 
-                           total=total)
-
+        # Redirection vers la page de confirmation
+        return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
 
 
 
