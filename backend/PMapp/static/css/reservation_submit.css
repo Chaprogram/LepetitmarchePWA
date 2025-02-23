@@ -1,0 +1,66 @@
+/* reservation.css */
+
+/* Styles généraux */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    text-align: center;
+}
+
+/* En-tête */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+    font-size: 1.5em;
+}
+
+/* Section récapitulatif */
+.order-summary {
+    background: white;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-summary h2 {
+    color: #4CAF50;
+}
+
+.order-summary ul {
+    list-style: none;
+    padding: 0;
+}
+
+.order-summary li {
+    background: #e8f5e9;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1.2em;
+}
+
+/* Bouton retour */
+.button-container {
+    margin-top: 20px;
+}
+
+.btn-go-home {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    transition: background 0.3s ease;
+}
+
+.btn-go-home:hover {
+    background-color: #45a049;
+}
