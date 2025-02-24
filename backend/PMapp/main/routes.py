@@ -166,7 +166,8 @@ def send_email_via_zoho(name, email, commandes):
 
     try:
         # Connexion au serveur SMTP de Zoho
-        server = smtplib.SMTP_SSL('smtp.zoho.com', 465)
+        server = smtplib.SMTP('smtp.zoho.eu', 587)
+        server.starttls()
         server.login(from_email, os.getenv('ZOHO_PASSWORD'))  # Mot de passe Zoho ou mot de passe spécifique à l'application
         text = msg.as_string()
         server.sendmail(from_email, to_email, text)
