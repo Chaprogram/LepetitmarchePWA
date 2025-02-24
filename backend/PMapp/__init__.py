@@ -28,7 +28,7 @@ def create_app():
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_clé_secrète')  
 
     # Configuration de Flask-Mail
-    app.config['MAIL_SERVER'] = 'smtp.sendgrid.com'
+    app.config['MAIL_SERVER'] = 'smtp.sendgrid.net'
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USE_TLS'] = True
     app.config['MAIL_USERNAME'] = 'apikey'  # Pour SendGrid, le nom d'utilisateur est toujours 'apikey'
