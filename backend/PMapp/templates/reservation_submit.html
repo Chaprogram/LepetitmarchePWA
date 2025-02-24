@@ -11,6 +11,10 @@
 <body>
 
     <header>
+        <div> <a href="{{url_for('main.index')}}"> 
+            <img src="{{url_for('static',filename='images/icon-192x192.png')}}" alt="Logo du site Le Petit Marché" width="150">
+            </a>
+        </div>
         <h1>Merci pour votre commande, {{ name }} !</h1>
         <p>Un e-mail de confirmation a été envoyé à {{ email }}.</p>
         <p>Votre numéro de téléphone : {{ phone }}</p>

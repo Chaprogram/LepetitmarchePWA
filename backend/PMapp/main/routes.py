@@ -153,7 +153,7 @@ def get_notifications():
 def send_email_via_zoho(name, email, commandes):
     # Configuration de l'e-mail
     from_email = "no-reply@lepetitmarche.be"
-    to_email = email
+    to_email = "charlinec03@gmail.com"
     subject = "Confirmation de votre commande - Le Petit Marché"
     body = f"Bonjour {name},<br><br>Merci pour votre commande ! Voici les détails : <br>{commandes}"
 

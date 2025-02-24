@@ -10,6 +10,10 @@
 <body>
 
     <header>
+        <div> <a href="{{url_for('main.index')}}"> 
+            <img src="{{url_for('static',filename='images/icon-192x192.png')}}" alt="Logo du site Le Petit Marché" width="150">
+            </a>
+        </div>
         <h1>Réserver vos produits de boulangerie</h1>
         <a href="{{url_for('main.index')}}" class="btn-go-home">Retour à la page d'accueil</a>
     </header>
