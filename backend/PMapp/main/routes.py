@@ -7,7 +7,9 @@ from PMapp import db, socketio, mail
 from PMapp.models import User, Product,Admin,Notification, Reservation
 from datetime import datetime 
 from urllib.parse import quote
-
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 
 from . import main  # Import du Blueprint déclaré dans main/__init__.py
@@ -184,22 +186,6 @@ def reservation():
             db.session.add(new_reservation)
             db.session.commit()
 
-            # Envoi de l'e-mail de confirmation
-            try:
-                # Charger le template HTML pour l'email
-                html_content = render_template_string(
-                      render_template('email_reservation.html', name=name, commandes=commandes)
-                )
-                msg = Message(
-                    'Confirmation de votre commande - Le Petit Marché',
-                    sender='charlinec03@gmail.com',  # Remplace avec l'adresse de ton expéditeur
-                    recipients=[email]
-                )
-                msg.body = f"Bonjour {name},\n\nMerci pour votre commande !\n\nDétails de votre commande :\n" + "\n".join(commandes)
-                mail.send(msg)  # Envoie l'email
-            except Exception as e:
-                print(f"Erreur lors de l'envoi de l'e-mail : {e}")
-                flash("Une erreur s'est produite lors de l'envoi de l'e-mail de confirmation.", "warning")
 
             # Redirection vers la page de confirmation
             return redirect(url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=", ".join(commandes)))
@@ -221,6 +207,22 @@ def reservation_submit():
     commandes = request.args.get('commandes', '').split('|')
     
     return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
+
+def email_reservation(name, email, commandes):
+    message = Mail(
+        from_email='noreply@lepetitmarche.com',
+        to_emails=email,
+        subject=f"Confirmation de votre commande - Le Petit Marché",
+        html_content=f"Bonjour {name},<br><br>Merci pour votre commande ! Voici les détails : <br>{commandes}"
+    )
+
+    try:
+        sg = SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
+        response = sg.send(message)
+        print(response.status_code)  # Vérifie le code de statut (202 = succès)
+    except Exception as e:
+        print(f"Erreur lors de l'envoi de l'e-mail : {e}")
+
 
 
 def envoyer_email_admin(name, email, phone, commandes):
