@@ -133,7 +133,8 @@ def reservation():
             )
             db.session.add(new_reservation)
             db.session.commit()
-
+            # Envoi de l'e-mail de confirmation
+            email_reservation(name, email, ", ".join(commandes))  # Appel ajouté ici pour envoyer l'email de confirmation
             # Redirection vers la page de confirmation
             return redirect(url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=", ".join(commandes)))
 
