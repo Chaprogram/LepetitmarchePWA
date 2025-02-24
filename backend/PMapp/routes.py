@@ -133,8 +133,7 @@ def reservation():
             )
             db.session.add(new_reservation)
             db.session.commit()
-            # Envoi de l'e-mail de confirmation
-            email_reservation(name, email, ", ".join(commandes))  # Appel ajouté ici pour envoyer l'email de confirmation
+           
             # Redirection vers la page de confirmation
             return redirect(url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=", ".join(commandes)))
 
@@ -156,21 +155,17 @@ def reservation_submit():
     
     return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
 
-def email_reservation(name, email, commandes):
-    message = Mail(
-        from_email='no-reply@lepetitmarche.be',
-        to_emails=email,
-        subject=f"Confirmation de votre commande - Le Petit Marché",
-        html_content=f"Bonjour {name},<br><br>Merci pour votre commande ! Voici les détails : <br>{commandes}"
-    )
-
+@main.route('/test-email')
+def test_email():
+    msg = Message('Test Email', 
+                  sender='no-reply@lepetitmarche.be', 
+                  recipients=['ton-email@gmail.com'])
+    msg.body = 'Ceci est un test de l envoi d e-mails via Zoho et Flask.'
     try:
-        sg = SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
-        response = sg.send(message)
-        print(response.status_code)  # Vérifie le code de statut (202 = succès)
+        mail.send(msg)
+        return 'E-mail envoyé avec succès !'
     except Exception as e:
-        print(f"Erreur lors de l'envoi de l'e-mail : {e}")
-
+        return f'Erreur lors de l\'envoi de l e-mail : {e}'
 
 
 

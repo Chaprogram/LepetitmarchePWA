@@ -28,10 +28,12 @@ def create_app():
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback_clé_secrète')  
 
     # Configuration de Flask-Mail
-    app.config['MAIL_SERVER'] = 'smtp.sendgrid.net'
+    app.config['MAIL_SERVER'] = 'smtp.zoho.eu'
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USE_TLS'] = True
-    app.config['MAIL_USERNAME'] = 'apikey'  # Pour SendGrid, le nom d'utilisateur est toujours 'apikey'
+    app.config['MAIL_USE_SSL'] = False
+    app.config['MAIL_USERNAME'] = os.getenv('ZOHO_EMAIL')
+    app.config['MAIL_PASSWORD'] = os.getenv('ZOHO_PASSWORD')
     app.config['MAIL_PASSWORD'] = os.getenv('SENDGRID_API_KEY')
     app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_FROM_EMAIL')
 
