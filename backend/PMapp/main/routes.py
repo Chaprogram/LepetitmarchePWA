@@ -1,4 +1,6 @@
+
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session,jsonify, current_app,render_template_string
+
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
@@ -185,7 +187,6 @@ def reservation():
             )
             db.session.add(new_reservation)
             db.session.commit()
-
 
             # Redirection vers la page de confirmation
             return redirect(url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=", ".join(commandes)))

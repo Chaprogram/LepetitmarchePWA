@@ -36,6 +36,7 @@ def create_app():
     app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_FROM_EMAIL')
 
 
+
     print(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
     print("DATABASE_URL: ", os.getenv("DATABASE_URL"))
 
