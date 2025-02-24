@@ -10,9 +10,9 @@ from PMapp.models import User, Product,Admin,Notification, Reservation
 from datetime import datetime 
 from urllib.parse import quote
 import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 from . import main  # Import du Blueprint déclaré dans main/__init__.py
  # Définir un blueprint
@@ -150,6 +150,30 @@ def get_notifications():
 
 
 
+def send_email_via_zoho(name, email, commandes):
+    # Configuration de l'e-mail
+    from_email = "no-reply@lepetitmarche.be"
+    to_email = email
+    subject = "Confirmation de votre commande - Le Petit Marché"
+    body = f"Bonjour {name},<br><br>Merci pour votre commande ! Voici les détails : <br>{commandes}"
+
+    # Création du message
+    msg = MIMEMultipart()
+    msg['From'] = from_email
+    msg['To'] = to_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'html'))
+
+    try:
+        # Connexion au serveur SMTP de Zoho
+        server = smtplib.SMTP_SSL('smtp.zoho.com', 465)
+        server.login(from_email, os.getenv('ZOHO_PASSWORD'))  # Mot de passe Zoho ou mot de passe spécifique à l'application
+        text = msg.as_string()
+        server.sendmail(from_email, to_email, text)
+        server.quit()
+        print(f"E-mail envoyé avec succès à {to_email}")
+    except Exception as e:
+        print(f"Erreur lors de l'envoi de l'e-mail : {e}")
 
 @main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
@@ -187,7 +211,8 @@ def reservation():
             )
             db.session.add(new_reservation)
             db.session.commit()
-
+ # Envoi de l'email via Zoho
+            send_email_via_zoho(name, email, ", ".join(commandes))
             # Redirection vers la page de confirmation
             return redirect(url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=", ".join(commandes)))
 
@@ -222,16 +247,7 @@ def test_email():
         return f'Erreur lors de l\'envoi de l e-mail : {e}'
 
 
-def envoyer_email_admin(name, email, phone, commandes):
-    with main.app_context():
-        admin_email = "charlinec03@gmail.com"
-        msg = Message("Nouvelle commande reçue !", sender="tonemail@gmail.com", recipients=[admin_email])
-        msg.html = render_template("emails/email_commande.html", name=name, email=email, phone=phone, commandes=commandes)
 
-        try:
-            mail.send(msg)
-        except Exception as e:
-            print(f"Erreur lors de l'envoi de l'e-mail : {e}")
 
 
 @main.route('/pains')
