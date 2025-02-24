@@ -157,7 +157,7 @@ def reservation_submit():
 
 def email_reservation(name, email, commandes):
     message = Mail(
-        from_email='noreply@lepetitmarche.com',
+        from_email='no-reply@lepetitmarche.be',
         to_emails=email,
         subject=f"Confirmation de votre commande - Le Petit Marché",
         html_content=f"Bonjour {name},<br><br>Merci pour votre commande ! Voici les détails : <br>{commandes}"
