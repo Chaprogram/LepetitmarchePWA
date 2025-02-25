@@ -9,15 +9,12 @@
 <body>
     <header>
         <h1>Mon Profil</h1>
-        <p id="welcome-message">Bienvenue, <strong>{{ user.username }}</strong> !</p>
         <button id="shop-btn" onclick="window.location.href='/menu'">Boutique</button>
         <button id="logout-btn">Déconnexion</button>
     </header>
 
     <main>
-
-   
-        
+    <h1><p id="welcome-message">Bienvenue, <strong>{{ user.username }}</strong> !</p></h1>
         <section class="order-history">
             <h2>Mes Commandes</h2>
             <table>
