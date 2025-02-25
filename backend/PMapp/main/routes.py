@@ -66,7 +66,7 @@ def login():
         else:
             flash('Email ou mot de passe incorrect', 'danger')
         
-    return render_template('login.html')
+    return render_template('login.html',user=current_user)
 
 @main.route('/utilisateur')
 @login_required

@@ -100,7 +100,7 @@ def login():
 @main.route('/utilisateur')
 @login_required
 def utilisateur():
-    return render_template('utilisateur.html')
+    return render_template('utilisateur.html',user=current_user)
 
 @main.route('/check-session')
 def check_session():

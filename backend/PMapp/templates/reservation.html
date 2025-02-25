@@ -1,256 +1,62 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réservation Boulangerie - Le Petit Marché</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/reservation.css') }}">
+    <title>Profil Utilisateur - Le Petit Marché</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/utilisateur.css') }}">
 </head>
 <body>
-
     <header>
-        <div> <a href="{{url_for('main.index')}}"> 
-            <img src="{{url_for('static',filename='images/icon-192x192.png')}}" alt="Logo du site Le Petit Marché" width="150">
-            </a>
-        </div>
-        <h1>Réserver vos produits de boulangerie</h1>
-        <a href="{{url_for('main.index')}}" class="btn-go-home">Retour à la page d'accueil</a>
+        <h1>Mon Profil</h1>
+        <button id="shop-btn" onclick="window.location.href='/boutique'">Boutique</button>
+        <a href="{{ url_for('auth.logout') }}"><button id="logout-btn">Déconnexion</button></a> <!-- Lien vers la route logout -->
     </header>
 
-    <!-- Formulaire de réservation -->
-    <form action="{{ url_for('main.reservation') }}" method="POST">
-        <!-- Liste des produits -->
-        <div class="product-container">
-            <div class="product"  data-price="2.30">
-                <span class="product-name">Petit Pain Blanc</span>
-                <span class="product-price">2.30€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_petit_pain_blanc" value="0"> 
-                <button type="button" class="decrease">-</button>
-
-            </div>
+    <main>
+        <div class="info">
+            <button id="edit-info-btn">Modifier</button>
+            <p><strong>Nom :</strong> <span id="nom">{{ user.nom }}</span></p>
+            <p><strong>Prénom :</strong> <span id="prenom">{{ user.prenom }}</span></p>
+            <p><strong>Email :</strong> <span id="email">{{ user.email }}</span></p>
+            <p><strong>Adresse :</strong> <span id="adresse">{{ user.adresse }}</span></p>
             
-            <div class="product" data-price="2.30">
-                <span class="product-name">Petit Pain Gris</span>
-                <span class="product-price">2.30€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_petit_pain_gris" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            
-            <div class="product" data-price="2.90">
-                <span class="product-name">Grand Pain Blanc</span>
-                <span class="product-price">2.90€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_grand_pain_blanc" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            
-            <div class="product"data-price="2.90">
-                <span class="product-name">Grand Pain Gris</span>
-                <span class="product-price">2.90€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_grand_pain_gris" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            
-            <div class="product"data-price="1.70" >
-                <span class="product-name">Baguette</span>
-                <span class="product-price">1.70€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_baguette" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            
-            <div class="product" data-price="0.65">
-                <span class="product-name">Miche</span>
-                <span class="product-price">0.65€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_miche" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            
-            <div class="product" data-price="1.70">
-                <span class="product-name">Croissant Nature</span>
-                <span class="product-price">1.70€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_croissant_nature" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            
-            <div class="product" data-price="1.80">
-                <span class="product-name">Croissant Au Sucre</span>
-                <span class="product-price">1.70€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_croissant_au_sucre" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            
-            <div class="product" data-price="1.70">
-                <span class="product-name">Pain au Chocolat</span>
-                <span class="product-price">1.70€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_pain_au_chocolat" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            <div class="product" data-price="4.95">
-                <span class="product-name">Moka</span>
-                <span class="product-price">4.95€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_moka" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-
-            <div class="product" data-price="2.60">
-                <span class="product-name">Boule de Berlin</span>
-                <span class="product-price">2.60€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_boule_de_berlin" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            <div class="product" data-price="3.60">
-                <span class="product-name">Tarte au riz</span>
-                <span class="product-price">3.60€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_tarte_au_riz" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            <div class="product" data-price="2.60">
-                <span class="product-name">Eclair</span>
-                <span class="product-price">2.60€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_eclair" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            <div class="product" data-price="3.50">
-                <span class="product-name">Gozette abricot</span>
-                <span class="product-price">3.50€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_gozette_abricot" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            <div class="product" data-price="3.50">
-                <span class="product-name">Gozette pomme</span>
-                <span class="product-price">3.50€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_gozette_pomme" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-
-            <div class="product" data-price="3.50">
-                <span class="product-name">Gozette cerise</span>
-                <span class="product-price">3.50€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_gozette_cerise" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-            <div class="product" data-price="3.50">
-                <span class="product-name">Gozette prune</span>
-                <span class="product-price">3.50€</span> 
-                <button type="button" class="increase">+</button>
-                <span class="quantity">0</span>
-                <input type="hidden" name="quantity_gozette_prune" value="0"> 
-                <button type="button" class="decrease">-</button>
-            </div>
-
-
-            
-        </div>  
-        <div class="customer-info">
-            <label for="name">Nom :</label>
-            <input type="text" id="name" name="name" required>
-        
-            <label for="email">Adresse e-mail :</label>
-            <input type="email" id="email" name="email" required>
-            
-            <label for="phone">Numéro de téléphone :</label>
-            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" placeholder="Ex: 0612345678">
-
+            <!-- Formulaire de modification -->
+            <form id="edit-form" class="hidden" action="{{ url_for('user.update_profile') }}" method="POST">
+                <label>Nom : <input type="text" name="nom" value="{{ user.nom }}"></label>
+                <label>Prénom : <input type="text" name="prenom" value="{{ user.prenom }}"></label>
+                <label>Email : <input type="email" name="email" value="{{ user.email }}"></label>
+                <label>Adresse : <input type="text" name="adresse" value="{{ user.adresse }}"></label>
+                <button type="submit">Enregistrer</button>
+                <button type="button" id="cancel-btn">Annuler</button>
+            </form>
         </div>
-    
-        <button type="submit">Valider la commande</button>
-    </form>
 
-    <h3>Total : <span id="total-price">0.00€</span></h3>
+        <section class="order-history">
+            <h2>Mes Commandes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Commande</th>
+                        <th>Montant</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-list">
+                    {% for order in user.orders %} <!-- Remplace par tes données réelles -->
+                    <tr>
+                        <td>{{ order.date }}</td>
+                        <td>{{ order.items }}</td>
+                        <td>{{ order.amount }}€</td>
+                        <td>{{ order.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
 
-    <p>Attention les commandes pour le lendemain sont clôturées à 15h00.</p>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const products = document.querySelectorAll(".product");
-            const totalPriceElement = document.getElementById("total-price");
-    
-            products.forEach(product => {
-                const increaseButton = product.querySelector(".increase");
-                const decreaseButton = product.querySelector(".decrease");
-                const quantityElement = product.querySelector(".quantity");
-                const pricePerUnit = parseFloat(product.getAttribute("data-price"));
-    
-                increaseButton.addEventListener("click", function () {
-                    let quantity = parseInt(quantityElement.textContent);
-                    quantity++;
-                    quantityElement.textContent = quantity;
-                    updateTotal();
-                });
-    
-                decreaseButton.addEventListener("click", function () {
-                    let quantity = parseInt(quantityElement.textContent);
-                    if (quantity > 0) {
-                        quantity--;
-                        quantityElement.textContent = quantity;
-                    }
-                    updateTotal();
-                });
-    
-                function updateTotal() {
-                    let total = 0;
-                    products.forEach(p => {
-                        const quantity = parseInt(p.querySelector(".quantity").textContent);
-                        const unitPrice = parseFloat(p.getAttribute("data-price"));
-                        total += quantity * unitPrice;
-                    });
-                    totalPriceElement.textContent = total.toFixed(2) + "€";
-                }
-            });
-        });
-    </script>
-  
-
-<script>
-    document.querySelector('form').addEventListener('submit', function(event) {
-        var name = document.getElementById('name').value;
-        var email = document.getElementById('email').value;
-        var phone = document.getElementById('phone').value;
-        
-        if (!name || !email || !phone) {
-            event.preventDefault();  // Empêche l'envoi du formulaire si les champs sont vides
-            alert('Veuillez remplir tous les champs.');
-        }
-    });
-</script>
-
-
-
-
-
-    <script src="{{ url_for('static', filename='js/reservation.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='js/utilisateur.js') }}"></script>
 </body>
 </html>
