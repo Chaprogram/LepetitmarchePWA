@@ -3,19 +3,25 @@ function getJwtToken() {
     return localStorage.getItem('jwt_token');  // Assurez-vous que le token est stocké dans le localStorage lors de la connexion
 }
 
-
 // Déconnexion
-
 document.getElementById('logout-btn').addEventListener('click', function() {
     fetch('/logout', {
         method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + getJwtToken()  // Ajout du token JWT dans l'en-tête Authorization
+        },
     })
     .then(response => {
         if (response.ok) {
+            localStorage.removeItem('jwt_token');  // Supprime le token du localStorage lors de la déconnexion
             window.location.href = '/login';  // Redirige vers la page de connexion après déconnexion
         } else {
             alert('Erreur lors de la déconnexion');
         }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Erreur lors de la déconnexion');
     });
 });
 
@@ -41,11 +47,12 @@ document.getElementById('edit-form').addEventListener('submit', function(event) 
         adresse: formData.get('adresse')
     };
 
-    // Envoi des données au backend via une requête POST
+    // Envoi des données au backend via une requête POST avec le JWT dans l'en-tête
     fetch('/modifier_info', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getJwtToken()  // Ajout du token JWT dans l'en-tête Authorization
         },
         body: JSON.stringify(data),
     })
@@ -57,5 +64,9 @@ document.getElementById('edit-form').addEventListener('submit', function(event) 
         } else {
             alert('Erreur lors de la modification');
         }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Erreur lors de la modification');
     });
 });
