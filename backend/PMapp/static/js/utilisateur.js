@@ -3,27 +3,7 @@ function getJwtToken() {
     return localStorage.getItem('jwt_token');  // Assurez-vous que le token est stocké dans le localStorage lors de la connexion
 }
 
-// Déconnexion
-document.getElementById('logout-btn').addEventListener('click', function() {
-    fetch('/logout', {
-        method: 'POST',
-        headers: {
-            'Authorization': 'Bearer ' + getJwtToken()  // Ajout du token JWT dans l'en-tête Authorization
-        },
-    })
-    .then(response => {
-        if (response.ok) {
-            localStorage.removeItem('jwt_token');  // Supprime le token du localStorage lors de la déconnexion
-            window.location.href = '/login';  // Redirige vers la page de connexion après déconnexion
-        } else {
-            alert('Erreur lors de la déconnexion');
-        }
-    })
-    .catch(error => {
-        console.error('Erreur:', error);
-        alert('Erreur lors de la déconnexion');
-    });
-});
+
 
 // Afficher / masquer le formulaire de modification
 document.getElementById('edit-info-btn').addEventListener('click', function() {
