@@ -1,7 +1,8 @@
-// Fonction pour afficher les produits dans le panier
+// Vérifier et afficher le panier
 function displayCart() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     console.log('Contenu du panier dans localStorage :', cart);
+    
     const cartList = document.getElementById('cart-items');
     const cartTotal = document.getElementById('cart-total');
 
@@ -15,115 +16,94 @@ function displayCart() {
 
     if (cart.length === 0) {
         cartList.innerHTML = '<p>Votre panier est vide.</p>';
-        cartTotal.textContent = '0.00 €'; // Total vide
+        cartTotal.textContent = '0.00 €';
         return;
     }
 
     let total = 0;
 
     cart.forEach((product) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.classList.add('cart-item');
-        itemDiv.innerHTML = `
-            <div class="item-name">${product.name}</div>
-            <div class="item-quantity">Quantité : ${product.quantity}</div>
-            <div class="item-price">${(product.price * product.quantity).toFixed(2)}€</div>
+        const itemLi = document.createElement('li');
+        itemLi.classList.add('cart-item');
+        itemLi.innerHTML = `
+            <span class="item-name">${product.name}</span>
+            <span class="item-quantity">Quantité : ${product.quantity}</span>
+            <span class="item-price">${(product.price * product.quantity).toFixed(2)}€</span>
             <button class="remove-btn" data-name="${product.name}">Supprimer</button>
         `;
-        cartList.appendChild(itemDiv);
+        cartList.appendChild(itemLi);
 
-        // Ajout au total
         total += product.quantity * product.price;
     });
 
-    cartTotal.textContent = `${total.toFixed(2)} €`; // Affiche le total
-    attachRemoveHandlers(); // Ajoute les gestionnaires d'événements pour les boutons "Supprimer"
+    cartTotal.textContent = `${total.toFixed(2)} €`;
+
+    attachRemoveHandlers(); // Ajoute les événements pour les boutons "Supprimer"
 }
 
-// Fonction pour supprimer un produit du panier
+// Supprimer un produit du panier
 function removeFromCart(productName) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart = cart.filter((item) => item.name !== productName); // Supprime le produit
-    localStorage.setItem('cart', JSON.stringify(cart)); // Sauvegarde les modifications
-    displayCart(); // Rafraîchit l'affichage
+    cart = cart.filter((item) => item.name !== productName);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    displayCart();
 }
 
-// Attache les gestionnaires aux boutons "Supprimer"
+// Attacher les événements aux boutons "Supprimer"
 function attachRemoveHandlers() {
     const removeButtons = document.querySelectorAll('.remove-btn');
     removeButtons.forEach((button) => {
-        button.removeEventListener('click', handleRemove); // Éviter les gestionnaires dupliqués
-        button.addEventListener('click', handleRemove); // Ajouter un gestionnaire
+        button.removeEventListener('click', handleRemove);
+        button.addEventListener('click', handleRemove);
     });
 }
 
-// Gestionnaire pour supprimer un produit
+// Gestionnaire de suppression d'un produit
 function handleRemove(event) {
     const productName = event.target.getAttribute('data-name');
     removeFromCart(productName);
 }
 
-// Fonction pour vider le panier
+// Vider complètement le panier
 function clearCart() {
-    localStorage.removeItem('cart'); // Supprime tous les produits du stockage local
-    displayCart(); // Recharge l'affichage du panier (vide)
+    localStorage.removeItem('cart');
+    displayCart();
     alert('Le panier a été vidé.');
 }
 
-// Gestion des options de livraison (uniquement livraison)
+// Activer les options de livraison et paiement
 function manageDeliveryOptions() {
-    const deliveryForm = document.getElementById('delivery-form');
-    const paymentForm = document.getElementById('payment-form');
-
-    if (!deliveryForm || !paymentForm) {
-        console.warn("Les formulaires de livraison ou de paiement sont introuvables.");
-        return;
-    }
-
-    // Afficher directement le formulaire de livraison et paiement
-    deliveryForm?.classList.remove('hidden'); // Affiche le formulaire de livraison
-    paymentForm?.classList.remove('hidden'); // Affiche le formulaire de paiement
-
-    // Afficher les options de paiement disponibles pour la livraison
+    document.getElementById('payment-form')?.classList.remove('hidden');
     displayPaymentOptions(['Cash', 'Payconiq']);
 }
 
-// Afficher les options de paiement dynamiquement
+// Affichage dynamique des moyens de paiement
 function displayPaymentOptions(options) {
     const paymentOptions = document.getElementById('payment-options');
-    if (!paymentOptions) {
-        console.warn("Section des options de paiement introuvable.");
-        return;
-    }
+    if (!paymentOptions) return;
 
-    paymentOptions.innerHTML = ''; // Vider les options précédentes
+    paymentOptions.innerHTML = '';
 
     options.forEach((option) => {
         const label = document.createElement('label');
-        label.innerHTML = `
-            <input type="radio" name="payment-method" value="${option}">
-            ${option}
-        `;
+        label.innerHTML = `<input type="radio" name="payment-method" value="${option}"> ${option}`;
         paymentOptions.appendChild(label);
     });
 }
 
-// Gestion du bouton "Valider la commande"
+// Validation et envoi de la commande
 function handleOrderSubmission() {
     const submitOrderButton = document.getElementById('submit-order');
 
-    if (!submitOrderButton) {
-        console.warn("Bouton valider-commande introuvable.");
-        return;
-    }
+    if (!submitOrderButton) return;
 
     submitOrderButton.addEventListener("click", function () {
         const deliveryAddress = document.getElementById('delivery-address')?.value;
+        const deliveryDate = document.getElementById('delivery-date')?.value;
         const deliveryTime = document.getElementById('delivery-time')?.value;
         const paymentMethod = document.querySelector('input[name="payment-method"]:checked');
 
-        // Vérifications des informations saisies
-        if (!deliveryAddress || !deliveryTime) {
+        if (!deliveryAddress || !deliveryDate || !deliveryTime) {
             alert('Veuillez remplir toutes les informations pour la livraison.');
             return;
         }
@@ -133,72 +113,27 @@ function handleOrderSubmission() {
             return;
         }
 
-        const details = {
+        const orderDetails = {
             method: 'Livraison',
             address: deliveryAddress,
+            date: deliveryDate,
             time: deliveryTime,
             paymentMethod: paymentMethod.value
         };
 
-        alert(`Commande validée avec succès.\nDétails : ${JSON.stringify(details)}`);
-        clearCart(); // Vide le panier après validation
+        alert(`Commande validée avec succès.\nDétails : ${JSON.stringify(orderDetails)}`);
+        clearCart();
     });
 }
 
-// Envoi de l'email de confirmation
-function sendConfirmationEmail(userEmail, orderDetails) {
-    fetch('/send_confirmation_email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: userEmail, order_details: orderDetails })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message) {
-            alert("E-mail de confirmation envoyé !");
-        } else {
-            alert("Erreur lors de l'envoi de l'e-mail : " + data.error);
-        }
-    })
-    .catch(error => console.error("Erreur :", error));
-}
-
-// Fonction pour mettre à jour le total du panier
-function updateTotal() {
-    let total = 0;
-
-    // Sélectionner tous les produits dans le panier
-    document.querySelectorAll(".cart-item").forEach(item => {
-        // Récupérer la quantité sous forme de nombre
-        let quantityText = item.querySelector(".item-quantity").textContent.trim();
-        let quantity = parseInt(quantityText.replace("Quantité : ", "")); 
-        
-        // Récupérer le prix et le convertir en nombre
-        let priceText = item.querySelector(".item-price").textContent.trim();
-        let price = parseFloat(priceText.replace("€", "").replace(",", "."));
-        
-        // Calculer le total de l'item
-        let itemTotal = quantity * price;
-        
-        // Mettre à jour le total général
-        total += itemTotal;
-    });
-
-    // Mettre à jour le total affiché
-    document.getElementById("cart-total").textContent = total.toFixed(2) + " €";
-}
-
-// Initialisation après chargement du DOM
+// Initialisation
 document.addEventListener('DOMContentLoaded', () => {
     displayCart();
-    manageDeliveryOptions(); // Affiche uniquement la section livraison
+    manageDeliveryOptions();
     handleOrderSubmission();
 
     const clearCartButton = document.getElementById('clear-cart');
     if (clearCartButton) {
         clearCartButton.addEventListener('click', clearCart);
     }
-
-    // Mettre à jour le total après chargement du panier
-    updateTotal();
 });
