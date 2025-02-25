@@ -15,23 +15,20 @@
 
     <main>
 
-            <div class="info">
-                
-                <button id="edit-info-btn">Modifier</button>
-                <p><strong>Nom :</strong> <span id="nom">{{ user.nom }}</span></p>
-                <p><strong>Prénom :</strong> <span id="prenom">{{ user.prenom }}</span></p>
-                <p><strong>Email :</strong> <span id="email">{{ user.email }}</span></p>
-                <p><strong>Adresse :</strong> <span id="adresse">{{ user.adresse }}</span></p>
-                <form id="edit-form" class="hidden">
-                    <label>Nom : <input type="text" name="nom" value="Dupont"></label>
-                    <label>Prénom : <input type="text" name="prenom" value="Jean"></label>
-                    <label>Email : <input type="email" name="email" value="jean.dupont@example.com"></label>
-                    <label>Adresse : <input type="text" name="adresse" value="123 Rue de la Liberté, Paris"></label>
-                    <button type="submit">Enregistrer</button>
-                    <button type="button" id="cancel-btn">Annuler</button>
-                </form>
-            </div>
-        </section>
+        <div class="info">
+            <button id="edit-info-btn">Modifier</button>
+            <p><strong>Nom d'utilisateur :</strong> <span id="username">{{ user.username }}</span></p>
+            <p><strong>Email :</strong> <span id="email">{{ user.email }}</span></p>
+            <!-- Champs non modifiables -->
+            <form id="edit-form" class="hidden">
+                <label>Nom d'utilisateur : <input type="text" name="username" value="{{ user.username }}"></label>
+                <label>Email : <input type="email" name="email" value="{{ user.email }}"></label>
+                <!-- Ajouter un champ pour l'adresse si tu veux permettre sa modification -->
+                <label>Adresse : <input type="text" name="adresse" value="{{ user.adresse }}"></label>
+                <button type="submit">Enregistrer</button>
+                <button type="button" id="cancel-btn">Annuler</button>
+            </form>
+        </div>
 
         <section class="order-history">
             <h2>Mes Commandes</h2>

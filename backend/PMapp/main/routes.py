@@ -68,20 +68,19 @@ def login():
         
     return render_template('login.html',user=current_user)
 
-@main.route('/utilisateur')
-@login_required  # Cette annotation assure que l'utilisateur est connecté
+@main.route('/utilisateur', methods=['GET'])
+@login_required
 def utilisateur():
-    if not current_user.is_authenticated:
-        return redirect(url_for('main.login'))  # Redirige vers la page de login si l'utilisateur n'est pas connecté
-    
-    # Renvoyer les informations de l'utilisateur sous forme de JSON
-    user_data = {
-        'nom': current_user.nom,
-        'prenom': current_user.prenom,
-        'email': current_user.email,
-        'adresse': current_user.adresse
-    }
-    return jsonify(user_data)
+    # Vérifier si l'utilisateur est authentifié
+    if current_user.is_authenticated:
+        # Renvoyer les données de l'utilisateur sous forme de JSON
+        return jsonify({
+            'username': current_user.username,
+            'email': current_user.email,
+        })
+    else:
+        # Si l'utilisateur n'est pas authentifié, rediriger vers la page de login
+        return jsonify({'error': 'Utilisateur non authentifié'}), 401
 
 @main.route('/check-session')
 def check_session():
@@ -89,26 +88,32 @@ def check_session():
 
 
 @main.route('/modifier_info', methods=['POST'])
-@login_required  # Assurez-vous que l'utilisateur est connecté
+@login_required
 def modifier_info():
+    # Vérification des données envoyées
     data = request.get_json()
 
-    # Vérifier que toutes les informations nécessaires sont présentes
-    if not data.get('nom') or not data.get('prenom') or not data.get('email') or not data.get('adresse'):
-        return jsonify({"message": "Toutes les informations doivent être remplies"}), 400
+    if not data or 'username' not in data or 'email' not in data:
+        return jsonify({"message": "Données manquantes ou incorrectes"}), 400
+
+    # Récupérer l'utilisateur actuellement connecté
+    user = current_user
 
     # Mettre à jour les informations de l'utilisateur
-    current_user.nom = data['nom']
-    current_user.prenom = data['prenom']
-    current_user.email = data['email']
-    current_user.adresse = data['adresse']
+    user.username = data['username']
+    user.email = data['email']
+
+    # Si tu veux aussi modifier l'adresse (en supposant que tu as un champ adresse)
+    if 'adresse' in data:
+        user.adresse = data['adresse']
 
     # Sauvegarder les modifications dans la base de données
-    db.session.commit()
-
-    return jsonify({"message": "Informations mises à jour avec succès!"})
-
-
+    try:
+        db.session.commit()
+        return jsonify({"message": "Informations mises à jour avec succès"}), 200
+    except Exception as e:
+        db.session.rollback()  # En cas d'erreur, rollback les changements
+        return jsonify({"message": f"Erreur lors de la mise à jour: {str(e)}"}), 500
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':

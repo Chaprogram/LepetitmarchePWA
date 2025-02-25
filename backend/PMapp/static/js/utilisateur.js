@@ -12,10 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(response => response.json()) // Récupérer les données de l'utilisateur
                 .then(user => {
-                    document.getElementById('nom').innerText = user.nom;
-                    document.getElementById('prenom').innerText = user.prenom;
+                    document.getElementById('username').innerText = user.username;
                     document.getElementById('email').innerText = user.email;
-                    document.getElementById('adresse').innerText = user.adresse;
                 })
                 .catch(error => {
                     console.error('Erreur lors de la récupération des données utilisateur:', error);
