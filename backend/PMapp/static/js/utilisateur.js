@@ -1,4 +1,11 @@
+// Récupérer le token JWT depuis le localStorage ou une autre source
+function getJwtToken() {
+    return localStorage.getItem('jwt_token');  // Assurez-vous que le token est stocké dans le localStorage lors de la connexion
+}
+
+
 // Déconnexion
+
 document.getElementById('logout-btn').addEventListener('click', function() {
     fetch('/logout', {
         method: 'POST',
