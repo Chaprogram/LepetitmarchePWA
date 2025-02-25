@@ -71,7 +71,6 @@ function clearCart() {
 }
 
 // Gestion des options de livraison (uniquement livraison)
-// Gestion des options de livraison (uniquement livraison)
 function manageDeliveryOptions() {
     const deliveryForm = document.getElementById('delivery-form');
     const paymentForm = document.getElementById('payment-form');
@@ -164,6 +163,31 @@ function sendConfirmationEmail(userEmail, orderDetails) {
     .catch(error => console.error("Erreur :", error));
 }
 
+// Fonction pour mettre à jour le total du panier
+function updateTotal() {
+    let total = 0;
+
+    // Sélectionner tous les produits dans le panier
+    document.querySelectorAll(".cart-item").forEach(item => {
+        // Récupérer la quantité sous forme de nombre
+        let quantityText = item.querySelector(".item-quantity").textContent.trim();
+        let quantity = parseInt(quantityText.replace("Quantité : ", "")); 
+        
+        // Récupérer le prix et le convertir en nombre
+        let priceText = item.querySelector(".item-price").textContent.trim();
+        let price = parseFloat(priceText.replace("€", "").replace(",", "."));
+        
+        // Calculer le total de l'item
+        let itemTotal = quantity * price;
+        
+        // Mettre à jour le total général
+        total += itemTotal;
+    });
+
+    // Mettre à jour le total affiché
+    document.getElementById("cart-total").textContent = total.toFixed(2) + " €";
+}
+
 // Initialisation après chargement du DOM
 document.addEventListener('DOMContentLoaded', () => {
     displayCart();
@@ -174,30 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (clearCartButton) {
         clearCartButton.addEventListener('click', clearCart);
     }
-});
 
-
-document.addEventListener("DOMContentLoaded", function () {
-    function updateTotal() {
-        let total = 0;
-        document.querySelectorAll("#cart-items tr").forEach(row => {
-            let priceText = row.querySelector(".item-price").textContent.trim();
-            let price = parseFloat(priceText.replace("€", "").replace(",", "."));
-            let quantity = parseInt(row.querySelector(".item-quantity").value);
-            let itemTotal = price * quantity;
-
-            row.querySelector(".item-total").textContent = itemTotal.toFixed(2) + "€";
-            total += itemTotal;
-        });
-
-        document.getElementById("total-price").textContent = total.toFixed(2) + "€";
-    }
-
-    // Mettre à jour le total lorsqu'on change une quantité
-    document.querySelectorAll(".item-quantity").forEach(input => {
-        input.addEventListener("input", updateTotal);
-    });
-
-    // Calculer le total au chargement de la page
+    // Mettre à jour le total après chargement du panier
     updateTotal();
 });

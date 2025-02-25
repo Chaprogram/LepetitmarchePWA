@@ -1,53 +1,130 @@
-/* Réduction de la taille de l'en-tête */
+/* Réinitialisation des marges et padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* 🌟 HEADER : plus compact */
 header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    background-color: #4CAF50; /* Vert harmonisé avec ton site */
+    align-items: center;
+    background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
-    font-size: 1rem;
+    height: 60px; /* Taille réduite */
 }
 
-/* Ajustement du titre */
 header h1 {
-    font-size: 1.4rem;
-    margin: 0;
+    font-size: 1.5em;
+    flex-grow: 1;
+    text-align: center;
 }
 
-/* Message de bienvenue */
 #welcome-message {
-    font-size: 1rem;
-    margin: 0;
+    font-size: 1em;
+    font-weight: bold;
+    margin-left: 15px;
 }
 
-/* Ajustement des boutons */
-header button {
+/* 📌 BOUTONS DU HEADER */
+#shop-btn, #logout-btn {
     background-color: white;
     color: #4CAF50;
     border: none;
     padding: 8px 12px;
-    font-size: 1rem;
+    font-size: 0.9em;
     cursor: pointer;
-    border-radius: 5px;
     transition: 0.3s;
+    border-radius: 5px;
 }
 
-header button:hover {
-    background-color: #f1f1f1;
+#shop-btn:hover, #logout-btn:hover {
+    background-color: #ddd;
 }
 
-/* Organisation des boutons */
-#shop-btn {
-    margin-right: 10px;
-}
-
-/* Centrage et style général */
+/* 🏠 PAGE PRINCIPALE */
 main {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
     background: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+}
+
+/* 📝 INFOS UTILISATEUR */
+.info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.info p {
+    font-size: 1.1em;
+    margin: 5px 0;
+}
+
+#edit-info-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+#edit-info-btn:hover {
+    background-color: #45a049;
+}
+
+/* 📦 HISTORIQUE DES COMMANDES */
+.order-history h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+/* 🛠️ RESPONSIVE */
+@media (max-width: 600px) {
+    header {
+        flex-direction: column;
+        height: auto;
+        padding: 15px;
+        text-align: center;
+    }
+
+    #shop-btn, #logout-btn {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    main {
+        width: 90%;
+        padding: 15px;
+    }
+
+    th, td {
+        font-size: 0.9em;
+        padding: 8px;
+    }
 }
