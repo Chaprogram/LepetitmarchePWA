@@ -135,70 +135,75 @@ const renderOrders = () => {
   });
 };
 
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', function () {
   const loginForm = document.getElementById('login-form');
 
   // Vérifier si l'élément existe avant d'ajouter l'écouteur
   if (loginForm) {
-      loginForm.addEventListener('submit', function (event) {
-          event.preventDefault();  // Empêche la soumission par défaut du formulaire
+    loginForm.addEventListener('submit', function (event) {
+      event.preventDefault(); // Empêche la soumission par défaut du formulaire
 
-          // Récupérer les valeurs des champs du formulaire
-          const username = document.getElementById('username').value;
-          const password = document.getElementById('password').value;
+      // Récupérer les valeurs des champs du formulaire
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
 
-          // Envoyer la requête de connexion au backend
-          fetch('/login', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                  username: username,
-                  password: password
-              })
-          })
-          .then(response => response.json())
-          .then(data => {
-              // Si un token JWT est retourné, le stocker dans localStorage
-              if (data.token) {
-                  localStorage.setItem('jwt_token', data.token);  // Stockage du token JWT
-
-                  // Rediriger vers la page utilisateur ou une autre page protégée
-                  window.location.href = '/utilisateur';  // Rediriger vers la page utilisateur
-              } else if (data.error) {
-                  alert(data.error);  // Affiche l'erreur venant du backend
-              } else {
-                  alert('Nom d\'utilisateur ou mot de passe incorrect');
-              }
-          })
-          .catch(error => {
-              console.error('Erreur lors de la connexion:', error);
-          });
-      });
+      // Envoyer la requête de connexion au backend
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Si un token JWT est retourné, le stocker dans localStorage
+          if (data.token) {
+            localStorage.setItem('jwt_token', data.token); // Stockage du token JWT
+            window.location.href = '/utilisateur'; // Rediriger vers la page utilisateur
+          } else if (data.error) {
+            alert(data.error); // Affiche l'erreur venant du backend
+          } else {
+            alert('Nom d\'utilisateur ou mot de passe incorrect');
+          }
+        })
+        .catch(error => {
+          console.error('Erreur lors de la connexion:', error);
+        });
+    });
   } else {
-      console.error('Formulaire de connexion non trouvé');
+    console.error('Formulaire de connexion non trouvé');
   }
 
   // Gérer la récupération du token JWT
   const jwtToken = localStorage.getItem('jwt_token'); // Récupérer le token JWT stocké dans localStorage
 
   if (jwtToken) {
-      fetch('/utilisateur', {
-          method: 'GET',
-          headers: {
-              'Authorization': `Bearer ${jwtToken}`  // Ajouter le token JWT dans l'en-tête de la requête
-          }
-      })
+    fetch('/utilisateur', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${jwtToken}` // Ajouter le token JWT dans l'en-tête de la requête
+      }
+    })
       .then(response => response.json())
       .then(data => {
-          // Traiter la réponse
-          console.log(data);
+        console.log(data); // Vérifier la réponse de l'API
+        if (data.token) {
+          localStorage.setItem('jwt_token', data.token); // Stockage du token JWT
+          window.location.href = '/utilisateur'; // Rediriger vers la page utilisateur
+        } else if (data.error) {
+          alert(data.error); // Affiche l'erreur venant du backend
+        } else {
+          alert('Nom d\'utilisateur ou mot de passe incorrect');
+        }
       })
       .catch(error => {
-          console.error('Erreur lors de la récupération du profil utilisateur :', error);
+        console.error('Erreur lors de la récupération du profil utilisateur :', error);
       });
   } else {
-      console.log('Utilisateur non connecté, impossible de faire cette requête.');
+    console.log('Utilisateur non connecté, impossible de faire cette requête.');
   }
 });
