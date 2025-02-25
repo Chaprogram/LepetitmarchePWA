@@ -139,3 +139,13 @@ const renderOrders = () => {
 window.onload = function() {
   document.body.style.overflowY = "scroll"; // Assure le défilement vertical
 };
+
+
+
+function logout() {
+  // Supprime le token JWT du stockage local (localStorage ou sessionStorage)
+  localStorage.removeItem('access_token');  // Si tu utilises localStorage
+
+  // Redirige l'utilisateur vers la page d'accueil ou de connexion
+  window.location.href = '/';  // Ou redirige vers la page de connexion
+}

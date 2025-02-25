@@ -89,7 +89,7 @@ def login():
                 if user.is_admin:
                     return redirect(url_for('main.admin'))
                 else:
-                    return redirect(url_for('main.menu'))  # Redirection vers la page de menu pour les utilisateurs non-admin
+                    return redirect(url_for('main.utilisateur'))  # Redirection vers la page de menu pour les utilisateurs non-admin
                 
             else:
                 flash('Email ou mot de passe incorrect', 'danger')
@@ -98,6 +98,18 @@ def login():
         
     return render_template('login.html')
 
+
+@main.route('/utilisateur')
+@jwt_required()  # Cette route nécessite que l'utilisateur soit connecté (avec JWT)
+def utilisateur():
+    # Récupérer les informations de l'utilisateur depuis le token
+    current_user = get_jwt_identity()
+    
+    # Récupérer les informations de l'utilisateur depuis la base de données (si nécessaire)
+    # Par exemple :
+    user_info = User.query.filter_by(username=current_user).first()
+
+    return render_template('utilisateur.html', user=user_info)
 
 def send_email_via_zoho(name, email, commandes):
     # Configuration de l'e-mail
