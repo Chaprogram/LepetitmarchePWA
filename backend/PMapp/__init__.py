@@ -36,7 +36,7 @@ def create_app():
     app.config['MAIL_USERNAME'] = os.getenv('ZOHO_EMAIL')
     app.config['MAIL_PASSWORD'] = os.getenv('ZOHO_PASSWORD')
     app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_FROM_EMAIL')
-   
+    app.config['SESSION_COOKIE_SECURE'] = True 
 
 
 
