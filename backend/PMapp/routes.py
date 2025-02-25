@@ -12,7 +12,6 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 
 
 
@@ -71,9 +70,8 @@ def user():
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        data = request.get_json()  # Récupérer les données JSON envoyées par le frontend
-        email = data.get('email')  # Utiliser 'data.get' pour récupérer l'email
-        password = data.get('password')  # Utiliser 'data.get' pour récupérer le mot de passe
+        email = request.form['email']
+        password = request.form['password']
         print(f"Email : {email}")  # Débogage : Vérifie que l'email est bien récupéré
         
         user = User.query.filter_by(email=email).first()
@@ -84,7 +82,6 @@ def login():
             if user.check_password(password):
                 print("Mot de passe correct")  # Débogage : Vérifie que le mot de passe est correct
                 login_user(user)
-                access_token = create_access_token(identity=user.username) 
                 
                 # Vérification du rôle d'admin après la connexion
                 if user.is_admin:
@@ -100,45 +97,14 @@ def login():
     return render_template('login.html')
 
 
-
 @main.route('/utilisateur')
-@jwt_required()  # Cette route nécessite que l'utilisateur soit connecté (avec JWT)
+@login_required
 def utilisateur():
-    # Récupérer les informations de l'utilisateur depuis le token
-    current_user = get_jwt_identity()
-    
-    # Récupérer les informations de l'utilisateur depuis la base de données (si nécessaire)
-    # Par exemple :
-    user_info = User.query.filter_by(username=current_user).first()
-    if user_info:
-        return jsonify({
-            "nom": user_info.nom,
-            "prenom": user_info.prenom,
-            "email": user_info.email,
-            "adresse": user_info.adresse
-        })  # Renvoyer les infos de l'utilisateur
-    else:
-        return jsonify({"msg": "Utilisateur non trouvé"}), 404
+    return render_template('utilisateur.html')
 
-@main.route('/modifier_info', methods=['POST'])
-@jwt_required()
-def modifier_info():
-    current_user = get_jwt_identity()
-    user_info = User.query.filter_by(username=current_user).first()
-
-    if not user_info:
-        return {'message': 'Utilisateur non trouvé'}, 404
-
-    # Récupérer les nouvelles informations du formulaire
-    data = request.json  # Assurez-vous d'envoyer les données en JSON depuis le frontend
-    user_info.nom = data.get('nom', user_info.nom)
-    user_info.prenom = data.get('prenom', user_info.prenom)
-    user_info.email = data.get('email', user_info.email)
-    user_info.adresse = data.get('adresse', user_info.adresse)
-
-    db.session.commit()  # Enregistrer les modifications
-
-    return {'message': 'Informations modifiées avec succès'}
+@main.route('/check-session')
+def check_session():
+    return {'logged_in': current_user.is_authenticated}
 
 
 
@@ -231,17 +197,13 @@ def reservation_submit():
 
 
 
-
-
-@main.route('/logout', methods=['POST'])
-@jwt_required()
+@main.route('/logout')
 def logout():
-    """
-    Déconnecte l'utilisateur en invalidant son token JWT.
-    """
-    identity = get_jwt_identity()
-    # Ici, tu peux enregistrer l'ID du token dans une liste de tokens invalidés (optionnel)
-    return jsonify({"message": "Déconnexion réussie"}), 200
+    logout_user()
+    session.pop('user_id', None)  # Supprimer l'id de l'utilisateur de la session
+    flash("Vous êtes maintenant déconnecté.", "success")
+    return redirect(url_for('main.login'))
+
 
 @main.route('/admin')
 @login_required
