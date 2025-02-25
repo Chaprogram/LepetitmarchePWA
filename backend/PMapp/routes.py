@@ -108,8 +108,10 @@ def utilisateur():
     # Récupérer les informations de l'utilisateur depuis la base de données (si nécessaire)
     # Par exemple :
     user_info = User.query.filter_by(username=current_user).first()
-
-    return render_template('utilisateur.html', user=user_info)
+    if user_info:
+        return render_template('utilisateur.html', user=user_info)
+    else:
+        return jsonify({"msg": "Utilisateur non trouvé"}), 404
 
 @main.route('/modifier_info', methods=['POST'])
 @jwt_required()

@@ -189,3 +189,25 @@ loginForm.addEventListener('submit', function (event) {
         console.error('Erreur lors de la connexion:', error);
     });
 });
+
+
+const jwtToken = localStorage.getItem('jwt_token'); // Récupérer le token JWT stocké dans localStorage
+
+if (jwtToken) {
+    fetch('/utilisateur', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${jwtToken}`  // Ajouter le token JWT dans l'en-tête de la requête
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Traiter la réponse
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Erreur lors de la récupération du profil utilisateur :', error);
+    });
+} else {
+    console.log('Utilisateur non connecté, impossible de faire cette requête.');
+}
