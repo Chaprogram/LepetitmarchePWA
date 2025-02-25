@@ -1,142 +1,107 @@
 /* Styles généraux */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
 }
 
-/* Header */
+/* HEADER */
 header {
     background-color: #4CAF50;
     color: white;
-    padding: 15px;
+    padding: 15px 20px;
     text-align: center;
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-.header-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-#shop-btn {
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-#shop-btn:hover {
-    background-color: #1976D2;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 header h1 {
     margin: 0;
+    font-size: 1.5rem;
 }
 
-#logout-btn {
-    background-color: #d9534f;
+header button {
+    background-color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+header button:hover {
+    background-color: #ddd;
+}
+
+/* MAIN CONTAINER */
+main {
+    max-width: 800px;
+    margin: 80px auto 20px;
+    padding: 20px;
+}
+
+/* CARTE UTILISATEUR */
+.info {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.info p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+}
+
+#edit-info-btn {
+    background-color: #4CAF50;
     color: white;
     border: none;
     padding: 10px 15px;
     cursor: pointer;
     border-radius: 5px;
-}
-
-#logout-btn:hover {
-    background-color: #c9302c;
-}
-
-
-
-.info p {
-    font-size: 18px;
-    margin: 8px 0;
-}
-
-#edit-info-btn {
-    background-color: #ffc107;
-    color: black;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 5px;
+    font-size: 1rem;
     margin-top: 10px;
 }
 
 #edit-info-btn:hover {
-    background-color: #e0a800;
+    background-color: #388E3C;
 }
 
-/* Formulaire de modification */
-#edit-form {
-    display: none;
-    text-align: left;
-}
-
-#edit-form label {
-    display: block;
-    margin: 10px 0;
-}
-
-#edit-form input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-#edit-form button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 10px;
-}
-
-#cancel-btn {
-    background-color: #d9534f;
-}
-
-#cancel-btn:hover {
-    background-color: #c9302c;
-}
-
-/* Section Commandes */
+/* TABLE DES COMMANDES */
 .order-history {
-    background-color: white;
+    background: white;
     padding: 20px;
-    margin: 20px auto;
-    width: 90%;
-    max-width: 800px;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .order-history h2 {
     text-align: center;
+    margin-bottom: 15px;
+    color: #4CAF50;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
-}
-
-table, th, td {
-    border: 1px solid #ddd;
+    text-align: left;
 }
 
 th, td {
     padding: 10px;
-    text-align: center;
+    border-bottom: 1px solid #ddd;
 }
 
 th {
@@ -144,6 +109,27 @@ th {
     color: white;
 }
 
-tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    main {
+        width: 90%;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+
+    header {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    header h1 {
+        margin-bottom: 10px;
+    }
+
+    header button {
+        width: 100%;
+        margin-top: 5px;
+    }
 }
