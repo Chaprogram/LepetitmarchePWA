@@ -20,16 +20,7 @@
             <p><strong>Nom d'utilisateur :</strong> <span id="username">{{ user.username }}</span></p>
             <p><strong>Email :</strong> <span id="email">{{ user.email }}</span></p>
             <!-- Champs non modifiables -->
-            <form id="edit-form" class="hidden">
-                <label>Nom d'utilisateur : <input type="text" name="username" value="{{ user.username }}"></label>
-                <label>Email : <input type="email" name="email" value="{{ user.email }}"></label>
-                <!-- Ajouter un champ pour l'adresse si tu veux permettre sa modification -->
-                <label>Adresse : <input type="text" name="adresse" value="{{ user.adresse }}"></label>
-                <button type="submit">Enregistrer</button>
-                <button type="button" id="cancel-btn">Annuler</button>
-            </form>
-        </div>
-
+        
         <section class="order-history">
             <h2>Mes Commandes</h2>
             <table>
