@@ -149,3 +149,43 @@ function logout() {
   // Redirige l'utilisateur vers la page d'accueil ou de connexion
   window.location.href = '/';  // Ou redirige vers la page de connexion
 }
+
+
+// Sélectionner le formulaire de connexion
+const loginForm = document.getElementById('login-form');
+
+// Ajouter un écouteur d'événement pour la soumission du formulaire
+loginForm.addEventListener('submit', function (event) {
+    event.preventDefault();  // Empêche la soumission par défaut du formulaire
+
+    // Récupérer les valeurs des champs du formulaire
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    // Envoyer la requête de connexion au backend
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Si un token JWT est retourné, le stocker dans localStorage
+        if (data.token) {
+            localStorage.setItem('jwt_token', data.token);  // Stockage du token JWT
+
+            // Rediriger vers la page utilisateur ou une autre page protégée
+            window.location.href = '/utilisateur';  // Rediriger vers la page utilisateur
+        } else {
+            alert('Nom d\'utilisateur ou mot de passe incorrect');
+        }
+    })
+    .catch(error => {
+        console.error('Erreur lors de la connexion:', error);
+    });
+});
