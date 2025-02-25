@@ -175,3 +175,29 @@ document.addEventListener('DOMContentLoaded', () => {
         clearCartButton.addEventListener('click', clearCart);
     }
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    function updateTotal() {
+        let total = 0;
+        document.querySelectorAll("#cart-items tr").forEach(row => {
+            let priceText = row.querySelector(".item-price").textContent.trim();
+            let price = parseFloat(priceText.replace("€", "").replace(",", "."));
+            let quantity = parseInt(row.querySelector(".item-quantity").value);
+            let itemTotal = price * quantity;
+
+            row.querySelector(".item-total").textContent = itemTotal.toFixed(2) + "€";
+            total += itemTotal;
+        });
+
+        document.getElementById("total-price").textContent = total.toFixed(2) + "€";
+    }
+
+    // Mettre à jour le total lorsqu'on change une quantité
+    document.querySelectorAll(".item-quantity").forEach(input => {
+        input.addEventListener("input", updateTotal);
+    });
+
+    // Calculer le total au chargement de la page
+    updateTotal();
+});

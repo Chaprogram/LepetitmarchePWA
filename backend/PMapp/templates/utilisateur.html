@@ -9,17 +9,14 @@
 <body>
     <header>
         <h1>Mon Profil</h1>
+        <p id="welcome-message">Bienvenue, <strong>{{ user.username }}</strong> !</p>
         <button id="shop-btn" onclick="window.location.href='/menu'">Boutique</button>
         <button id="logout-btn">Déconnexion</button>
     </header>
 
     <main>
 
-        <div class="info">
-            <button id="edit-info-btn">Modifier</button>
-            <p><strong>Nom d'utilisateur :</strong> <span id="username">{{ user.username }}</span></p>
-            <p><strong>Email :</strong> <span id="email">{{ user.email }}</span></p>
-            <!-- Champs non modifiables -->
+   
         
         <section class="order-history">
             <h2>Mes Commandes</h2>
