@@ -8,6 +8,7 @@ dnspython==2.7.0
 eventlet==0.39.0
 Flask==3.1.0
 Flask-DebugToolbar==0.16.0
+Flask-JWT-Extended==4.7.1
 Flask-Login==0.6.3
 Flask-Mail==0.10.0
 Flask-Migrate==4.1.0
@@ -25,6 +26,7 @@ packaging==24.2
 psycopg2==2.9.10
 psycopg2-binary==2.9.10
 pycparser==2.22
+PyJWT==2.10.1
 python-dotenv==1.0.1
 python-engineio==4.11.2
 python-http-client==3.3.7
