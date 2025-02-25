@@ -85,38 +85,3 @@ document.getElementById('edit-form').addEventListener('submit', function(event) 
         alert('Erreur lors de la modification');
     });
 });
-
-
-document.getElementById('edit-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Empêche le comportement par défaut du formulaire
-
-    const formData = new FormData(this);  // Récupère les données du formulaire
-    const data = {
-        nom: formData.get('nom'),
-        prenom: formData.get('prenom'),
-        email: formData.get('email'),
-        adresse: formData.get('adresse')
-    };
-
-    // Envoi des données au backend via une requête POST pour modifier les informations utilisateur
-    fetch('/modifier_info', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message) {
-            alert(data.message);  // Affiche un message de succès
-            window.location.reload();  // Recharger la page pour afficher les informations mises à jour
-        } else {
-            alert('Erreur lors de la modification');
-        }
-    })
-    .catch(error => {
-        console.error('Erreur:', error);
-        alert('Erreur lors de la modification');
-    });
-});

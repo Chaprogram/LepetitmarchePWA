@@ -69,10 +69,19 @@ def login():
     return render_template('login.html',user=current_user)
 
 @main.route('/utilisateur')
-@login_required
+@login_required  # Cette annotation assure que l'utilisateur est connecté
 def utilisateur():
-    return render_template('utilisateur.html', user=current_user)
-
+    if not current_user.is_authenticated:
+        return redirect(url_for('main.login'))  # Redirige vers la page de login si l'utilisateur n'est pas connecté
+    
+    # Renvoyer les informations de l'utilisateur sous forme de JSON
+    user_data = {
+        'nom': current_user.nom,
+        'prenom': current_user.prenom,
+        'email': current_user.email,
+        'adresse': current_user.adresse
+    }
+    return jsonify(user_data)
 
 @main.route('/check-session')
 def check_session():
