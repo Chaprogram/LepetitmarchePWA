@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Utilisateur - Le Petit Marché</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/utilisateur.css') }}">>
+</head>
+<body>
+    <header>
+        <h1>Mon Profil</h1>
+        <button id="shop-btn" onclick="window.location.href='/boutique'">Boutique</button>
+        <button id="logout-btn">Déconnexion</button>
+    </header>
+
+    <main>
+
+            <div class="info">
+                <p><strong>Nom :</strong> <span id="nom">Dupont</span></p>
+                <p><strong>Prénom :</strong> <span id="prenom">Jean</span></p>
+                <p><strong>Email :</strong> <span id="email">jean.dupont@example.com</span></p>
+                <p><strong>Adresse :</strong> <span id="adresse">123 Rue de la Liberté, Paris</span></p>
+                <button id="edit-info-btn">Modifier</button>
+
+                <form id="edit-form" class="hidden">
+                    <label>Nom : <input type="text" name="nom" value="Dupont"></label>
+                    <label>Prénom : <input type="text" name="prenom" value="Jean"></label>
+                    <label>Email : <input type="email" name="email" value="jean.dupont@example.com"></label>
+                    <label>Adresse : <input type="text" name="adresse" value="123 Rue de la Liberté, Paris"></label>
+                    <button type="submit">Enregistrer</button>
+                    <button type="button" id="cancel-btn">Annuler</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="order-history">
+            <h2>Mes Commandes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Commande</th>
+                        <th>Montant</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-list">
+                    <tr>
+                        <td>2024-02-20</td>
+                        <td>3 pains blancs, 5 croissants</td>
+                        <td>12.50€</td>
+                        <td>Livré</td>
+                    </tr>
+                    <tr>
+                        <td>2024-02-15</td>
+                        <td>2 baguettes, 1 gâteau au chocolat</td>
+                        <td>9.80€</td>
+                        <td>En cours</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static',filename='js/utilisateur.js') }}"></script>
+</body>
+</html>

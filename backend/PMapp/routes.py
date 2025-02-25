@@ -12,6 +12,7 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 
@@ -188,10 +189,15 @@ def reservation_submit():
 
 
 
-@main.route('/logout')
+@main.route('/logout', methods=['POST'])
+@jwt_required()
 def logout():
-    logout_user()
-    return redirect(url_for('main.index'))
+    """
+    Déconnecte l'utilisateur en invalidant son token JWT.
+    """
+    identity = get_jwt_identity()
+    # Ici, tu peux enregistrer l'ID du token dans une liste de tokens invalidés (optionnel)
+    return jsonify({"message": "Déconnexion réussie"}), 200
 
 @main.route('/admin')
 @login_required

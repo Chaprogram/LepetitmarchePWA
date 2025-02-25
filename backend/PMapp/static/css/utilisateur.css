@@ -1,0 +1,149 @@
+/* Styles généraux */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+#shop-btn {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#shop-btn:hover {
+    background-color: #1976D2;
+}
+
+header h1 {
+    margin: 0;
+}
+
+#logout-btn {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#logout-btn:hover {
+    background-color: #c9302c;
+}
+
+
+
+.info p {
+    font-size: 18px;
+    margin: 8px 0;
+}
+
+#edit-info-btn {
+    background-color: #ffc107;
+    color: black;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#edit-info-btn:hover {
+    background-color: #e0a800;
+}
+
+/* Formulaire de modification */
+#edit-form {
+    display: none;
+    text-align: left;
+}
+
+#edit-form label {
+    display: block;
+    margin: 10px 0;
+}
+
+#edit-form input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#edit-form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#cancel-btn {
+    background-color: #d9534f;
+}
+
+#cancel-btn:hover {
+    background-color: #c9302c;
+}
+
+/* Section Commandes */
+.order-history {
+    background-color: white;
+    padding: 20px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.order-history h2 {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}

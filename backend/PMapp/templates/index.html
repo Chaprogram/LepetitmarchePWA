@@ -9,9 +9,16 @@
   <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }}"> <!-- Liens CSS Flask -->
   <link rel ="user" href="{{ url_for('main.user') }}"> <!-- Si tu as une page utilisateur -->
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+  <link rel="login" href="{{url_for('main.login')}}">
+  <link rel="register" href="{{url_for('main.register')}}">
 </head>
 <body>
   <header>
+    <div class="auth-buttons">
+      <button onclick="window.location.href='/login'">Se connecter </button>
+      <button onclick="window.location.href='/register'">Créer un compte</button>
+
+  </div>
     <img src="{{ url_for('static',filename='images/icon-192x192.png') }}" alt="Logo du site Le Petit Marché" width="150"> <!-- Utilisation de Flask pour le chemin de l'image -->
     <h1>Bienvenue sur Le Petit Marché</h1>
   </header>

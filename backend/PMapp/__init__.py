@@ -5,7 +5,7 @@ from flask_socketio import SocketIO
 from flask_mail import Mail
 import os
 from dotenv import load_dotenv
-
+from flask_jwt_extended import JWTManager
 
 load_dotenv()
 # Initialisation des extensions
@@ -13,6 +13,7 @@ db = SQLAlchemy()
 socketio = SocketIO()
 mail = Mail()
 login_manager = LoginManager()
+jwt = JWTManager()
 
 def create_app():
     # Créer l'application Flask
@@ -35,6 +36,7 @@ def create_app():
     app.config['MAIL_USERNAME'] = os.getenv('ZOHO_EMAIL')
     app.config['MAIL_PASSWORD'] = os.getenv('ZOHO_PASSWORD')
     app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_FROM_EMAIL')
+    app.config["JWT_SECRET_KEY"] =os.getenv('JWT_SECRET_KEY')
 
 
 
@@ -47,6 +49,7 @@ def create_app():
     mail.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'
+    jwt.init_app(app)
 
     # Vérifier la connexion à la base de données (pour le démarrage)
     with app.app_context():
