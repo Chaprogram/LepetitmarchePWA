@@ -1,3 +1,38 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const jwtToken = getJwtToken(); // Assurez-vous que vous récupérez le token JWT ici
+
+    // Vérifier si le token existe avant d'essayer de charger les données
+    if (jwtToken) {
+        fetch('/utilisateur', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + jwtToken // Ajout du token JWT dans l'en-tête
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Récupérer les données de l'utilisateur
+            } else {
+                window.location.href = '/login'; // Rediriger vers la page de login si non autorisé
+            }
+        })
+        .then(user => {
+            // Affichage des informations utilisateur sur la page
+            document.getElementById('nom').innerText = user.nom;
+            document.getElementById('prenom').innerText = user.prenom;
+            document.getElementById('email').innerText = user.email;
+            document.getElementById('adresse').innerText = user.adresse;
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des données utilisateur:', error);
+        });
+    } else {
+        window.location.href = '/login'; // Si pas de token, rediriger vers login
+    }
+});
+
+
+
 // Récupérer le token JWT depuis le localStorage ou une autre source
 function getJwtToken() {
     return localStorage.getItem('jwt_token');  // Assurez-vous que le token est stocké dans le localStorage lors de la connexion
