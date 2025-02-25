@@ -71,9 +71,9 @@ def user():
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        data = request.get_json()
-        email = request.form['email']
-        password = request.form['password']
+        data = request.get_json()  # Récupérer les données JSON envoyées par le frontend
+        email = data.get('email')  # Utiliser 'data.get' pour récupérer l'email
+        password = data.get('password')  # Utiliser 'data.get' pour récupérer le mot de passe
         print(f"Email : {email}")  # Débogage : Vérifie que l'email est bien récupéré
         
         user = User.query.filter_by(email=email).first()
@@ -98,6 +98,7 @@ def login():
             flash('Email ou mot de passe incorrect', 'danger')
         
     return render_template('login.html')
+
 
 
 @main.route('/utilisateur')
