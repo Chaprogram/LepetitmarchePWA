@@ -13,7 +13,7 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 
 from . import main  # Import du Blueprint déclaré dans main/__init__.py
  # Définir un blueprint
@@ -42,6 +42,7 @@ def user():
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        data = request.get_json()
         email = request.form['email']
         password = request.form['password']
         print(f"Email : {email}")  # Débogage : Vérifie que l'email est bien récupéré
@@ -54,7 +55,7 @@ def login():
             if user.check_password(password):
                 print("Mot de passe correct")  # Débogage : Vérifie que le mot de passe est correct
                 login_user(user)
-                flash('Connexion réussie', 'success')
+                access_token = create_access_token(identity=user.username)
                 
                 # Vérification du rôle d'admin après la connexion
                 if user.is_admin:
@@ -81,9 +82,15 @@ def utilisateur():
     user_info = User.query.filter_by(username=current_user).first()
 
     if user_info:
-        return render_template('utilisateur.html', user=user_info)
+         return jsonify({
+            "nom": user_info.nom,
+            "prenom": user_info.prenom,
+            "email": user_info.email,
+            "adresse": user_info.adresse
+        })  # Renvoyer les infos de l'utilisateur
     else:
         return jsonify({"msg": "Utilisateur non trouvé"}), 404
+    
 
 @main.route('/modifier_info', methods=['POST'])
 @jwt_required()

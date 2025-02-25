@@ -154,6 +154,7 @@ function logout() {
 // Sélectionner le formulaire de connexion
 const loginForm = document.getElementById('login-form');
 
+
 // Ajouter un écouteur d'événement pour la soumission du formulaire
 loginForm.addEventListener('submit', function (event) {
     event.preventDefault();  // Empêche la soumission par défaut du formulaire
@@ -181,6 +182,8 @@ loginForm.addEventListener('submit', function (event) {
 
             // Rediriger vers la page utilisateur ou une autre page protégée
             window.location.href = '/utilisateur';  // Rediriger vers la page utilisateur
+        } else if (data.error) {
+            alert(data.error);  // Affiche l'erreur venant du backend
         } else {
             alert('Nom d\'utilisateur ou mot de passe incorrect');
         }
@@ -189,7 +192,6 @@ loginForm.addEventListener('submit', function (event) {
         console.error('Erreur lors de la connexion:', error);
     });
 });
-
 
 const jwtToken = localStorage.getItem('jwt_token'); // Récupérer le token JWT stocké dans localStorage
 
