@@ -108,6 +108,27 @@ def check_session():
     return {'logged_in': current_user.is_authenticated}
 
 
+@main.route('/modifier_info', methods=['POST'])
+@login_required  # Assurez-vous que l'utilisateur est connecté
+def modifier_info():
+    data = request.get_json()
+
+    # Vérifier que toutes les informations nécessaires sont présentes
+    if not data.get('nom') or not data.get('prenom') or not data.get('email') or not data.get('adresse'):
+        return jsonify({"message": "Toutes les informations doivent être remplies"}), 400
+
+    # Mettre à jour les informations de l'utilisateur
+    current_user.nom = data['nom']
+    current_user.prenom = data['prenom']
+    current_user.email = data['email']
+    current_user.adresse = data['adresse']
+
+    # Sauvegarder les modifications dans la base de données
+    db.session.commit()
+
+    return jsonify({"message": "Informations mises à jour avec succès!"})
+
+
 
 
 def send_email_via_zoho(name, email, commandes):
