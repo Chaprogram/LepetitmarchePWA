@@ -71,16 +71,9 @@ def login():
 @main.route('/utilisateur', methods=['GET'])
 @login_required
 def utilisateur():
-    # Vérifier si l'utilisateur est authentifié
-    if current_user.is_authenticated:
-        # Renvoyer les données de l'utilisateur sous forme de JSON
-        return jsonify({
-            'username': current_user.username,
-            'email': current_user.email,
-        })
-    else:
-        # Si l'utilisateur n'est pas authentifié, rediriger vers la page de login
-        return jsonify({'error': 'Utilisateur non authentifié'}), 401
+    user = current_user
+    print("Utilisateur connecté :", user)  # Log pour voir les données en console
+    return render_template('utilisateur.html', user=user)
 
 @main.route('/check-session')
 def check_session():
