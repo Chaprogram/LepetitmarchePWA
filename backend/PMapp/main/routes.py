@@ -76,8 +76,7 @@ def utilisateur():
 
 @main.route('/check-session')
 def check_session():
-    return {'logged_in': current_user.is_authenticated}
-
+    return jsonify({'logged_in': current_user.is_authenticated})
 
 
 @main.route('/register', methods=['GET', 'POST'])

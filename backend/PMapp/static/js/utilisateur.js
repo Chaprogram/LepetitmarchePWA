@@ -1,49 +1,45 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const jwtToken = getJwtToken(); // Assurez-vous que vous récupérez le token JWT ici
-
-    // Vérifier si le token existe avant d'essayer de charger les données
-    if (jwtToken) {
-        fetch('/utilisateur', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + jwtToken // Ajout du token JWT dans l'en-tête
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json(); // Récupérer les données de l'utilisateur
+    // Vérifier si l'utilisateur est connecté
+    fetch('/check-session')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.logged_in) {
+                window.location.href = '/login'; // Rediriger vers la page de login si l'utilisateur n'est pas connecté
             } else {
-                window.location.href = '/login'; // Rediriger vers la page de login si non autorisé
+                // Affichage des informations utilisateur
+                fetch('/utilisateur', {
+                    method: 'GET',
+                })
+                .then(response => response.json()) // Récupérer les données de l'utilisateur
+                .then(user => {
+                    document.getElementById('nom').innerText = user.nom;
+                    document.getElementById('prenom').innerText = user.prenom;
+                    document.getElementById('email').innerText = user.email;
+                    document.getElementById('adresse').innerText = user.adresse;
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des données utilisateur:', error);
+                });
             }
-        })
-        .then(user => {
-            // Affichage des informations utilisateur sur la page
-            document.getElementById('nom').innerText = user.nom;
-            document.getElementById('prenom').innerText = user.prenom;
-            document.getElementById('email').innerText = user.email;
-            document.getElementById('adresse').innerText = user.adresse;
         })
         .catch(error => {
-            console.error('Erreur lors de la récupération des données utilisateur:', error);
+            console.error('Erreur lors de la vérification de la session:', error);
+            window.location.href = '/login'; // Rediriger vers la page de login si un problème survient
         });
-    } else {
-        window.location.href = '/login'; // Si pas de token, rediriger vers login
-    }
 });
 
-
-
-// Récupérer le token JWT depuis le localStorage ou une autre source
-function getJwtToken() {
-    return localStorage.getItem('jwt_token');  // Assurez-vous que le token est stocké dans le localStorage lors de la connexion
-}
-
-// Fonction de logout pour supprimer le token JWT et rediriger
+// Fonction de logout pour supprimer la session et rediriger
 document.getElementById('logout-btn').addEventListener('click', () => {
-    localStorage.removeItem('jwt_token');  // Suppression du token JWT
-    window.location.href = '/login';  // Redirection vers la page de connexion
+    fetch('/logout', {
+        method: 'GET',
+    })
+    .then(() => {
+        window.location.href = '/login';  // Redirection vers la page de connexion après déconnexion
+    })
+    .catch(error => {
+        console.error('Erreur lors de la déconnexion:', error);
+    });
 });
-
 
 // Afficher / masquer le formulaire de modification
 document.getElementById('edit-info-btn').addEventListener('click', function() {
@@ -67,12 +63,11 @@ document.getElementById('edit-form').addEventListener('submit', function(event) 
         adresse: formData.get('adresse')
     };
 
-    // Envoi des données au backend via une requête POST avec le JWT dans l'en-tête
+    // Envoi des données au backend via une requête POST pour modifier les informations utilisateur
     fetch('/modifier_info', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + getJwtToken()  // Ajout du token JWT dans l'en-tête Authorization
         },
         body: JSON.stringify(data),
     })
