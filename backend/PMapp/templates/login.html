@@ -37,7 +37,7 @@
     {% if current_user.is_authenticated %}
         <button id="logout-btn" onclick="logout()">Logout</button>
     {% else %}
-        <a href="{{ url_for('main.login') }}"><button id="login-btn">Se connecter</button></a>
+        <a href="{{ url_for('main.login') }}"><button id="login-btn">Se déconnecter</button></a>
     {% endif %}
 </div>
 

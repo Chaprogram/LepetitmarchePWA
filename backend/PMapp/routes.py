@@ -111,6 +111,29 @@ def utilisateur():
 
     return render_template('utilisateur.html', user=user_info)
 
+@main.route('/modifier_info', methods=['POST'])
+@jwt_required()
+def modifier_info():
+    current_user = get_jwt_identity()
+    user_info = User.query.filter_by(username=current_user).first()
+
+    if not user_info:
+        return {'message': 'Utilisateur non trouvé'}, 404
+
+    # Récupérer les nouvelles informations du formulaire
+    data = request.json  # Assurez-vous d'envoyer les données en JSON depuis le frontend
+    user_info.nom = data.get('nom', user_info.nom)
+    user_info.prenom = data.get('prenom', user_info.prenom)
+    user_info.email = data.get('email', user_info.email)
+    user_info.adresse = data.get('adresse', user_info.adresse)
+
+    db.session.commit()  # Enregistrer les modifications
+
+    return {'message': 'Informations modifiées avec succès'}
+
+
+
+
 def send_email_via_zoho(name, email, commandes):
     # Configuration de l'e-mail
     from_email = "no-reply@lepetitmarche.be"

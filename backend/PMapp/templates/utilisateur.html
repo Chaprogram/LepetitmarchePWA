@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil Utilisateur - Le Petit Marché</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/utilisateur.css') }}">>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/utilisateur.css') }}">
 </head>
 <body>
     <header>
@@ -16,12 +16,12 @@
     <main>
 
             <div class="info">
-                <p><strong>Nom :</strong> <span id="nom">Dupont</span></p>
-                <p><strong>Prénom :</strong> <span id="prenom">Jean</span></p>
-                <p><strong>Email :</strong> <span id="email">jean.dupont@example.com</span></p>
-                <p><strong>Adresse :</strong> <span id="adresse">123 Rue de la Liberté, Paris</span></p>
+                
                 <button id="edit-info-btn">Modifier</button>
-
+                <p><strong>Nom :</strong> <span id="nom">{{ user.nom }}</span></p>
+                <p><strong>Prénom :</strong> <span id="prenom">{{ user.prenom }}</span></p>
+                <p><strong>Email :</strong> <span id="email">{{ user.email }}</span></p>
+                <p><strong>Adresse :</strong> <span id="adresse">{{ user.adresse }}</span></p>
                 <form id="edit-form" class="hidden">
                     <label>Nom : <input type="text" name="nom" value="Dupont"></label>
                     <label>Prénom : <input type="text" name="prenom" value="Jean"></label>

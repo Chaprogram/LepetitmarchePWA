@@ -1,142 +1,54 @@
-// Sélection des éléments du DOM
-const editInfoBtn = document.getElementById('edit-info-btn');
-const editForm = document.getElementById('edit-form');
-const cancelBtn = document.getElementById('cancel-btn');
-const logoutBtn = document.getElementById('logout-btn');
-const changePhotoBtn = document.getElementById('change-photo-btn');
-const uploadPhotoInput = document.getElementById('upload-photo');
-const profilePic = document.getElementById('profile-pic');
-
-// ✅ Afficher le formulaire de modification
-editInfoBtn.addEventListener('click', () => {
-    editForm.classList.remove('hidden');
-    editInfoBtn.style.display = 'none';
-});
-
-// ❌ Annuler la modification
-cancelBtn.addEventListener('click', () => {
-    editForm.classList.add('hidden');
-    editInfoBtn.style.display = 'inline-block';
-});
-
-// 📤 Upload de la photo de profil
-changePhotoBtn.addEventListener('click', () => {
-    uploadPhotoInput.click();
-});
-
-uploadPhotoInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            profilePic.src = event.target.result; // Affiche l'image sélectionnée
-            // Ici, tu peux envoyer l'image au backend si nécessaire
-        };
-        reader.readAsDataURL(file);
-    }
-});
-
-// 📝 Soumettre le formulaire de modification
-editForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(editForm);
-
-    try {
-        const response = await fetch('/update-profile', {
-            method: 'POST',
-            body: JSON.stringify({
-                nom: formData.get('nom'),
-                prenom: formData.get('prenom'),
-                email: formData.get('email'),
-                adresse: formData.get('adresse')
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}` // JWT pour l'authentification
-            }
-        });
-
+// Déconnexion
+document.getElementById('logout-btn').addEventListener('click', function() {
+    fetch('/logout', {
+        method: 'POST',
+    })
+    .then(response => {
         if (response.ok) {
-            const data = await response.json();
-            // Met à jour les informations affichées
-            document.getElementById('nom').textContent = data.nom;
-            document.getElementById('prenom').textContent = data.prenom;
-            document.getElementById('email').textContent = data.email;
-            document.getElementById('adresse').textContent = data.adresse;
-
-            editForm.classList.add('hidden');
-            editInfoBtn.style.display = 'inline-block';
+            window.location.href = '/login';  // Redirige vers la page de connexion après déconnexion
         } else {
-            alert('Erreur lors de la modification.');
+            alert('Erreur lors de la déconnexion');
         }
-    } catch (error) {
-        console.error('Erreur:', error);
-    }
+    });
 });
 
-// 🚪 Déconnexion
-logoutBtn.addEventListener('click', async () => {
-    try {
-        const response = await fetch('/logout', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        if (response.ok) {
-            localStorage.removeItem('token'); // Supprime le token JWT
-            window.location.href = '/'; // Redirige vers la page d'accueil
-        } else {
-            alert('Erreur lors de la déconnexion.');
-        }
-    } catch (error) {
-        console.error('Erreur:', error);
-    }
+// Afficher / masquer le formulaire de modification
+document.getElementById('edit-info-btn').addEventListener('click', function() {
+    document.getElementById('edit-form').classList.toggle('hidden');
 });
 
+// Annuler les modifications
+document.getElementById('cancel-btn').addEventListener('click', function() {
+    document.getElementById('edit-form').classList.add('hidden');
+});
 
-// 🛒 Charger la liste des commandes
-async function loadOrders() {
-    try {
-        const response = await fetch('/get-orders', {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
+// Soumettre les modifications du profil
+document.getElementById('edit-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Empêche le comportement par défaut du formulaire
 
-        if (response.ok) {
-            const orders = await response.json();
-            const ordersList = document.getElementById('orders-list');
-            ordersList.innerHTML = ''; // Vide la liste actuelle
+    const formData = new FormData(this);  // Récupère les données du formulaire
+    const data = {
+        nom: formData.get('nom'),
+        prenom: formData.get('prenom'),
+        email: formData.get('email'),
+        adresse: formData.get('adresse')
+    };
 
-            orders.forEach(order => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${order.date}</td>
-                    <td>${order.commande}</td>
-                    <td>${order.montant}€</td>
-                    <td>${order.status}</td>
-                `;
-                ordersList.appendChild(row);
-            });
+    // Envoi des données au backend via une requête POST
+    fetch('/modifier_info', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert(data.message);  // Affiche un message de succès
+            window.location.reload();  // Recharger la page pour afficher les informations mises à jour
         } else {
-            console.error('Erreur de chargement des commandes');
+            alert('Erreur lors de la modification');
         }
-    } catch (error) {
-        console.error('Erreur:', error);
-    }
-}
-
-// 🔒 Vérification de la connexion de l'utilisateur
-async function checkAuth() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        window.location.href = '/login'; // Redirige vers la page de connexion si non connecté
-    } else {
-        await loadOrders();
-    }
-}
-
-// Lance la vérification au chargement de la page
-window.addEventListener('DOMContentLoaded', checkAuth);
+    });
+});
