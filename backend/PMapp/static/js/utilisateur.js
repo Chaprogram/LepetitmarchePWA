@@ -3,6 +3,11 @@ function getJwtToken() {
     return localStorage.getItem('jwt_token');  // Assurez-vous que le token est stocké dans le localStorage lors de la connexion
 }
 
+// Fonction de logout pour supprimer le token JWT et rediriger
+document.getElementById('logout-btn').addEventListener('click', () => {
+    localStorage.removeItem('jwt_token');  // Suppression du token JWT
+    window.location.href = '/login';  // Redirection vers la page de connexion
+});
 
 
 // Afficher / masquer le formulaire de modification
