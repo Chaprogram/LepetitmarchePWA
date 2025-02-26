@@ -41,5 +41,12 @@
         <a href="{{url_for('main.cart')}}" class="cart-link">Voir mon panier</a>
     </div>
     <script src="{{url_for('static',filename='js/scripts.js')}}"></script>
+    <script>
+        // Définir la catégorie actuelle dans l'URL (ex: chocolat.html?categorie=chocolats)
+        if (!window.location.search.includes("categorie=")) {
+            const category = "alcoolC";  // Change ceci selon la page
+            window.location.href = `${window.location.pathname}?categorie=${category}`;
+        }
+    </script>
 </body>
 </html>

@@ -18,7 +18,7 @@ from email.mime.text import MIMEText
 from . import main  # Import du Blueprint déclaré dans main/__init__.py
  # Définir un blueprint
 main = Blueprint('main', __name__)
-
+admin_bp = Blueprint('admin', __name__)
 
 
 
@@ -130,25 +130,7 @@ def admin():
         return redirect(url_for('main.index'))
     return render_template('admin.html')
 
-@main.route("/add_product", methods=["POST"])
-def add_product():
-    data = request.get_json()
-    if not all(key in data for key in ["nom", "prix", "categorie", "stock", "description"]):
-        return jsonify({"message": "Données incomplètes"}), 400
 
-    try:
-        nouveau_produit = Product(
-            name=data["nom"],
-            price=float(data["prix"]),
-            category=data["categorie"],
-            stock=int(data["stock"]),
-            description=data["description"]
-        )
-        db.session.add(nouveau_produit)
-        db.session.commit()
-        return jsonify({"message": f"Produit {data['nom']} ajouté avec succès"}), 201
-    except Exception as e:
-        return jsonify({"message": f"Erreur : {str(e)}"}), 500
 
 @main.route("/notifications", methods=["GET"])
 def get_notifications():
@@ -262,6 +244,59 @@ def test_email():
         return f'Erreur lors de l\'envoi de l e-mail : {e}'
 
 
+
+
+@admin_bp.route('/admin')
+def admin():
+    return render_template('admin.html')
+
+@admin_bp.route('/ajouter_produit', methods=['POST'])
+def ajouter_produit():
+    data = request.json
+    nouveau_produit = Product(  # Utilisation correcte de Product
+        name=data['name'],       # Doit correspondre au nom envoyé par le frontend
+        price=data['price'],
+        category=data['category'],
+        stock=data['stock']
+    )
+    db.session.add(nouveau_produit)
+    db.session.commit()
+    return jsonify({"message": "Produit ajouté avec succès", "produit": data})
+
+
+# Route pour récupérer tous les produits
+@admin_bp.route('/produits', methods=['GET'])
+def get_produits():
+    produits = Product.query.all()  # Utilisation correcte de Product
+    produits_dict = [{"id": p.id, "name": p.name, "price": p.price, "category": p.category, "stock": p.stock} for p in produits]
+    return jsonify(produits_dict)
+
+
+# Route pour supprimer un produit
+@admin_bp.route('/supprimer_produit/<int:id>', methods=['DELETE'])
+def supprimer_produit(id):
+    produit = Product.query.get(id)  # Utilisation correcte de Product
+    if produit:
+        db.session.delete(produit)
+        db.session.commit()
+        return jsonify({"message": "Produit supprimé avec succès"})
+    return jsonify({"error": "Produit introuvable"}), 404
+
+
+
+@main.route('/produits')
+def get_products():
+    categorie = request.args.get('categorie')
+    if categorie:
+        products = Product.query.filter_by(category=categorie).all()
+    else:
+        products = Product.query.all()
+
+    return jsonify([{
+        "name": product.name,
+        "price": product.price,
+        "stock": product.stock
+    } for product in products])
 
 
 
