@@ -86,6 +86,12 @@ const renderNotifications = () => {
 // Fonction pour afficher les réservations (simulées ici)
 const renderReservations = () => {
     const reservationsTable = document.querySelector('#reservations tbody');
+
+    if (!reservationsTable) {
+        console.error("❌ L'élément #reservations tbody n'existe pas dans le DOM !");
+        return; // Arrêter l'exécution de la fonction
+    }
+
     reservationsTable.innerHTML = ''; // Vider la table des réservations
 
     // Exemple de réservations simulées
