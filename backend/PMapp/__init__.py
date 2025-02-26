@@ -5,7 +5,9 @@ from flask_socketio import SocketIO
 from flask_mail import Mail
 import os
 from dotenv import load_dotenv
-from flask_jwt_extended import JWTManager
+from PMapp.models import db
+from PMapp.routes import main_bp,admin_bp
+
 
 load_dotenv()
 # Initialisation des extensions
@@ -69,5 +71,7 @@ def create_app():
     # Importation et enregistrement des routes
     from PMapp.routes import main
     app.register_blueprint(main)
+    app.register_blueprint(main_bp)
+    app.register_blueprint(admin_bp, url_prefix='/admin')  # Ajoute ceci
 
     return app
