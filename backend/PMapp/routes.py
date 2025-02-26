@@ -211,7 +211,7 @@ def logout():
 
 @main.route('/admin')
 @login_required
-def admin():
+def admin_page():
     print(f"Utilisateur connecté : {current_user.username}")  # Debug
     if not current_user.is_admin:
         flash("Accès non autorisé", "danger")
