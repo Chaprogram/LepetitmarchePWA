@@ -18,7 +18,6 @@ from email.mime.text import MIMEText
 from . import main  # Import du Blueprint déclaré dans main/__init__.py
  # Définir un blueprint
 main = Blueprint('main', __name__)
-admin_bp = Blueprint('admin', __name__)
 
 
 
@@ -246,11 +245,11 @@ def test_email():
 
 
 
-@admin_bp.route('/admin')
+@main.route('/admin')
 def admin():
     return render_template('admin.html')
 
-@admin_bp.route('/ajouter_produit', methods=['POST'])
+@main.route('/ajouter_produit', methods=['POST'])
 def ajouter_produit():
     data = request.json
     nouveau_produit = Product(  # Utilisation correcte de Product
@@ -265,7 +264,7 @@ def ajouter_produit():
 
 
 # Route pour récupérer tous les produits
-@admin_bp.route('/produits', methods=['GET'])
+@main.route('/produits', methods=['GET'])
 def get_produits():
     produits = Product.query.all()  # Utilisation correcte de Product
     produits_dict = [{"id": p.id, "name": p.name, "price": p.price, "category": p.category, "stock": p.stock} for p in produits]
@@ -273,7 +272,7 @@ def get_produits():
 
 
 # Route pour supprimer un produit
-@admin_bp.route('/supprimer_produit/<int:id>', methods=['DELETE'])
+@main.route('/supprimer_produit/<int:id>', methods=['DELETE'])
 def supprimer_produit(id):
     produit = Product.query.get(id)  # Utilisation correcte de Product
     if produit:

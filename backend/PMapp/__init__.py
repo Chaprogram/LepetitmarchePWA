@@ -68,8 +68,8 @@ def create_app():
         return User.query.get(int(user_id))
 
     # Importation et enregistrement des routes
-    from PMapp.routes import admin_bp, main_bp
-    app.register_blueprint(main_bp)
-    app.register_blueprint(admin_bp, url_prefix='/admin')  # Ajoute ceci
+    from PMapp.routes import main
+    app.register_blueprint(main)
+    
 
     return app
