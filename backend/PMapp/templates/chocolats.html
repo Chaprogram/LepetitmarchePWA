@@ -15,20 +15,8 @@
     </header>
 
     <!-- Liste des produits -->
-    <div class="products-container">
-        <div class="product">
-            
-            <h3>Kinder bueno</h3>
-            <p class="price">5,99€</p> 
-            <button class="add-btn" onclick="addProductToCart('Kinder bueno')">+</button>
-        </div>
-        <div class="product">
-    
-            <h3>Kinder surpise</h3>
-            <p class="price">2,99€</p> 
-            <button class="add-btn" onclick="addProductToCart('Kinder surprise')">+</button>
-        </div>
-        <!-- Ajouter d'autres produits ici -->
+    <div id="products-container">
+        
     </div>
 
     <!-- Affichage du panier -->
@@ -39,10 +27,12 @@
     <script>
         // Vérifier si l'URL contient déjà un paramètre "categorie"
         if (!window.location.search.includes("categorie=")) {
-            const category = "chocolats";  // Nom de la catégorie associée à cette page
-            window.location.href = `${window.location.pathname}?categorie=${category}`;
+            const category = "chocolats";  // Nom de la catégorie pour cette page
+            window.location.href = `${window.location.pathname}?categorie=${category}`;  // Ajouter "categorie=chocolats" à l'URL
         }
     </script>
+    
+
     
 </body>
 </html>
