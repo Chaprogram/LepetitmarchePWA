@@ -63,7 +63,12 @@
     <section id="gestion-produits">
       <h2>Gestion des Produits</h2>
       <ul id="product-list">
-          <!-- Les produits seront chargés ici dynamiquement -->
+        {% for produit in produits %}
+        <li>
+            {{ produit.nom }} - {{ produit.categorie }} - {{ produit.prix }}€ 
+            <button class="delete-product" data-id="{{ produit.id }}">Supprimer</button>
+        </li>
+    {% endfor %}
       </ul>
   </section>
   
