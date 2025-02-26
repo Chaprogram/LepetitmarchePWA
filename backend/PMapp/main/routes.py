@@ -251,16 +251,24 @@ def admin():
 
 @main.route('/ajouter_produit', methods=['POST'])
 def ajouter_produit():
-    data = request.json
-    nouveau_produit = Product(  # Utilisation correcte de Product
-        name=data['name'],       # Doit correspondre au nom envoyé par le frontend
-        price=data['price'],
-        category=data['category'],
-        stock=data['stock']
-    )
-    db.session.add(nouveau_produit)
-    db.session.commit()
-    return jsonify({"message": "Produit ajouté avec succès", "produit": data})
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Données invalides"}), 400  # Renvoie une erreur si aucune donnée n'est envoyée
+    
+    try:
+        nouveau_produit = Product(
+            name=data['name'],       
+            price=data['price'],
+            category=data['category'],
+            stock=data['stock']
+        )
+        db.session.add(nouveau_produit)
+        db.session.commit()
+        return jsonify({"message": "Produit ajouté avec succès", "produit": data})
+    
+    except Exception as e:
+        db.session.rollback()  # Annule les changements en cas d'erreur
+        return jsonify({"error": f"Erreur lors de l'ajout du produit: {str(e)}"}), 500
 
 
 # Route pour récupérer tous les produits
@@ -271,31 +279,26 @@ def get_produits():
     return jsonify(produits_dict)
 
 
-# Route pour supprimer un produit
 @main.route('/supprimer_produit/<int:id>', methods=['DELETE'])
 def supprimer_produit(id):
-    produit = Product.query.get(id)  # Utilisation correcte de Product
-    if produit:
+    produit = Product.query.get(id)
+    if not produit:
+        return jsonify({"error": "Produit introuvable"}), 404  # Retourne une erreur HTTP 404 si le produit n'existe pas
+
+    try:
         db.session.delete(produit)
         db.session.commit()
         return jsonify({"message": "Produit supprimé avec succès"})
-    return jsonify({"error": "Produit introuvable"}), 404
+    
+    except Exception as e:
+        db.session.rollback()  # Annule les changements en cas d'erreur
+        return jsonify({"error": f"Erreur lors de la suppression: {str(e)}"}), 500
 
 
 
-@main.route('/produits')
-def get_products():
-    categorie = request.args.get('categorie')
-    if categorie:
-        products = Product.query.filter_by(category=categorie).all()
-    else:
-        products = Product.query.all()
 
-    return jsonify([{
-        "name": product.name,
-        "price": product.price,
-        "stock": product.stock
-    } for product in products])
+
+
 
 
 
