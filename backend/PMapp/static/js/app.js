@@ -1,3 +1,4 @@
+// Enregistrement du service worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
@@ -135,6 +136,13 @@ const renderOrders = () => {
   });
 };
 
+// Mettre à jour le statut de la commande
+const updateOrderStatus = (index, status) => {
+  orders[index].status = status;
+  renderOrders(); // Mettre à jour l'affichage des commandes
+};
+
+// Vérifier si l'utilisateur est connecté et afficher le bouton de déconnexion
 window.addEventListener('DOMContentLoaded', () => {
   fetch('/check-session')
   .then(response => response.json())
