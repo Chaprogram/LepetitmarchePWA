@@ -5,7 +5,6 @@ from flask_socketio import SocketIO
 from flask_mail import Mail
 import os
 from dotenv import load_dotenv
-from PMapp.models import db
 from PMapp.routes import main_bp,admin_bp
 
 
@@ -69,7 +68,7 @@ def create_app():
         return User.query.get(int(user_id))
 
     # Importation et enregistrement des routes
-    from PMapp.routes import main
+    from PMapp.routes import main, admin_bp, main_bp
     app.register_blueprint(main)
     app.register_blueprint(main_bp)
     app.register_blueprint(admin_bp, url_prefix='/admin')  # Ajoute ceci
