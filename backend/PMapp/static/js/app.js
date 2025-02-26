@@ -136,13 +136,16 @@ const renderOrders = () => {
 };
 
 window.addEventListener('DOMContentLoaded', () => {
-  fetch('/check-session')  // Exemple d'endpoint pour vérifier si l'utilisateur est connecté
-    .then(response => response.json())
-    .then(data => {
-      if (data.logged_in) {
-        // Utilisateur connecté, afficher le bouton logout
-        document.getElementById('logout-btn').style.display = 'inline-block';
+  fetch('/check-session')
+  .then(response => response.json())
+  .then(data => {
+    if (data.logged_in) {
+      // Vérifie que l'élément existe avant de modifier son style
+      const logoutButton = document.getElementById('logout-btn');
+      if (logoutButton) {
+        logoutButton.style.display = 'inline-block';
       }
-    })
-    .catch(error => console.error('Erreur lors de la vérification de la session:', error));
+    }
+  })
+  .catch(error => console.error('Erreur lors de la vérification de la session:', error))
 });
