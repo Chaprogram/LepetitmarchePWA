@@ -9,6 +9,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (searchBtn) {
         searchBtn.addEventListener('click', searchProduct);
     }
+
+    // Bouton pour ajouter un produit (uniquement pour l'admin)
+    const addProductBtn = document.getElementById("add-product-btn");
+    if (addProductBtn) {
+        addProductBtn.addEventListener("click", () => {
+            const productName = prompt("Nom du produit:");
+            const productPrice = prompt("Prix du produit:");
+            const productStock = prompt("Stock disponible:");
+
+            if (productName && productPrice && productStock) {
+                ajouterProduit(productName, productPrice, productStock);
+            }
+        });
+    }
 });
 
 // 🔹 Fonction pour charger les produits en fonction de la catégorie dans l'URL
@@ -61,17 +75,7 @@ function handleCategorySelection() {
     });
 }
 
-// 🔹 Fonction pour rechercher un produit
-function searchProduct() {
-    const searchValue = document.getElementById('search-input').value.trim().toLowerCase();
-    const allProducts = document.querySelectorAll('.product h3');
 
-    allProducts.forEach(product => {
-        const productDiv = product.parentElement;
-        const productName = product.textContent.toLowerCase();
-        productDiv.style.display = productName.includes(searchValue) ? 'block' : 'none';
-    });
-}
 
 // 🔹 Initialisation et gestion du panier
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -130,36 +134,15 @@ function displayCart() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    handleCategorySelection();
-    updateCartCount();
-    displayCart();
-    loadProductsFromURL();
-
-    // Bouton pour ajouter un produit (uniquement pour l'admin)
-    const addProductBtn = document.getElementById("add-product-btn");
-    if (addProductBtn) {
-        addProductBtn.addEventListener("click", () => {
-            const productName = prompt("Nom du produit:");
-            const productPrice = prompt("Prix du produit:");
-            const productStock = prompt("Stock disponible:");
-
-            if (productName && productPrice && productStock) {
-                ajouterProduit(productName, productPrice, productStock);
-            }
-        });
-    }
-});
-
 // 🔹 Fonction pour ajouter un produit via API Flask
-function ajouterProduit(nom, prix, stock) {
+function ajouterProduit(name, price, stock) {
     const urlParams = new URLSearchParams(window.location.search);
     const categorie = urlParams.get("categorie");
 
     fetch("/api/ajouter_produit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nom, prix, stock, categorie })
+        body: JSON.stringify({ name, price, stock, category })
     })
     .then(response => response.json())
     .then(data => {
