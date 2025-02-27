@@ -104,3 +104,29 @@ header h1 {
 .cart-link:hover {
     text-decoration: underline;
 }
+
+.quantity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.quantity button {
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    border-radius: 5px;
+}
+
+.quantity button:hover {
+    background-color: #ccc;
+}
+
+.quantity-text {
+    font-size: 1.2rem;
+    padding: 0 10px;
+}
