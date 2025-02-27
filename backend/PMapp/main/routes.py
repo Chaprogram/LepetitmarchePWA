@@ -353,120 +353,119 @@ def get_products_by_category(category):
 @main.route('/pains')
 def pains():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('pains') # Par exemple
-    return render_template('pains.html', products=products)
+    produits = Product.query.filter_by(category='pains') # Par exemple
+    return render_template('pains.html', produits=produits)
    
 
 @main.route('/alcoolB')
 def alcoolB():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('alcoolB')  # Par exemple
-    return render_template('alcoolB.html', products=products)
+    produits = Product.query.filter_by(category='alcoolB')  # Par exemple
+    return render_template('alcoolB.html', produits=produits)
 
 @main.route('/alcoolC')
 def alcoolC():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('alcoolC')  # Par exemple
-    return render_template('alcoolC.html', products=products)
+    produits = Product.query.filter_by(category='alcoolC')  # Par exemple
+    return render_template('alcoolC.html', produits=produits)
 
 
 @main.route('/animaux')
 def animaux():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('animaux')  # Par exemple
-    return render_template('animaux.html', products=products)
+    produits =   Product.query.filter_by(category='animaux')  # Par exemple
+    return render_template('animaux.html', produits=produits)
 
 
 @main.route('/cereales')
 def cereales():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('cereales')  # Par exemple
-    return render_template('cereales.html', products=products)
+    produits =  Product.query.filter_by(category='cereales')  # Par exemple
+    return render_template('cereales.html', produits=produits)
 
 
 @main.route('/chips')
 def chips():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('chips')  # Par exemple
-    return render_template('chips.html', products=products)
+    produits =   Product.query.filter_by(category='chips')  # Par exemple
+    return render_template('chips.html', produits=produits)
 
 
 @main.route('/chiques')
 def chiques():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('chiques') # Par exemple
-    return render_template('chiques.html', products=products)
+    produits =  Product.query.filter_by(category='chiques') # Par exemple
+    return render_template('chiques.html', produits=produits)
 
 
 @main.route('/chocolats')
 def chocolats():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('chocolats')  # Par exemple
-    return render_template('chocolats.html', products=products)
+    produits = Product.query.filter_by(category='chocolats')  # Par exemple
+    return render_template('chocolats.html', produits=produits)
 
 
 @main.route('/conserves')
 def conserves():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('conserves')  # Par exemple
-    return render_template('conserves.html', products=products)
+    produits =   Product.query.filter_by(category='conserves')  # Par exemple
+    return render_template('conserves.html', produits=produits)
 
 
 @main.route('/glaces')
 def glaces():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('glaces')  # Par exemple
-    return render_template('glaces.html', products=products)
+    produits =  Product.query.filter_by(category='glaces')  # Par exemple
+    return render_template('glaces.html', produits=produits)
 
 
 @main.route('/grignotages')
 def grignotages():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products = products = get_products_by_category('grignotages')  # Par exemple
-    return render_template('grignotages.html', products=products)
+    produits = Product.query.filter_by(category='grignotages')  # Par exemple
+    return render_template('grignotages.html', produits=produits)
 
 
 @main.route('/hygienes')
 def hygienes():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('hygienes') # Par exemple
-    return render_template('hygienes.html', products=products)
+    produits = Product.query.filter_by(category='hygienes') # Par exemple
+    return render_template('hygienes.html', produits=produits)
 
 
 @main.route('/pates')
 def pates():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('pates')  # Par exemple
-    return render_template('pates.html', products=products)
+    produits =   Product.query.filter_by(category='pates')  # Par exemple
+    return render_template('pates.html', produits=produits)
 
 
 @main.route('/pellets')
 def pellets():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('pellets')  # Par exemple
-    return render_template('pellets.html', products=products)
+    produits = Product.query.filter_by(category='pellets')  # Par exemple
+    return render_template('pellets.html', produits=produits)
 
 
 @main.route('/sauces')
 def sauces():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('sauces')  # Par exemple
-    return render_template('sauces.html', products=products)
+    produits =   Product.query.filter_by(category='sauces')  # Par exemple
+    return render_template('sauces.html', produits=produits)
 
 
 @main.route('/softs')
 def softs():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('softs') # Par exemple
-    return render_template('softs.html', products=products)
+    produits = Product.query.filter_by(category='softs') # Par exemple
+    return render_template('softs.html', produits=produits)
 
 
 @main.route('/surgeles')
 def surgeles():
     # Tu peux récupérer les produits de la catégorie "pains" depuis la base de données si tu le souhaites
-    products =  products = get_products_by_category('surgeles') # Par exemple
-    return render_template('surgeles.html', products=products)
-
+    produits = Product.query.filter_by(category='surgeles') # Par exemple
+    return render_template('surgeles.html', produits=produits)
 
 
 
