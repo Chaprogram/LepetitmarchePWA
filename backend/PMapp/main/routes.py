@@ -294,7 +294,11 @@ def ajouter_produit():
 def manage_produits():
     if request.method == 'GET':
         try:
-            produits = Product.query.all()
+            categorie = request.args.get('categorie')  # Récupérer la catégorie depuis l'URL
+            query = Product.query
+            if categorie:  # Filtrer si une catégorie est spécifiée
+                query = query.filter_by(category=categorie)
+            produits = query.all()
             produits_dict = [
                 {"id": p.id, "name": p.name, "price": p.price, "category": p.category, "stock": p.stock}
                 for p in produits
@@ -302,9 +306,10 @@ def manage_produits():
             return jsonify(produits_dict), 200
         except Exception as e:
             return jsonify({"error": f"Erreur lors de la récupération des produits: {str(e)}"}), 500
+
     elif request.method == 'POST':
         try:
-            data = request.get_json()  # Récupère les données envoyées par le frontend
+            data = request.get_json()
             new_product = Product(
                 name=data['name'],
                 price=data['price'],

@@ -44,14 +44,15 @@ function loadProductsFromURL() {
 // Fonction pour attacher les événements "Ajouter au panier"
 function attachAddToCartEvents() {
     if (document.querySelectorAll(".add-btn").length === 0) return; // Evite de réattacher les événements
-    document.querySelectorAll(".add-btn").forEach(button => {
-        button.addEventListener("click", (e) => {
+    document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("add-btn")) {
             const productId = parseInt(e.target.getAttribute("data-id"));
             const productName = e.target.getAttribute("data-name");
             const productPrice = parseFloat(e.target.getAttribute("data-price"));
             addProductToCart(productId, productName, productPrice);
-        });
+        }
     });
+    
 }
 
 // Ajout d'un produit au panier
@@ -68,6 +69,7 @@ function addProductToCart(productId, productName, productPrice) {
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();  // Mise à jour du nombre d'articles
     displayCart();      // Affichage du contenu du panier
+
 }
 
 // Mise à jour du nombre d'articles dans le panier
@@ -78,4 +80,8 @@ function updateCartCount() {
     if (cartCountElement) {
         cartCountElement.textContent = cartCount;
     }
+}
+
+function displayCart() {
+    console.log("Panier mis à jour :", JSON.parse(localStorage.getItem('cart')) || []);
 }

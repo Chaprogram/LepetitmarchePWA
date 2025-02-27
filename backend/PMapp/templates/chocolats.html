@@ -31,13 +31,7 @@
         <a href="{{url_for('main.cart')}}" class="cart-link">Voir mon panier</a>
     </div>
     <script src="{{url_for('static',filename='js/scripts.js')}}"></script>
-    <script>
-        // Vérifier si l'URL contient déjà un paramètre "categorie"
-        if (!window.location.search.includes("categorie=")) {
-            const category = "chocolats";  // Nom de la catégorie pour cette page
-            window.location.href = `${window.location.pathname}?categorie=${category}`;  // Ajouter "categorie=chocolats" à l'URL
-        }
-    </script>
+    
     
 
     
