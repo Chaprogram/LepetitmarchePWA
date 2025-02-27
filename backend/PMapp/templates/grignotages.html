@@ -18,8 +18,8 @@
     <div id="products-container">
         {% for produit in produits %}
             <div class="product">
-                <h3>{{ produit.nom }}</h3>
-                <p>Prix: {{ produit.prix }}€</p>
+                <h3>{{ produit.name }}</h3>
+                <p>Prix: {{ produit.price }}€</p>
                 <p>Stock: {{ produit.stock }}</p>
                 <button class="add-to-cart" data-id="{{ produit.id }}">Ajouter au panier</button>
             </div>

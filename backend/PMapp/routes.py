@@ -251,7 +251,8 @@ def envoyer_email_admin(name, email, phone, commandes):
 # Route pour afficher la page admin
 @main.route('/admin')
 def admin():
-    return render_template('admin.html')
+    produits = Product.query.all()
+    return render_template('admin.html', produits=produits)
 
 @main.route('/ajouter_produit', methods=['POST'])
 def ajouter_produit():
