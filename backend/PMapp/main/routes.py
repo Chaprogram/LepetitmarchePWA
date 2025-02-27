@@ -319,24 +319,15 @@ def manage_produits():
 
 
 
-@main.route('/api/supprimer_produit/<int:id>', methods=['DELETE'])
-def supprimer_produit(id):
-    produit = Product.query.get(id)  # Recherche le produit par ID
-    if not produit:
-        # Si le produit n'existe pas, retourne une erreur 404
-        return jsonify({"error": "Produit introuvable"}), 404
-
-    try:
-        db.session.delete(produit)  # Supprime le produit de la base de données
-        db.session.commit()  # Applique les changements
-        # Renvoie un message de succès après la suppression
-        return jsonify({"message": "Produit supprimé avec succès"}), 200
-    
-    except Exception as e:
-        # En cas d'erreur, annule les changements et renvoie une erreur 500
-        db.session.rollback()
-        return jsonify({"error": f"Erreur lors de la suppression: {str(e)}"}), 500
-
+@main.route('/api/produits/<int:id>', methods=['DELETE'])
+def delete_product(id):
+    product = Product.query.get(id)
+    if product:
+        db.session.delete(product)
+        db.session.commit()
+        return jsonify({'message': 'Produit supprimé avec succès.'}), 200
+    else:
+        return jsonify({'message': 'Produit non trouvé.'}), 404
 
 
 
