@@ -1,5 +1,6 @@
 // Initialisation du panier au chargement de la page
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+function displayCart() { 
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 // Fonction exécutée lorsque le DOM est complètement chargé
 document.addEventListener("DOMContentLoaded", () => {
@@ -27,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-});
+})};
 
 // 🔹 Fonction pour charger les produits en fonction de la catégorie dans l'URL
 function loadProductsFromURL() {
