@@ -250,7 +250,7 @@ def admin():
     produits = Product.query.all()
     return render_template('admin.html',produits=produits)
 
-@main.route('/ajouter_produit', methods=['POST'])
+@main.route('/api/ajouter_produit', methods=['POST'])
 def ajouter_produit():
     data = request.get_json()  # Récupère les données envoyées en JSON
     
@@ -290,7 +290,7 @@ def ajouter_produit():
 
 
 
-@main.route('/produits', methods=['GET'])
+@main.route('/api/produits', methods=['GET'])
 def get_produits():
     try:
         produits = Product.query.all()  # Récupère tous les produits depuis la base de données
@@ -306,7 +306,7 @@ def get_produits():
 
 
 
-@main.route('/supprimer_produit/<int:id>', methods=['DELETE'])
+@main.route('/api/supprimer_produit/<int:id>', methods=['DELETE'])
 def supprimer_produit(id):
     produit = Product.query.get(id)  # Recherche le produit par ID
     if not produit:

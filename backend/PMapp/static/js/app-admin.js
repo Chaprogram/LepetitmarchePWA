@@ -35,6 +35,13 @@ const addProduct = async (e) => {
     e.preventDefault(); // Empêche l'envoi du formulaire
 
     // Récupère les valeurs du formulaire
+    const productNameField = document.getElementById('product-name');
+if (productNameField) {
+    const productName = productNameField.value;
+} else {
+    console.error('Le champ de produit n\'existe pas.');
+}
+
     const name = document.getElementById('name').value;
     const price = parseFloat(document.getElementById('price').value);
     const category = document.getElementById('category').value;
