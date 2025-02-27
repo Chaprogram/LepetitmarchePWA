@@ -31,11 +31,12 @@
         <a href="{{url_for('main.cart')}}" class="cart-link">Voir mon panier</a>
     </div>
     <script src="{{url_for('static',filename='js/scripts.js')}}"></script>
-    <script>
+    
+   <script>
         // Fonction pour charger les produits en fonction de la catégorie dans l'URL
         function loadProductsFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
-            const categorie = urlParams.get("categorie"); // Récupère la catégorie de l'URL
+            const categorie = urlParams.get("categorie");
 
             if (!categorie) {
                 console.error("Aucune catégorie spécifiée dans l'URL.");
@@ -44,7 +45,6 @@
 
             console.log("Catégorie extraite de l'URL :", categorie);
 
-            // Appel de l'API Flask pour récupérer les produits de cette catégorie
             fetch(`/api/produits?categorie=${categorie}`)
                 .then(response => response.json())
                 .then(data => {
@@ -69,7 +69,6 @@
                         container.appendChild(productDiv);
                     });
 
-                    // Attache les événements après le chargement des produits
                     attachAddToCartEvents();
                 })
                 .catch(error => console.error("Erreur lors du chargement des produits :", error));
@@ -77,7 +76,6 @@
 
         // Fonction pour attacher les événements "Ajouter au panier"
         function attachAddToCartEvents() {
-            if (document.querySelectorAll(".add-to-cart").length === 0) return;
             document.querySelectorAll(".add-to-cart").forEach(button => {
                 button.addEventListener("click", (e) => {
                     const productId = parseInt(e.target.getAttribute("data-id"));
@@ -98,7 +96,7 @@
             }
 
             localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount(); // Mise à jour du nombre d'articles
+            updateCartCount();
         }
 
         // Fonction pour mettre à jour le nombre d'articles dans le panier
@@ -111,7 +109,7 @@
             }
         }
 
-        // Lancement de la fonction de chargement des produits après le chargement de la page
+        // Lancer la fonction après le chargement de la page
         document.addEventListener("DOMContentLoaded", loadProductsFromURL);
     </script>
     
