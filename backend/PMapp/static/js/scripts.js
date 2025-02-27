@@ -1,3 +1,7 @@
+// Initialisation du panier au chargement de la page
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// Fonction exécutée lorsque le DOM est complètement chargé
 document.addEventListener("DOMContentLoaded", () => {
     handleCategorySelection(); // Gestion des catégories
     updateCartCount(); // Mise à jour du nombre d'articles dans le panier
@@ -49,7 +53,7 @@ function loadProductsFromURL() {
                     <h3>${product.name}</h3>
                     <p>Prix: ${product.price}€</p>
                     <p>Stock: ${product.stock}</p>
-                    <button class="add-btn" data-name="${product.name}" data-price="${product.price}">Ajouter au panier</button>
+                    <button class="add-btn" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}">Ajouter au panier</button>
                 `;
                 container.appendChild(productDiv);
             });
@@ -75,14 +79,12 @@ function handleCategorySelection() {
     });
 }
 
-
-
 // 🔹 Initialisation et gestion du panier
-function addProductToCart(productName, productPrice) {
-    const productIndex = cart.findIndex(product => product.name === productName);
+function addProductToCart(productId, productName, productPrice) {
+    const productIndex = cart.findIndex(product => product.id === productId);
 
     if (productIndex === -1) {
-        cart.push({ name: productName, price: productPrice, quantity: 1 });
+        cart.push({ id: productId, name: productName, price: productPrice, quantity: 1 });
     } else {
         cart[productIndex].quantity++;  // Incrémente la quantité si le produit est déjà dans le panier
     }
@@ -97,13 +99,13 @@ function attachAddToCartEvents() {
     if (document.querySelectorAll(".add-btn").length === 0) return; // Evite de réattacher les événements
     document.querySelectorAll(".add-btn").forEach(button => {
         button.addEventListener("click", (e) => {
+            const productId = parseInt(e.target.getAttribute("data-id"));
             const productName = e.target.getAttribute("data-name");
             const productPrice = parseFloat(e.target.getAttribute("data-price"));
-            addProductToCart(productName, productPrice);
+            addProductToCart(productId, productName, productPrice);
         });
     });
 }
-
 
 // 🔹 Mise à jour du nombre d'articles dans le panier
 function updateCartCount() {
@@ -134,7 +136,7 @@ function displayCart() {
     });
 }
 
-// 🔹 Fonction pour ajouter un produit via API Flask
+// 🔹 Fonction pour ajouter un produit via API Flask (pour l'admin)
 function ajouterProduit(name, price, stock) {
     const urlParams = new URLSearchParams(window.location.search);
     const categorie = urlParams.get("categorie");
@@ -142,7 +144,7 @@ function ajouterProduit(name, price, stock) {
     fetch("/api/ajouter_produit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, price, stock, category })
+        body: JSON.stringify({ name, price, stock, category: categorie })
     })
     .then(response => response.json())
     .then(data => {

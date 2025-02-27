@@ -252,50 +252,77 @@ def admin():
 
 @main.route('/ajouter_produit', methods=['POST'])
 def ajouter_produit():
-    data = request.get_json()
-    if not data:
-        return jsonify({"error": "Données invalides"}), 400  # Renvoie une erreur si aucune donnée n'est envoyée
+    data = request.get_json()  # Récupère les données envoyées en JSON
+    
+    # Vérifie que toutes les données nécessaires sont présentes
+    if not data or not all(key in data for key in ['name', 'price', 'category', 'stock']):
+        return jsonify({"error": "Données invalides. Assurez-vous que 'name', 'price', 'category', 'stock' sont inclus."}), 400
     
     try:
+        # Crée un nouvel objet Produit avec les données envoyées
         nouveau_produit = Product(
             name=data['name'],       
             price=data['price'],
             category=data['category'],
             stock=data['stock']
         )
+        
+        # Ajoute le produit à la base de données
         db.session.add(nouveau_produit)
         db.session.commit()
-        return jsonify({"message": "Produit ajouté avec succès", "produit": data})
+        
+        # Renvoie une réponse avec les détails du produit ajouté
+        return jsonify({
+            "message": "Produit ajouté avec succès",
+            "produit": {
+                "id": nouveau_produit.id,  # Ajoute l'ID généré
+                "name": nouveau_produit.name,
+                "price": nouveau_produit.price,
+                "category": nouveau_produit.category,
+                "stock": nouveau_produit.stock
+            }
+        }), 201  # Code de statut HTTP 201 pour la création réussie
     
     except Exception as e:
-        db.session.rollback()  # Annule les changements en cas d'erreur
+        # En cas d'erreur, annule la transaction et renvoie une erreur
+        db.session.rollback()
         return jsonify({"error": f"Erreur lors de l'ajout du produit: {str(e)}"}), 500
 
 
-# Route pour récupérer tous les produits
+
 @main.route('/produits', methods=['GET'])
 def get_produits():
-    produits = Product.query.all()  # Utilisation correcte de Product
-    produits_dict = [{"id": p.id, "name": p.name, "price": p.price, "category": p.category, "stock": p.stock} for p in produits]
-    return jsonify(produits_dict)
+    try:
+        produits = Product.query.all()  # Récupère tous les produits depuis la base de données
+        produits_dict = [
+            {"id": p.id, "name": p.name, "price": p.price, "category": p.category, "stock": p.stock}
+            for p in produits
+        ]
+        # Si des produits existent, renvoie-les avec un code de statut 200
+        return jsonify(produits_dict), 200
+    
+    except Exception as e:
+        return jsonify({"error": f"Erreur lors de la récupération des produits: {str(e)}"}), 500
+
 
 
 @main.route('/supprimer_produit/<int:id>', methods=['DELETE'])
 def supprimer_produit(id):
-    produit = Product.query.get(id)
+    produit = Product.query.get(id)  # Recherche le produit par ID
     if not produit:
-        return jsonify({"error": "Produit introuvable"}), 404  # Retourne une erreur HTTP 404 si le produit n'existe pas
+        # Si le produit n'existe pas, retourne une erreur 404
+        return jsonify({"error": "Produit introuvable"}), 404
 
     try:
-        db.session.delete(produit)
-        db.session.commit()
-        return jsonify({"message": "Produit supprimé avec succès"})
+        db.session.delete(produit)  # Supprime le produit de la base de données
+        db.session.commit()  # Applique les changements
+        # Renvoie un message de succès après la suppression
+        return jsonify({"message": "Produit supprimé avec succès"}), 200
     
     except Exception as e:
-        db.session.rollback()  # Annule les changements en cas d'erreur
+        # En cas d'erreur, annule les changements et renvoie une erreur 500
+        db.session.rollback()
         return jsonify({"error": f"Erreur lors de la suppression: {str(e)}"}), 500
-
-
 
 
 
