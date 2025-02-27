@@ -34,11 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
 function loadProductsFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     const categorie = urlParams.get("categorie");
-    console.log("Catégorie extraite de l'URL :", categorie);
+
+    // Vérifie si la catégorie est spécifiée dans l'URL
     if (!categorie) {
-        console.error("Aucune catégorie spécifiée.");
+        console.error("Aucune catégorie spécifiée dans l'URL.");
         return;
     }
+
+    console.log("Catégorie extraite de l'URL :", categorie);
 
     fetch(`/produits?categorie=${categorie}`)
         .then(response => response.json())
@@ -54,7 +57,7 @@ function loadProductsFromURL() {
                     <h3>${product.name}</h3>
                     <p>Prix: ${product.price}€</p>
                     <p>Stock: ${product.stock}</p>
-                    <button class="add-btn" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}">Ajouter au panier</button>
+                    <button class="add-btn" data-name="${product.name}" data-price="${product.price}">Ajouter au panier</button>
                 `;
                 container.appendChild(productDiv);
             });
@@ -64,6 +67,7 @@ function loadProductsFromURL() {
         })
         .catch(error => console.error("Erreur lors du chargement des produits :", error));
 }
+
 
 // 🔹 Fonction pour gérer les catégories
 function handleCategorySelection() {
