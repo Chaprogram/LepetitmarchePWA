@@ -20,7 +20,7 @@
     <!-- Ajout d'un produit -->
     <section id="ajouter-produit">
         <h2>Ajouter un Produit</h2>
-        <form id="addProductForm" method="POST" action="{{ url_for('main.ajouter_produit') }}">
+        <form id="addProductForm" method="POST" action="/api/ajouter_produit">
             <label for="nom">Nom du Produit :</label>
             <input type="text" id="name" name="name" required>
 

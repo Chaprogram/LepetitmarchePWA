@@ -256,19 +256,21 @@ def admin():
 
 @main.route('/api/ajouter_produit', methods=['POST'])
 def ajouter_produit():
-    data = request.get_json()  # Récupère les données envoyées en JSON
-    
-    # Vérifie que toutes les données nécessaires sont présentes
-    if not data or not all(key in data for key in ['name', 'price', 'category', 'stock']):
+    name = request.form.get('name')
+    price = request.form.get('price')
+    category = request.form.get('category')
+    stock = request.form.get('stock')
+
+    if not name or not price or not category or not stock:
         return jsonify({"error": "Données invalides. Assurez-vous que 'name', 'price', 'category', 'stock' sont inclus."}), 400
-    
+
     try:
         # Crée un nouvel objet Produit avec les données envoyées
         nouveau_produit = Product(
-            name=data['name'],       
-            price=data['price'],
-            category=data['category'],
-            stock=data['stock']
+            name=name,
+            price=float(price),
+            category=category,
+            stock=int(stock)
         )
         
         # Ajoute le produit à la base de données
@@ -291,6 +293,7 @@ def ajouter_produit():
         # En cas d'erreur, annule la transaction et renvoie une erreur
         db.session.rollback()
         return jsonify({"error": f"Erreur lors de l'ajout du produit: {str(e)}"}), 500
+
 
 
 # Route pour récupérer tous les produits
