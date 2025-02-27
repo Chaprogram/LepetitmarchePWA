@@ -129,3 +129,46 @@ function displayCart() {
         cartContainer.appendChild(li);
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    handleCategorySelection();
+    updateCartCount();
+    displayCart();
+    loadProductsFromURL();
+
+    // Bouton pour ajouter un produit (uniquement pour l'admin)
+    const addProductBtn = document.getElementById("add-product-btn");
+    if (addProductBtn) {
+        addProductBtn.addEventListener("click", () => {
+            const productName = prompt("Nom du produit:");
+            const productPrice = prompt("Prix du produit:");
+            const productStock = prompt("Stock disponible:");
+
+            if (productName && productPrice && productStock) {
+                ajouterProduit(productName, productPrice, productStock);
+            }
+        });
+    }
+});
+
+// 🔹 Fonction pour ajouter un produit via API Flask
+function ajouterProduit(nom, prix, stock) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const categorie = urlParams.get("categorie");
+
+    fetch("/api/ajouter_produit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nom, prix, stock, categorie })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Produit ajouté avec succès !");
+            loadProductsFromURL(); // Recharge les produits dynamiquement
+        } else {
+            alert("Erreur lors de l'ajout du produit.");
+        }
+    })
+    .catch(error => console.error("Erreur:", error));
+}

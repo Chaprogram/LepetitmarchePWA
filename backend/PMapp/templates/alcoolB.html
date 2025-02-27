@@ -4,38 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AlcoolB - Le Petit Marché</title>
-    <link rel="stylesheet" href="{{url_for('static',filename='css/produits.css')}}">
-    <script src="{{url_for('static',filename='js/scripts.js')}}" defer></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/produits.css') }}">
+    <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
 </head>
 <body>
     <!-- Header -->
     <header>
         <h1>Bouteilles d'alcool</h1>
-        <a href="{{url_for('main.menu')}}"class="btn-go-home">Retour à la boutique</a>
+        <a href="{{ url_for('main.menu') }}" class="btn-go-home">Retour à la boutique</a>
     </header>
 
     <!-- Liste des produits -->
     <div id="products-container">
-        
-           
+        {% for produit in produits %}
+            <div class="product">
+                <h3>{{ produit.nom }}</h3>
+                <p>Prix: {{ produit.prix }}€</p>
+                <p>Stock: {{ produit.stock }}</p>
+                <button class="add-to-cart" data-id="{{ produit.id }}">Ajouter au panier</button>
+            </div>
+        {% endfor %}
     </div>
 
     <!-- Affichage du panier -->
     <div class="cart">
-        <a href="{{url_for('main.cart')}}" class="cart-link">Voir mon panier</a>
+        <a href="{{ url_for('main.cart') }}" class="cart-link">Voir mon panier</a>
     </div>
 
-
-
-    
-        
-    <script src="{{url_for('static',filename='js/scripts.js')}}"></script> 
-    <script>
-        // Vérifier si l'URL contient déjà un paramètre "categorie"
-        if (!window.location.search.includes("categorie=")) {
-            const category = "alcoolB";  // Nom de la catégorie pour cette page
-            window.location.href = `${window.location.pathname}?categorie=${category}`;  // Ajouter "categorie=chocolats" à l'URL
-        }
-    </script>
 </body>
 </html>
