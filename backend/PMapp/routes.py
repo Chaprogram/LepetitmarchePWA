@@ -294,20 +294,32 @@ def ajouter_produit():
 
 
 # Route pour récupérer tous les produits
-@main.route('/api/produits', methods=['GET'])
-def get_produits():
-    try:
-        produits = Product.query.all()  # Récupère tous les produits depuis la base de données
-        produits_dict = [
-            {"id": p.id, "name": p.name, "price": p.price, "category": p.category, "stock": p.stock}
-            for p in produits
-        ]
-        # Si des produits existent, renvoie-les avec un code de statut 200
-        return jsonify(produits_dict), 200
-    
-    except Exception as e:
-        return jsonify({"error": f"Erreur lors de la récupération des produits: {str(e)}"}), 500
-
+@main.route('/api/produits', methods=['GET', 'POST'])
+def manage_produits():
+    if request.method == 'GET':
+        try:
+            produits = Product.query.all()
+            produits_dict = [
+                {"id": p.id, "name": p.name, "price": p.price, "category": p.category, "stock": p.stock}
+                for p in produits
+            ]
+            return jsonify(produits_dict), 200
+        except Exception as e:
+            return jsonify({"error": f"Erreur lors de la récupération des produits: {str(e)}"}), 500
+    elif request.method == 'POST':
+        try:
+            data = request.get_json()  # Récupère les données envoyées par le frontend
+            new_product = Product(
+                name=data['name'],
+                price=data['price'],
+                category=data['category'],
+                stock=data['stock']
+            )
+            db.session.add(new_product)
+            db.session.commit()
+            return jsonify({"message": "Produit ajouté avec succès"}), 201
+        except Exception as e:
+            return jsonify({"error": f"Erreur lors de l'ajout du produit: {str(e)}"}), 500
 
 
 @main.route('/api/supprimer_produit/<int:id>', methods=['DELETE'])
