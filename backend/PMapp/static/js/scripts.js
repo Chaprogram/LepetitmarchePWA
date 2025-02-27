@@ -1,38 +1,65 @@
-// Fonction pour ajouter un produit au panier avec la quantité choisie
-function addProductToCart(productId, quantity) {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const productIndex = cart.findIndex(product => product.id === productId);
+document.addEventListener("DOMContentLoaded", function() {
+    loadProductsFromURL();  // Charge les produits après le chargement de la page
+});
 
-    if (productIndex === -1) {
-        // Ajoute le produit avec la quantité sélectionnée
-        cart.push({ id: productId, quantity: quantity });
-    } else {
-        // Si le produit est déjà dans le panier, incrémente sa quantité
-        cart[productIndex].quantity += quantity;
+// Fonction pour charger les produits depuis l'URL
+function loadProductsFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const categorie = urlParams.get("categorie");
+
+    if (!categorie) {
+        console.error("Aucune catégorie spécifiée dans l'URL.");
+        return;
     }
 
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
+    console.log("Catégorie extraite de l'URL :", categorie);
+
+    fetch(`/api/produits?categorie=${categorie}`)
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById("products-container");
+            if (!container) return;
+            container.innerHTML = "";
+
+            if (data.length === 0) {
+                container.innerHTML = "Aucun produit trouvé pour cette catégorie.";
+                return;
+            }
+
+            data.forEach(product => {
+                const productDiv = document.createElement("div");
+                productDiv.classList.add("product");
+                productDiv.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <p>Prix: ${product.price}€</p>
+                    <p>Stock: ${product.stock}</p>
+                    
+                    <!-- Quantité -->
+                    <div class="quantity">
+                        <button class="decrease" data-id="${product.id}">-</button>
+                        <span class="quantity-text">1</span>
+                        <button class="increase" data-id="${product.id}">+</button>
+                    </div>
+                    
+                    <!-- Ajouter au panier -->
+                    <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}">Ajouter au panier</button>
+                `;
+                container.appendChild(productDiv);
+            });
+
+            attachQuantityEvents();  // Attache les événements pour ajuster la quantité
+            attachAddToCartEvents(); // Attache les événements pour ajouter au panier
+        })
+        .catch(error => console.error("Erreur lors du chargement des produits :", error));
 }
 
-// Fonction pour attacher les événements "Ajouter au panier"
-function attachAddToCartEvents() {
-    document.querySelectorAll(".add-to-cart").forEach(button => {
-        button.addEventListener("click", (e) => {
-            const productId = parseInt(e.target.getAttribute("data-id"));
-            const quantity = parseInt(e.target.previousElementSibling.querySelector('.quantity-text').textContent);
-            addProductToCart(productId, quantity);  // Envoie la quantité choisie
-        });
-    });
-}
-
-// Fonction pour gérer l'ajustement de la quantité
+// Fonction pour attacher les événements aux boutons "+" et "-"
 function attachQuantityEvents() {
     document.querySelectorAll('.increase').forEach(button => {
         button.addEventListener('click', (e) => {
             const quantitySpan = e.target.previousElementSibling;
             let currentQuantity = parseInt(quantitySpan.textContent);
-            if (currentQuantity < 99) {  // Limiter à 99 produits
+            if (currentQuantity < 99) {  // Limiter la quantité à 99
                 quantitySpan.textContent = currentQuantity + 1;
             }
         });
@@ -49,7 +76,36 @@ function attachQuantityEvents() {
     });
 }
 
-// Fonction pour mettre à jour le nombre d'articles dans le panier
+// Fonction pour attacher l'événement "Ajouter au panier"
+function attachAddToCartEvents() {
+    document.querySelectorAll(".add-to-cart").forEach(button => {
+        button.addEventListener("click", (e) => {
+            const productId = parseInt(e.target.getAttribute("data-id"));
+            const productName = e.target.getAttribute("data-name");
+            const productPrice = parseFloat(e.target.getAttribute("data-price"));
+            const quantity = parseInt(e.target.previousElementSibling.querySelector('.quantity-text').textContent);
+            
+            addProductToCart(productId, productName, productPrice, quantity);
+        });
+    });
+}
+
+// Fonction pour ajouter un produit au panier
+function addProductToCart(productId, productName, productPrice, quantity) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const productIndex = cart.findIndex(product => product.id === productId);
+
+    if (productIndex === -1) {
+        cart.push({ id: productId, name: productName, price: productPrice, quantity: quantity });
+    } else {
+        cart[productIndex].quantity += quantity;  // Incrémente la quantité si le produit est déjà dans le panier
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();  // Mise à jour du nombre d'articles
+}
+
+// Mise à jour du nombre d'articles dans le panier
 function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const cartCount = cart.reduce((total, product) => total + product.quantity, 0);
@@ -59,11 +115,4 @@ function updateCartCount() {
     }
 }
 
-// Fonction pour afficher le contenu du panier dans la console (optionnel)
-function displayCart() {
-    console.log("Panier mis à jour :", JSON.parse(localStorage.getItem('cart')) || []);
-}
-
-// Lancer la fonction après le chargement de la page
-document.addEventListener("DOMContentLoaded", loadProductsFromURL);
 

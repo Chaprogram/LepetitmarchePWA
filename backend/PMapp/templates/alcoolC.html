@@ -13,7 +13,7 @@
         <h1>Alcools en canettes</h1>
         <a href="{{url_for('main.menu')}}" class="btn-go-home">Retour à la boutique</a>
     </header>
-
+    <span id="cart-count">0</span>
     <!-- Liste des produits -->
     <div id="products-container">
         {% for produit in produits %}
@@ -40,7 +40,7 @@
     <script src="{{url_for('static',filename='js/scripts.js')}}"></script>
     
     <script>
-        function loadProductsFromURL() {
+function loadProductsFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     const categorie = urlParams.get("categorie");
 
