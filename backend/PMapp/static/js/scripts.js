@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function loadProductsFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     const categorie = urlParams.get("categorie");
-
+    console.log("Catégorie extraite de l'URL :", categorie);
     if (!categorie) {
         console.error("Aucune catégorie spécifiée.");
         return;
