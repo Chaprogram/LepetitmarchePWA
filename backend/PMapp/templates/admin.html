@@ -22,13 +22,13 @@
         <h2>Ajouter un Produit</h2>
         <form id="addProductForm" method="POST" action="{{ url_for('main.ajouter_produit') }}">
             <label for="nom">Nom du Produit :</label>
-            <input type="text" id="nom" name="name" required>
+            <input type="text" id="name" name="name" required>
 
             <label for="prix">Prix (€) :</label>
-            <input type="number" id="prix" name="price" step="0.01" required>
+            <input type="number" id="price" name="price" step="0.01" required>
 
-            <label for="categorie">Catégorie :</label>
-            <select id="categorie" name="category">
+            <label for="category">Catégorie :</label>
+            <select id="category" name="category">
                 <option value="chocolats">Chocolats</option>
                 <option value="chiques">Chiques</option>
                 <option value="chips">Chips</option>

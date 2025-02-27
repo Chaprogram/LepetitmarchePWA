@@ -35,7 +35,7 @@ const addProduct = async (e) => {
     e.preventDefault(); // Empêche l'envoi du formulaire
 
     // Récupère les valeurs du formulaire
-    const productNameField = document.getElementById('product-name');
+    const productNameField = document.getElementById('name');
 if (productNameField) {
     const productName = productNameField.value;
 } else {
