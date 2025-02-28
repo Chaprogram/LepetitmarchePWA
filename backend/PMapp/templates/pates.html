@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pâtes - Le Petit Marché</title>
     <link rel="stylesheet" href="{{url_for('static',filename='css/produits.css')}}">
-    <script src="{{url_for('static',filename='js/scripts.js')}}"defer></script>
+    
 </head>
 <body>
     <!-- Header -->
@@ -95,7 +95,8 @@ function attachAddToCartEvents() {
     document.querySelectorAll(".add-to-cart").forEach(button => {
         button.addEventListener("click", (e) => {
             const productId = parseInt(e.target.getAttribute("data-id"));
-            const quantity = parseInt(e.target.previousElementSibling.querySelector('.quantity-text').textContent);
+            const quantity = parseInt(e.target.parentElement.querySelector('.quantity-text').textContent);
+
             addProductToCart(productId, quantity);
         });
     });

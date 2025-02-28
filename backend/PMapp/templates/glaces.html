@@ -93,7 +93,8 @@ function attachAddToCartEvents() {
     document.querySelectorAll(".add-to-cart").forEach(button => {
         button.addEventListener("click", (e) => {
             const productId = parseInt(e.target.getAttribute("data-id"));
-            const quantity = parseInt(e.target.previousElementSibling.querySelector('.quantity-text').textContent);
+            const quantity = parseInt(e.target.parentElement.querySelector('.quantity-text').textContent);
+
             addProductToCart(productId, quantity);
         });
     });

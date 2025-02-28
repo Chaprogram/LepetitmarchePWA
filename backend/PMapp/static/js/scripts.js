@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+    updateCartCount();
     loadProductsFromURL();  // Charge les produits après le chargement de la page
 });
 
@@ -83,7 +84,8 @@ function attachAddToCartEvents() {
             const productId = parseInt(e.target.getAttribute("data-id"));
             const productName = e.target.getAttribute("data-name");
             const productPrice = parseFloat(e.target.getAttribute("data-price"));
-            const quantity = parseInt(e.target.previousElementSibling.querySelector('.quantity-text').textContent);
+            const quantity = parseInt(e.target.closest('.product').querySelector('.quantity-text').textContent);
+
             
             addProductToCart(productId, productName, productPrice, quantity);
         });
