@@ -48,3 +48,19 @@ function displayCart() {
 
     attachRemoveHandlers();
 }
+
+function attachRemoveHandlers() {
+    document.querySelectorAll('.remove-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const productName = e.target.getAttribute('data-name');
+            removeProductFromCart(productName);
+        });
+    });
+}
+
+function removeProductFromCart(productName) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart = cart.filter(product => product.name !== productName); // Filtrer le produit à supprimer
+    localStorage.setItem('cart', JSON.stringify(cart));
+    displayCart(); // Réafficher le panier
+}
