@@ -32,7 +32,7 @@ function loadProductsFromURL() {
                 productDiv.innerHTML = `
                     <h3>${product.name}</h3>
                     <p>Prix: ${product.price}€</p>
-                    <p>Stock: ${product.stock}</p>
+                   
                     
                     <!-- Quantité -->
                     <div class="quantity">

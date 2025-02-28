@@ -20,7 +20,7 @@
             <div class="product">
                 <h3>{{ produit.name }}</h3>
                 <p>Prix: {{ produit.price }}€</p>
-                <p>Stock: {{ produit.stock }}</p>
+              
                  <!-- Quantité -->
             <div class="quantity">
                 <button class="decrease" data-id="{{ produit.id }}">-</button>
@@ -68,7 +68,7 @@ function loadProductsFromURL() {
                 productDiv.innerHTML = `
                     <h3>${product.name}</h3>
                     <p>Prix: ${product.price}€</p>
-                    <p>Stock: ${product.stock}</p>
+                    
                     
                     <!-- Quantité -->
                     <div class="quantity">
