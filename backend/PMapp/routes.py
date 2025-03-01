@@ -147,7 +147,7 @@ def reservation():
     if request.method == 'POST':
         try:
             name = request.form.get('name')
-            email = request.form.get('email')
+            email_reservation = request.form.get('email')  # Correction ici
             phone = request.form.get('phone')
 
             # Construction de la liste des commandes
@@ -172,16 +172,18 @@ def reservation():
             # Sauvegarde dans la base de données
             new_reservation = Reservation(
                 name=name,
-                email=email,
+                email_reservation=email_reservation,  # Correction ici
                 phone_number=phone,
                 order_details=", ".join(commandes)  # Stocke sous forme de chaîne
             )
             db.session.add(new_reservation)
             db.session.commit()
-         # Envoi de l'email via Zoho
-            send_email_via_zoho(name, email, ", ".join(commandes))
+
+            # Envoi de l'email via Zoho
+            send_email_via_zoho(name, email_reservation, ", ".join(commandes))  # Correction ici
+
             # Redirection vers la page de confirmation
-            return redirect(url_for('main.reservation_submit', name=name, email=email, phone=phone, commandes=", ".join(commandes)))
+            return redirect(url_for('main.reservation_submit', name=name, email=email_reservation, phone=phone, commandes="|".join(commandes)))
 
         except Exception as e:
             db.session.rollback()
@@ -191,15 +193,14 @@ def reservation():
 
     return render_template('reservation.html')
 
-
 @main.route('/reservation_submit')
 def reservation_submit():
     name = request.args.get('name')
-    email = request.args.get('email')
+    email_reservation = request.args.get('email')  # Correction ici
     phone = request.args.get('phone')
     commandes = request.args.get('commandes', '').split('|')
-    
-    return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
+
+    return render_template('reservation_submit.html', name=name, email=email_reservation, phone=phone, commandes=commandes)
 
 
 
