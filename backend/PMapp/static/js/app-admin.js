@@ -45,14 +45,14 @@ if (productNameField) {
     const name = document.getElementById('name').value;
     const price = parseFloat(document.getElementById('price').value);
     const category = document.getElementById('category').value;
-    const stock = parseInt(document.getElementById('stock').value, 10);
+    
 
     // Crée un nouvel objet produit
     const newProduct = {
         name: name,
         price: price,
         category: category,
-        stock: stock
+       
     };
 
     // Envoie le produit au backend via une requête POST

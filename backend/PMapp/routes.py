@@ -262,9 +262,9 @@ def ajouter_produit():
     name = request.form.get('name')
     price = request.form.get('price')
     category = request.form.get('category')
-    stock = request.form.get('stock')
+    
 
-    if not name or not price or not category or not stock:
+    if not name or not price or not category:
         return jsonify({"error": "Données invalides. Assurez-vous que 'name', 'price', 'category', 'stock' sont inclus."}), 400
 
     try:
@@ -273,7 +273,7 @@ def ajouter_produit():
             name=name,
             price=float(price),
             category=category,
-            stock=int(stock)
+            
         )
         
         # Ajoute le produit à la base de données
@@ -288,7 +288,7 @@ def ajouter_produit():
                 "name": nouveau_produit.name,
                 "price": nouveau_produit.price,
                 "category": nouveau_produit.category,
-                "stock": nouveau_produit.stock
+                
             }
         }), 201  # Code de statut HTTP 201 pour la création réussie
     
@@ -310,7 +310,7 @@ def manage_produits():
                 query = query.filter_by(category=categorie)
             produits = query.all()
             produits_dict = [
-                {"id": p.id, "name": p.name, "price": p.price, "category": p.category, "stock": p.stock}
+                {"id": p.id, "name": p.name, "price": p.price, "category": p.category}
                 for p in produits
             ]
             return jsonify(produits_dict), 200
@@ -324,7 +324,7 @@ def manage_produits():
                 name=data['name'],
                 price=data['price'],
                 category=data['category'],
-                stock=data['stock']
+                
             )
             db.session.add(new_product)
             db.session.commit()
