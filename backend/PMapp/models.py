@@ -54,21 +54,34 @@ class Reservation(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     phone_number = Column(String(20), nullable=False)
-    email = Column(String(120), nullable=False)
+    email_reservation = Column(String(120), nullable=False)
     order_details = Column(String, nullable=False)  # Contient les détails de la commande (produits)
     new_column = Column(String(255))
     
-
     # Lien avec un utilisateur (si tu veux associer une réservation à un utilisateur)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', backref='reservations')
 
 
 
+
 class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), unique=True, nullable=False)
+    email_admin = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
 
     def __repr__(self):
         return f"<Admin {self.email}>"
+    
+
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_email = db.Column(db.String(100), nullable=False)
+    items = db.Column(db.Text, nullable=False)  # Stockera les produits en JSON
+    total = db.Column(db.Float, nullable=False)
+
+    def __init__(self, user_email, items, total):
+        self.user_email = user_email
+        self.items = items
+        self.total = total

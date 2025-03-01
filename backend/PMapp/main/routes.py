@@ -1,5 +1,5 @@
 
-from flask import Blueprint, render_template, redirect, url_for, request, flash, session,jsonify, current_app,render_template_string
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session,jsonify, current_app,render_template_string,send_file
 
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,6 +13,8 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import qrcode
+from io import BytesIO
 
 
 from . import main  # Import du Blueprint déclaré dans main/__init__.py
@@ -473,9 +475,87 @@ def surgeles():
 
 @main.route('/cart')
 def cart():
-      return render_template('cart.html')
+    cart = session.get('cart', [])  # Récupère le panier de la session
+    total = sum(item['price'] * item['quantity'] for item in cart)
+    return render_template('cart.html', cart=cart, total=total)
 
 
+@main.route("/generate_payconiq_qr")
+def generate_payconiq_qr():
+    # Remplace cette URL par celle de ton compte Payconiq
+    payconiq_payment_url = "https://payconiq.com/payment-link-exemple"
+
+    # Générer le QR Code
+    qr = qrcode.make(payconiq_payment_url)
+    img_io = BytesIO()
+    qr.save(img_io, "PNG")
+    img_io.seek(0)
+
+    return send_file(img_io, mimetype="image/png")
+
+
+
+@main.route('/add_to_cart', methods=['POST'])
+def add_to_cart():
+    data = request.json  # Données envoyées par le client (JS)
+    product_id = data.get('id')
+    name = data.get('name')
+    price = data.get('price')
+    quantity = data.get('quantity', 1)
+
+    if 'cart' not in session:
+        session['cart'] = []
+
+    cart = session['cart']
+
+    # Vérifier si le produit est déjà dans le panier
+    for item in cart:
+        if item['id'] == product_id:
+            item['quantity'] += quantity
+            break
+    else:
+        cart.append({'id': product_id, 'name': name, 'price': price, 'quantity': quantity})
+
+    session['cart'] = cart  # Mise à jour de la session
+    session.modified = True  # Pour s'assurer que Flask enregistre les changements
+
+    return jsonify({'message': 'Produit ajouté au panier', 'cart': cart})
+
+
+
+@main.route("/submit_order", methods=["POST"])
+def submit_order():
+    data = request.json
+    payment_method = data.get("payment_method")
+    delivery_address = data.get("delivery_address")
+    delivery_date = data.get("delivery_date")
+    delivery_time = data.get("delivery_time")
+
+    if not delivery_address:
+        return jsonify({"success": False, "error": "Adresse de livraison manquante"}), 400
+
+    # Récupérer les articles du panier
+    cart = session.get("cart", [])
+    if not cart:
+        return jsonify({"success": False, "error": "Le panier est vide"}), 400
+
+    # Sauvegarder la commande dans la base de données
+    total_price = sum(item["price"] * item["quantity"] for item in cart)
+    new_order = Reservation(
+        user_id=session.get("user_id"),  # Assurez-vous que l'utilisateur est connecté
+        items=str(cart),
+        total_price=total_price,
+        delivery_address=delivery_address,
+        delivery_date=datetime.strptime(delivery_date, "%Y-%m-%d"),
+        delivery_time=delivery_time,
+        payment_method=payment_method,
+        status="En attente"
+    )
+
+    db.session.add(new_order)
+    db.session.commit()
+
+    return jsonify({"success": True, "order_id": new_order.id})
 
 
 @main.route('/send_confirmation_email', methods=['POST'])

@@ -5,30 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Panier</title>
     <link rel="stylesheet" href="{{url_for('static',filename='css/cart.css')}}">
-    
 </head>
+
 <header>
     <a href="{{url_for('main.index')}}"> 
-    <img src="{{url_for('static', filename='images/icon-192x192.png')}}" alt="Logo du site Le Petit Marché" width="150">
+        <img src="{{url_for('static', filename='images/icon-192x192.png')}}" alt="Logo du site Le Petit Marché" width="150">
     </a>
 </header>
+
 <body>
     <div class="container">
         <h1>Mon Panier</h1>
-        <ul id="cart-items"></ul>
-        <p>Total : <span id="cart-total">0.00€</span></p>
+
+        <!-- Liste des produits dans le panier -->
+        <ul id="cart-items">
+            {% for item in cart %}
+                <li>
+                    <span>{{ item.name }}</span> <!-- Affiche le nom du produit -->
+                    <span>Quantité : {{ item.quantity }}</span> <!-- Affiche la quantité du produit -->
+                    <span>{{ item.price * item.quantity }}€</span> <!-- Affiche le prix total pour cet article -->
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Affichage du total du panier -->
+        <p>Total : <span id="cart-total">{{ total }}€</span></p>
+
         <button id="clear-cart">Vider le panier</button>
         <button onclick="window.location.href='/menu'">Retour à la boutique</button>
-    
-        <h2>Informations pour la livraison</h2>
 
+        <!-- Formulaire pour la livraison -->
+        <h2>Informations pour la livraison</h2>
         <div id="delivery-form">
             <label for="delivery-address">Adresse :</label>
             <input type="text" id="delivery-address" placeholder="Votre adresse complète" required>
-            
+
             <label for="delivery-date">Jour de livraison :</label>
             <input type="date" id="delivery-date" required>
-            
+
             <label for="delivery-time">Heure de livraison :</label>
             <select id="delivery-time" required>
                 <option value="19:00">19:00</option>
@@ -40,28 +54,99 @@
                 <option value="22:00">22:00</option>
             </select>
         </div>
-        
+
+        <!-- Script pour définir la date de livraison par défaut -->
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 let deliveryDateInput = document.getElementById("delivery-date");
                 if (deliveryDateInput) {
-                    deliveryDateInput.value = new Date().toISOString().split("T")[0];
+                    deliveryDateInput.value = new Date().toISOString().split("T")[0]; // Définit la date d'aujourd'hui par défaut
                 }
             });
         </script>
-        
-    <!-- Section pour le choix de paiement -->
-    <div id="payment-form" class="hidden">
-        <h3>Choisissez votre mode de paiement</h3>
-        <div id="payment-options"></div>
-    </div>
 
-    <button id="submit-order">Valider la commande</button>
+        <!-- Section pour le choix de paiement -->
+        <h3>Choisissez votre mode de paiement</h3>
+<div id="payment-options">
+    <label>
+        <input type="radio" name="payment-method" value="cash" checked> Payer en espèces (à la livraison)
+    </label>
+    <label>
+        <input type="radio" name="payment-method" value="payconiq"> Payer avec Payconiq
+    </label>
 </div>
 
+<!-- Zone pour afficher le QR Code Payconiq -->
+<div id="payconiq-qr" style="display: none; text-align: center;">
+    <h4>Scannez le QR Code avec Payconiq</h4>
+    <img id="payconiq-image" src="" alt="QR Code Payconiq" width="200">
+</div>
+
+<button id="submit-order">Valider la commande</button>
+
+    <!-- Scripts pour gérer l'affichage et les interactions du panier -->
     <script src="{{url_for('static', filename='js/cart.js')}}"></script>
     <script src="{{url_for('static', filename='js/scripts.js')}}"></script>
 
-    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let paymentOptions = document.querySelectorAll("input[name='payment-method']");
+            let payconiqQrDiv = document.getElementById("payconiq-qr");
+            let payconiqImage = document.getElementById("payconiq-image");
+        
+            paymentOptions.forEach(option => {
+                option.addEventListener("change", function () {
+                    if (this.value === "payconiq") {
+                        // Affiche le QR code Payconiq
+                        payconiqQrDiv.style.display = "block";
+                        payconiqImage.src = "/generate_payconiq_qr"; // URL pour générer le QR
+                    } else {
+                        // Cache le QR code
+                        payconiqQrDiv.style.display = "none";
+                    }
+                });
+            });
+        
+            document.getElementById("submit-order").addEventListener("click", function () {
+                let selectedPayment = document.querySelector("input[name='payment-method']:checked").value;
+                let deliveryAddress = document.getElementById("delivery-address").value;
+                let deliveryDate = document.getElementById("delivery-date").value;
+                let deliveryTime = document.getElementById("delivery-time").value;
+        
+                if (!deliveryAddress) {
+                    alert("Veuillez entrer une adresse de livraison.");
+                    return;
+                }
+        
+                let orderData = {
+                    payment_method: selectedPayment,
+                    delivery_address: deliveryAddress,
+                    delivery_date: deliveryDate,
+                    delivery_time: deliveryTime
+                };
+        
+                fetch("/submit_order", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(orderData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Commande validée !");
+                        window.location.href = "/confirmation";
+                    } else {
+                        alert("Erreur lors de la commande.");
+                    }
+                });
+            });
+        });
+        </script>
+        
+
+
+
 </body>
 </html>
