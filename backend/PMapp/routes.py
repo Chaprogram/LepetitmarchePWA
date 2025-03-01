@@ -577,6 +577,41 @@ def commander():
     return render_template('menu.html')
     
 
+@main.route('/confirmation_commande', methods=['GET', 'POST'])
+def confirmation():
+    # Récupérer les informations de l'utilisateur et de la commande
+    user = get_user_info()  # Cette fonction récupère les infos de l'utilisateur connecté
+    produits = get_order_details()  # Cette fonction récupère les détails des produits dans le panier
+    
+    # Calculer le total de la commande
+    total = sum(produit['price'] * produit['quantity'] for produit in produits)
+    
+    # Si la méthode est POST, on pourrait rediriger vers la page de paiement
+    if request.method == 'POST':
+        return redirect(url_for('main.process_payment'))  # Rediriger vers la route de paiement
+    
+    # Rendre la page de confirmation avec les données
+    return render_template('confirmation_commande.html', user=user, produits=produits, total=total)
+
+# Exemple de fonction pour récupérer les infos de l'utilisateur
+def get_user_info():
+    # À adapter selon ton modèle d'utilisateur
+    return {
+        'name': 'John',
+        'surname': 'Doe',
+        'email': 'john.doe@example.com',
+        'address': '123 rue de Paris, 75000 Paris'
+    }
+
+# Exemple de fonction pour récupérer les détails des produits dans la commande
+def get_order_details():
+    # À adapter selon comment tu récupères les produits dans le panier
+    return [
+        {'name': 'Pain', 'price': 2.50, 'quantity': 2},
+        {'name': 'Chocolat', 'price': 3.00, 'quantity': 1}
+    ]
+
+
 
 @main.route('/send_confirmation_email', methods=['POST'])
 def send_confirmation_email():
@@ -598,3 +633,10 @@ def send_confirmation_email():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500 
+    
+
+@main.route('/process_payment', methods=['GET', 'POST'])
+def process_payment():
+    # Ici, tu traiterais le paiement via l'API Payconiq
+    # Pour l'instant, nous affichons un message de succès pour la démonstration
+    return render_template('payment_success.html')

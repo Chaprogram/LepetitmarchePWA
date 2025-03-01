@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de Commande - Le Petit Marché</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/produits.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Confirmation de votre commande</h1>
+        <a href="{{ url_for('main.menu') }}" class="btn-go-home">Retour à la boutique</a>
+    </header>
+    
+    <!-- Détails de la commande -->
+    <div id="order-summary">
+        <h2>Résumé de la commande</h2>
+        <p><strong>Nom :</strong> {{ user.name }} {{ user.surname }}</p>
+        <p><strong>Email :</strong> {{ user.email }}</p>
+        <p><strong>Adresse :</strong> {{ user.address }}</p>
+
+        <h3>Détails de la commande</h3>
+        <ul>
+            {% for produit in produits %}
+                <li>{{ produit.name }} - {{ produit.quantity }} x {{ produit.price }}€</li>
+            {% endfor %}
+        </ul>
+        
+        <p><strong>Total :</strong> {{ total }}€</p>
+    </div>
+
+    <!-- Bouton de paiement -->
+    <div id="payment-section">
+        <form action="{{ url_for('main.process_payment') }}" method="POST">
+            <button type="submit" class="pay-button">Procéder au paiement</button>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
