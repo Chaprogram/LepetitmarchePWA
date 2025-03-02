@@ -3,25 +3,29 @@ const renderProducts = async () => {
     const productList = document.getElementById('product-list');
     const productContainer = document.getElementById('product-container');
     const loadMoreBtn = document.getElementById("load-more");
-    
+
+    if (!productList || !productContainer || !loadMoreBtn) {
+        console.error("Erreur : Un élément de la page est introuvable.");
+        return;
+    }
+
     productList.innerHTML = ''; // Vide la liste avant de réajouter les produits
     productContainer.innerHTML = ''; // Vide aussi l'affichage des produits
 
     try {
-        const response = await fetch('/api/produits'); // Récupère la liste des produits depuis le backend
+        const response = await fetch('/api/produits'); // Récupère la liste des produits
         const products = await response.json();
 
-        // Vérifie si des produits existent
-        if (products.length === 0) {
+        if (!Array.isArray(products) || products.length === 0) {
             productContainer.innerHTML = "<p>Aucun produit disponible.</p>";
+            loadMoreBtn.style.display = "none";
             return;
         }
 
-        // Ajout des produits dans la liste et dans le conteneur
         products.forEach((product, index) => {
             const productItem = document.createElement('li');
             productItem.innerHTML = `
-                ${product.name} - ${product.category} - ${product.price}€ 
+                ${product.name} - ${product.category} - ${product.price.toFixed(2)}€ 
                 <button class="delete-product" data-id="${product.id}">Supprimer</button>
             `;
             productList.appendChild(productItem);
@@ -30,21 +34,15 @@ const renderProducts = async () => {
             productDiv.classList.add("product");
             productDiv.innerHTML = `
                 <h3>${product.name}</h3>
-                <p>Prix : ${product.price}€</p>
+                <p>Prix : ${product.price.toFixed(2)}€</p>
                 <p>Catégorie : ${product.category}</p>
             `;
-            productDiv.style.display = "none"; // Tous les produits sont cachés au départ
+            productDiv.style.display = index < 5 ? "block" : "none"; // Affiche les 5 premiers produits
             productContainer.appendChild(productDiv);
         });
 
         // Gérer le bouton "Voir plus"
-        if (products.length > 5) {
-            loadMoreBtn.style.display = "block";
-        } else {
-            loadMoreBtn.style.display = "none";
-        }
-
-        // Initialiser la visibilité des premiers produits
+        loadMoreBtn.style.display = products.length > 5 ? "block" : "none";
         setupLoadMore(products);
 
         // Ajout des événements pour les boutons de suppression
@@ -62,9 +60,8 @@ const renderProducts = async () => {
 
 // Fonction pour ajouter un produit via le formulaire
 const addProduct = async (e) => {
-    e.preventDefault(); // Empêche l'envoi du formulaire
+    e.preventDefault();
 
-    // Récupère les valeurs du formulaire
     const nameField = document.getElementById('name');
     const priceField = document.getElementById('price');
     const categoryField = document.getElementById('category');
@@ -83,10 +80,8 @@ const addProduct = async (e) => {
         return;
     }
 
-    // Crée un nouvel objet produit
-    const newProduct = { name, price, category };
+    const newProduct = { name, price: parseFloat(price.toFixed(2)), category };
 
-    // Envoie le produit au backend via une requête POST
     try {
         const response = await fetch('/api/produits', {
             method: 'POST',
@@ -94,15 +89,15 @@ const addProduct = async (e) => {
             body: JSON.stringify(newProduct),
         });
 
-        if (response.ok) {
-            console.log('Produit ajouté:', newProduct);
-            await renderProducts(); // Réactualise la liste des produits
-            document.getElementById('addProductForm').reset(); // Réinitialise le formulaire
-        } else {
-            console.error('Erreur lors de l\'ajout du produit');
+        if (!response.ok) {
+            throw new Error(`Erreur ${response.status}: Impossible d'ajouter le produit.`);
         }
+
+        console.log('Produit ajouté:', newProduct);
+        await renderProducts();
+        document.getElementById('addProductForm').reset();
     } catch (error) {
-        console.error('Erreur de connexion au backend:', error);
+        console.error('Erreur lors de l\'ajout du produit:', error);
     }
 };
 
@@ -111,14 +106,14 @@ const deleteProduct = async (id) => {
     try {
         const response = await fetch(`/api/produits/${id}`, { method: 'DELETE' });
 
-        if (response.ok) {
-            console.log('Produit supprimé avec l\'ID:', id);
-            await renderProducts(); // Réactualise la liste des produits
-        } else {
-            console.error('Erreur lors de la suppression du produit');
+        if (!response.ok) {
+            throw new Error(`Erreur ${response.status}: Impossible de supprimer le produit.`);
         }
+
+        console.log(`Produit supprimé avec l'ID: ${id}`);
+        await renderProducts();
     } catch (error) {
-        console.error('Erreur de connexion au backend pour supprimer le produit:', error);
+        console.error('Erreur lors de la suppression du produit:', error);
     }
 };
 
@@ -131,28 +126,29 @@ const setupLoadMore = (products) => {
         return;
     }
 
-    let visibleCount = 5; // Commence avec 5 produits visibles
+    let visibleCount = 5;
 
     loadMoreBtn.addEventListener("click", function () {
         const productDivs = document.querySelectorAll("#product-container .product");
-        
+
         for (let i = visibleCount; i < visibleCount + 5 && i < products.length; i++) {
-            productDivs[i].style.display = "block";  // Affiche les produits suivants
+            if (productDivs[i]) {
+                productDivs[i].style.display = "block";
+            }
         }
 
         visibleCount += 5;
 
-        // Cacher le bouton si tous les produits sont affichés
         if (visibleCount >= products.length) {
             loadMoreBtn.style.display = "none";
         }
     });
 };
 
-// Fonction d'initialisation qui appelle toutes les fonctions au chargement de la page
+// Initialisation
 document.addEventListener('DOMContentLoaded', async () => {
-    await renderProducts(); // Afficher les produits
-    // Ajouter un produit au soumettre du formulaire
+    await renderProducts();
+
     const addProductForm = document.getElementById('addProductForm');
     if (addProductForm) {
         addProductForm.addEventListener('submit', addProduct);
