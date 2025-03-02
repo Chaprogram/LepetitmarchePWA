@@ -1,4 +1,20 @@
+// Initialisation
+document.addEventListener('DOMContentLoaded', async () => {
+    await renderProducts();
+
+    const addProductForm = document.getElementById('addProductForm');
+    if (addProductForm) {
+        addProductForm.addEventListener('submit', addProduct);
+    } else {
+        console.error("Erreur : Formulaire d'ajout introuvable.");
+    }
+});
+
+
+
 // Fonction pour afficher les produits depuis le backend
+
+
 const renderProducts = async () => {
     const productList = document.getElementById('product-list');
     const productContainer = document.getElementById('product-container');
@@ -90,14 +106,3 @@ const setupLoadMore = (products) => {
     });
 };
 
-// Initialisation
-document.addEventListener('DOMContentLoaded', async () => {
-    await renderProducts();
-
-    const addProductForm = document.getElementById('addProductForm');
-    if (addProductForm) {
-        addProductForm.addEventListener('submit', addProduct);
-    } else {
-        console.error("Erreur : Formulaire d'ajout introuvable.");
-    }
-});
