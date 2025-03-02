@@ -38,9 +38,16 @@
         <!-- Formulaire pour la livraison -->
         <h2>Informations pour la livraison</h2>
         <div id="delivery-form">
+            <label for="client-name">Nom du client :</label>
+            <input type="text" id="client-name" placeholder="Votre nom complet" required>
             <label for="delivery-address">Adresse :</label>
             <input type="text" id="delivery-address" placeholder="Votre adresse complète" required>
-
+            <label for="postal-code">Code postal :</label>
+            <input type="text" id="postal-code" placeholder="Votre code postal" required>
+            <label for="email">Adresse e-mail :</label>
+            <input type="email" id="email" placeholder="Votre adresse e-mail" required>
+            <label for="delivery-phone">Numéro de téléphone :</label>
+            <input type="tel" id="delivery-phone" placeholder="Votre numéro de téléphone" required>
             <label for="delivery-date">Jour de livraison :</label>
             <input type="date" id="delivery-date" required>
 

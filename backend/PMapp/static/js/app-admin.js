@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 const renderProducts = async () => {
     const productList = document.getElementById('product-list');
     const productContainer = document.getElementById('product-container');
-    const loadMoreBtn = document.getElementById("load-more");
+    const loadMoreBtn = document.getElementById("see-more_button");
 
     if (!productList || !productContainer || !SeeMoreButton) {
         console.error("Erreur : Un élément de la page est introuvable.");

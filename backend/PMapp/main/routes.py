@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
 import re  # Pour la validation des emails
 from PMapp import db, socketio, mail
-from PMapp.models import User, Product,Admin,Notification, Reservation
+from PMapp.models import User, Product,Admin,Notification, Reservation,Order,ProductOrder
 from datetime import datetime 
 from urllib.parse import quote
 import os
@@ -15,6 +15,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import qrcode
 from io import BytesIO
+from flask_socketio import emit
 
 
 from . import main  # Import du Blueprint déclaré dans main/__init__.py
@@ -561,28 +562,42 @@ def add_to_cart():
 
 
 
+
 @main.route("/submit_order", methods=["POST"])
 def submit_order():
     data = request.json
+
+    # Récupérer les nouvelles données (nom, code postal, email)
+    client_name = data.get("client_name")
+    postal_code = data.get("postal_code")
+    email = data.get("email")
+    phone_number = data.get("phone_number")
     payment_method = data.get("payment_method")
     delivery_address = data.get("delivery_address")
     delivery_date = data.get("delivery_date")
     delivery_time = data.get("delivery_time")
 
-    if not delivery_address:
-        return jsonify({"success": False, "error": "Adresse de livraison manquante"}), 400
+    # Vérification des champs obligatoires
+    if not client_name or not postal_code or not email or not delivery_address or not phone_number:
+        return jsonify({"success": False, "error": "Tous les champs du client sont requis"}), 400
 
     # Récupérer les articles du panier
     cart = session.get("cart", [])
     if not cart:
         return jsonify({"success": False, "error": "Le panier est vide"}), 400
 
-    # Sauvegarder la commande dans la base de données
+    # Calculer le prix total
     total_price = sum(item["price"] * item["quantity"] for item in cart)
-    new_order = Reservation(
+
+    # Créer une nouvelle commande
+    new_order = ProductOrder(
         user_id=session.get("user_id"),  # Assurez-vous que l'utilisateur est connecté
         items=str(cart),
         total_price=total_price,
+        client_name=client_name,
+        postal_code=postal_code,
+        email=email,
+        phone_number=phone_number,
         delivery_address=delivery_address,
         delivery_date=datetime.strptime(delivery_date, "%Y-%m-%d"),
         delivery_time=delivery_time,
@@ -590,10 +605,28 @@ def submit_order():
         status="En attente"
     )
 
-    db.session.add(new_order)
-    db.session.commit()
+    # Sauvegarder la commande dans la base de données
+    try:
+        db.session.add(new_order)
+        db.session.commit()
 
-    return jsonify({"success": True, "order_id": new_order.id})
+        # Émettre une notification en temps réel aux administrateurs
+        socketio.emit('new_order', {
+            'client_name': client_name,
+            'phone_number': phone_number,
+            'order_id': new_order.id,
+            'total_price': total_price,
+            'delivery_address': delivery_address
+        }, broadcast=True)  # L'option broadcast=True envoie la notification à tous les clients connectés
+
+        return jsonify({"success": True, "order_id": new_order.id})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+
+
 
 
 @main.route('/send_confirmation_email', methods=['POST'])

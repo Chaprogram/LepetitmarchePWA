@@ -85,3 +85,21 @@ class Order(db.Model):
         self.user_email = user_email
         self.items = items
         self.total = total
+
+
+class ProductOrder(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    client_name = db.Column(db.String(100), nullable=False)
+    postal_code = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False) 
+    payment_method = db.Column(db.String(50), nullable=False)
+    delivery_address = db.Column(db.String(200), nullable=False)
+    delivery_date = db.Column(db.Date, nullable=False)
+    delivery_time = db.Column(db.String(50), nullable=False)
+    items = db.Column(db.Text, nullable=False)  # Liste des articles sous forme de chaîne de caractères
+    total_price = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String(50), default="En attente")  # Par exemple, "En attente", "Livré"
+    
+    def __repr__(self):
+        return f"<ProductOrder {self.id}, {self.client_name}, {self.total_price}>"
