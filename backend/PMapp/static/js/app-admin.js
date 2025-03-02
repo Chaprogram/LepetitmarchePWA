@@ -22,7 +22,11 @@ const renderProducts = async () => {
             return;
         }
 
-        products.forEach((product, index) => {
+        // Afficher uniquement les 5 premiers produits
+        const displayedProducts = products.slice(0, 5);
+
+        // Affiche ces 5 produits
+        displayedProducts.forEach((product, index) => {
             const productItem = document.createElement('li');
             productItem.innerHTML = `
                 ${product.name} - ${product.category} - ${product.price.toFixed(2)}€ 
@@ -55,65 +59,6 @@ const renderProducts = async () => {
 
     } catch (error) {
         console.error('Erreur de connexion au backend pour récupérer les produits:', error);
-    }
-};
-
-// Fonction pour ajouter un produit via le formulaire
-const addProduct = async (e) => {
-    e.preventDefault();
-
-    const nameField = document.getElementById('name');
-    const priceField = document.getElementById('price');
-    const categoryField = document.getElementById('category');
-
-    if (!nameField || !priceField || !categoryField) {
-        console.error("Erreur : Un ou plusieurs champs sont introuvables.");
-        return;
-    }
-
-    const name = nameField.value.trim();
-    const price = parseFloat(priceField.value);
-    const category = categoryField.value.trim();
-
-    if (!name || isNaN(price) || !category) {
-        console.error("Erreur : Veuillez remplir correctement tous les champs.");
-        return;
-    }
-
-    const newProduct = { name, price: parseFloat(price.toFixed(2)), category };
-
-    try {
-        const response = await fetch('/api/produits', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newProduct),
-        });
-
-        if (!response.ok) {
-            throw new Error(`Erreur ${response.status}: Impossible d'ajouter le produit.`);
-        }
-
-        console.log('Produit ajouté:', newProduct);
-        await renderProducts();
-        document.getElementById('addProductForm').reset();
-    } catch (error) {
-        console.error('Erreur lors de l\'ajout du produit:', error);
-    }
-};
-
-// Fonction pour supprimer un produit
-const deleteProduct = async (id) => {
-    try {
-        const response = await fetch(`/api/produits/${id}`, { method: 'DELETE' });
-
-        if (!response.ok) {
-            throw new Error(`Erreur ${response.status}: Impossible de supprimer le produit.`);
-        }
-
-        console.log(`Produit supprimé avec l'ID: ${id}`);
-        await renderProducts();
-    } catch (error) {
-        console.error('Erreur lors de la suppression du produit:', error);
     }
 };
 

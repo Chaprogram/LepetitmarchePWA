@@ -132,12 +132,19 @@ document.addEventListener('click', (e) => {
         const productDiv = e.target.closest('.product');
         if (!productDiv) return;
 
+        const priceElement = productDiv.querySelector('.price');
+        if (!priceElement) {
+            console.error("Élément prix non trouvé dans :", productDiv.innerHTML);
+            return;
+        }
+
         const product = {
             id: parseInt(e.target.dataset.id, 10),
-            name: productDiv.querySelector('h3').textContent,
-            price: parseFloat(productDiv.querySelector('.price').textContent.replace('Prix: ', '').replace('€', '').trim()),
+            name: productDiv.querySelector('h3').textContent.trim(),
+            price: parseFloat(priceElement.textContent.replace('Prix: ', '').replace('€', '').trim()),
         };
 
         addToCart(product);
     }
 });
+
