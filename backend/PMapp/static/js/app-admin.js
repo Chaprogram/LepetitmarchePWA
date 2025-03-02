@@ -33,7 +33,7 @@ const renderProducts = async () => {
                 <p>Prix : ${product.price}€</p>
                 <p>Catégorie : ${product.category}</p>
             `;
-            if (index >= 5) productDiv.style.display = "none"; // Cacher les produits après les 5 premiers
+            productDiv.style.display = "none"; // Tous les produits sont cachés au départ
             productContainer.appendChild(productDiv);
         });
 
@@ -43,6 +43,9 @@ const renderProducts = async () => {
         } else {
             loadMoreBtn.style.display = "none";
         }
+
+        // Initialiser la visibilité des premiers produits
+        setupLoadMore(products);
 
         // Ajout des événements pour les boutons de suppression
         document.querySelectorAll('.delete-product').forEach(button => {
@@ -120,7 +123,7 @@ const deleteProduct = async (id) => {
 };
 
 // Gérer le système "Voir plus"
-const setupLoadMore = () => {
+const setupLoadMore = (products) => {
     const loadMoreBtn = document.getElementById("load-more");
 
     if (!loadMoreBtn) {
@@ -128,15 +131,14 @@ const setupLoadMore = () => {
         return;
     }
 
-    loadMoreBtn.addEventListener("click", function () {
-        const products = document.querySelectorAll("#product-container .product");
-        let visibleCount = 5;
+    let visibleCount = 5; // Commence avec 5 produits visibles
 
-        products.forEach((product, index) => {
-            if (index < visibleCount + 5) {
-                product.style.display = "block";
-            }
-        });
+    loadMoreBtn.addEventListener("click", function () {
+        const productDivs = document.querySelectorAll("#product-container .product");
+        
+        for (let i = visibleCount; i < visibleCount + 5 && i < products.length; i++) {
+            productDivs[i].style.display = "block";  // Affiche les produits suivants
+        }
 
         visibleCount += 5;
 
@@ -150,8 +152,6 @@ const setupLoadMore = () => {
 // Fonction d'initialisation qui appelle toutes les fonctions au chargement de la page
 document.addEventListener('DOMContentLoaded', async () => {
     await renderProducts(); // Afficher les produits
-    setupLoadMore(); // Gérer le bouton "Voir plus"
-
     // Ajouter un produit au soumettre du formulaire
     const addProductForm = document.getElementById('addProductForm');
     if (addProductForm) {
