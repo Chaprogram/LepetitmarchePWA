@@ -14,12 +14,12 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import qrcode
 from io import BytesIO
-from flask_socketio import SocketIO, emit
+from flask_socketio import emit
 
 
 # Définir un blueprint
 main = Blueprint('main', __name__)
-
+secret_key = os.getenv('SECRET_KEY', 'fallback_clé_secrète')
 
 
 @main.route('/')
@@ -520,7 +520,7 @@ def add_to_cart():
 
     return jsonify({'message': 'Produit ajouté au panier', 'cart': cart})
 
-
+'''
 @main.route("/submit_order", methods=["POST"])
 def submit_order():
     data = request.json
@@ -580,7 +580,7 @@ def submit_order():
         return jsonify({"success": True, "order_id": new_order.id})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"success": False, "error": str(e)}), 500'''
 
 
 

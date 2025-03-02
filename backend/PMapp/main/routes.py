@@ -562,7 +562,7 @@ def add_to_cart():
 
 
 
-
+'''
 @main.route("/submit_order", methods=["POST"])
 def submit_order():
     data = request.json
@@ -622,7 +622,7 @@ def submit_order():
         return jsonify({"success": True, "order_id": new_order.id})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"success": False, "error": str(e)}), 500'''
 
 
 
