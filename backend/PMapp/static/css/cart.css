@@ -1,184 +1,188 @@
-/* Style global */
-body {
-    font-family: Arial, sans-serif;
+/* Réinitialiser les marges et padding par défaut */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f8f9fa;
+    box-sizing: border-box;
+}
+
+/* Style général pour le body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
     color: #333;
+    line-height: 1.6;
 }
 
 /* Conteneur principal */
 .container {
-    max-width: 800px;
+    width: 90%;
+    max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
-    background: #ffffff;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
     border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* En-tête */
+/* En-tête avec logo */
 header {
     text-align: center;
-    background-color: #2e7d32;
-    color: white;
-    padding: 10px 0;
     margin-bottom: 20px;
 }
 
 header img {
-    margin-top: 10px;
+    width: 150px;
+    margin-top: 20px;
 }
 
-/* Titres */
-h1, h2, h3 {
-    margin: 15px 0;
-    color: #2e7d32;
+/* Titre principal */
+h1 {
     text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
 }
 
-h2, h3 {
-    font-size: 1.2em;
-}
-
-/* Liste des produits */
+/* Liste des articles du panier */
 #cart-items {
-    list-style: none;
+    list-style-type: none;
     padding: 0;
-    margin: 20px 0;
+    margin-bottom: 30px;
 }
 
-.cart-item {
+#cart-items li {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fdfdfd;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
 }
 
-.cart-item .item-name {
-    flex: 2;
+#cart-items span {
+    font-size: 16px;
+}
+
+/* Total et informations supplémentaires */
+p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#cart-total {
     font-weight: bold;
-    font-size: 1.1em;
+    font-size: 22px;
+    color: #e74c3c;
 }
 
-.cart-item .item-quantity,
-.cart-item .item-price {
-    flex: 1;
-    text-align: center;
-    font-size: 0.9em;
-}
-
-.cart-item .remove-btn {
-    background-color: #d32f2f;
+/* Boutons */
+button {
+    padding: 10px 20px;
+    background-color: #2ecc71;
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 5px 10px;
     cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.3s ease;
-}
-
-.cart-item .remove-btn:hover {
-    background-color: #b71c1c;
-}
-
-/* Total */
-#cart-total {
-    font-weight: bold;
-    font-size: 1.2em;
-    color: #2e7d32;
-}
-
-/* Boutons principaux */
-button {
-    display: block;
-    width: 100%;
+    font-size: 16px;
     margin: 10px 0;
-    padding: 10px;
-    font-size: 1em;
-    color: white;
-    background-color: #2e7d32;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #1b5e20;
+    background-color: #27ae60;
 }
 
-button:active {
-    background-color: #144d14;
+button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
 }
 
-button[onclick] {
-    background-color: #4caf50;
+#clear-cart {
+    background-color: #e74c3c;
 }
 
-/* Options de livraison et retrait */
-.delivery-options label {
+#clear-cart:hover {
+    background-color: #c0392b;
+}
+
+/* Formulaire de livraison */
+#delivery-form {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#delivery-form label {
     display: block;
-    margin: 10px 0;
-    font-size: 1em;
+    margin-bottom: 8px;
+    font-weight: bold;
 }
 
-.hidden {
+#delivery-form input,
+#delivery-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#delivery-form input[type="date"] {
+    cursor: pointer;
+}
+
+/* Choix de paiement */
+#payment-options {
+    margin-top: 20px;
+}
+
+#payment-options label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* QR Code Payconiq */
+#payconiq-qr {
+    margin-top: 20px;
     display: none;
 }
 
-input[type="text"],
-input[type="date"],
-input[type="time"] {
-    width: 100%;
-    padding: 8px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
+#payconiq-qr h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
 }
 
-/* Formulaires */
-#pickup-form, #delivery-form, #payment-form {
-    margin: 20px 0;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f7f7f7;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+#payconiq-qr img {
+    margin-top: 10px;
 }
 
-label {
-    font-size: 0.9em;
-    color: #555;
-}
-
-/* Options de paiement */
-#payment-options label {
-    display: block;
-    margin: 10px 0;
-    font-size: 1em;
-}
-
-input[type="radio"] {
-    margin-right: 8px;
-}
-
-/* Responsive */
+/* Responsivité */
 @media (max-width: 768px) {
-    .cart-item {
-        flex-direction: column;
-        align-items: flex-start;
+    .container {
+        padding: 15px;
     }
 
-    .cart-item .item-quantity,
-    .cart-item .item-price {
-        text-align: left;
+    header img {
+        width: 120px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    button {
+        width: 100%;
+        padding: 15px;
+    }
+
+    #delivery-form {
+        padding: 10px;
+    }
+
+    #delivery-form input,
+    #delivery-form select {
+        font-size: 14px;
     }
 }
