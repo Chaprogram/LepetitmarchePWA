@@ -88,7 +88,7 @@ document.addEventListener("click", function(event) {
 
 // Fonction pour ajouter un produit au panier
 function addProductToCart(productId, productName, productPrice, quantity) {
-    fetch('/api/add_to_cart', {
+    fetch('/add_to_cart', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

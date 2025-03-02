@@ -79,17 +79,17 @@ const renderProducts = async () => {
 };
 
 // Gérer le système "Voir plus"
-const setupLoadMore = (products) => {
-    const loadMoreBtn = document.getElementById("load-more");
+const setupSeeMoreButton = (products) => {
+    const seeMoreButton = document.getElementById("see-more-button");
 
-    if (!loadMoreBtn) {
+    if (!seeMoreButton) {
         console.error("Erreur : Bouton 'Voir plus' introuvable.");
         return;
     }
 
     let visibleCount = 5;
 
-    loadMoreBtn.addEventListener("click", function () {
+    seeMoreButton.addEventListener("click", function () {
         const productDivs = document.querySelectorAll("#product-container .product");
 
         for (let i = visibleCount; i < visibleCount + 5 && i < products.length; i++) {
@@ -101,7 +101,7 @@ const setupLoadMore = (products) => {
         visibleCount += 5;
 
         if (visibleCount >= products.length) {
-            loadMoreBtn.style.display = "none";
+            seeMoreButton.style.display = "none";
         }
     });
 };
