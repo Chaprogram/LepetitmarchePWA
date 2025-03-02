@@ -133,10 +133,9 @@ document.addEventListener('click', (e) => {
         if (!productDiv) return;
 
         const product = {
-            id: parseInt(productDiv.dataset.id, 10),
+            id: parseInt(e.target.dataset.id, 10),
             name: productDiv.querySelector('h3').textContent,
-            price: parseFloat(productDiv.querySelector('.price').textContent.replace('€', '')),
-            category: productDiv.querySelector('.category').textContent
+            price: parseFloat(productDiv.querySelector('.price').textContent.replace('Prix: ', '').replace('€', '').trim()),
         };
 
         addToCart(product);

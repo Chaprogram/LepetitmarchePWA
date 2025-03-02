@@ -19,7 +19,8 @@
         {% for produit in produits %}
         <div class="product">
             <h3>{{ produit.name }}</h3>
-            <p>Prix: {{ produit.price }}€</p>
+            <p class="price">Prix: {{ produit.price }}€</p>
+
              <!-- Quantité -->
              <div class="quantity">
                 <button class="decrease" data-id="{{ produit.id }}">-</button>
