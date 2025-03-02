@@ -56,20 +56,29 @@
 
     <!-- Liste des produits avec option de suppression -->
     <section id="gestion-produits">
-        <h2>Gestion des Produits</h2>
-        <div id="product-container">
-            {% for produit in produits %}
-            <div class="product">
-                <h3>{{ produit.name }}</h3>
-                <p>Prix : {{ produit.price }}€</p>
-                <p>Catégorie : {{ produit.category }}</p>
-            </div>
-            {% endfor %}
-        </div>
-        <button id="load-more" style="display: none;">Voir plus</button>
-    </section>
-    
+      <h2>Gestion des Produits</h2>
+      {% for produit in produits %}
+      <div class="product">
+          <h3>{{ produit.name }}</h3>
+          <p>Prix : {{ produit.price }}€</p>
+          <p>Catégorie : {{ produit.category }}</p>
+      </div>
+      <button id="load-more" style="display: none;">Voir plus</button>
+  {% endfor %}
+
+      <ul id="product-list">
+        {% for produit in produits %}
+        <li>
+            {{ produit.nom }} - {{ produit.categorie }} - {{ produit.prix }}€ 
+            <button class="delete-product" data-id="{{ produit.id }}">Supprimer</button>
+        </li>
+    {% endfor %}
+      </ul>
+  </section>
   
+
+   
+
 
     <!-- Notifications des commandes -->
     <section id="notifications">
