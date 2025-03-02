@@ -105,3 +105,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const addProductForm = document.getElementById('addProductForm');
     addProductForm.addEventListener('submit', addProduct);
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const products = document.querySelectorAll("#product-container .product");
+    const loadMoreBtn = document.getElementById("load-more");
+    let visibleCount = 5; // Nombre de produits visibles au départ
+
+    // Cacher les produits au-delà des 5 premiers
+    products.forEach((product, index) => {
+        if (index >= visibleCount) {
+            product.style.display = "none";
+        }
+    });
+
+    // Afficher le bouton si plus de 5 produits
+    if (products.length > visibleCount) {
+        loadMoreBtn.style.display = "block";
+    }
+
+    // Gérer le clic sur "Voir plus"
+    loadMoreBtn.addEventListener("click", function () {
+        let newVisibleCount = visibleCount + 5;
+        products.forEach((product, index) => {
+            if (index < newVisibleCount) {
+                product.style.display = "block";
+            }
+        });
+
+        visibleCount = newVisibleCount;
+
+        // Cacher le bouton si tous les produits sont affichés
+        if (visibleCount >= products.length) {
+            loadMoreBtn.style.display = "none";
+        }
+    });
+});

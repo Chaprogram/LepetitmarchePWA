@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     updateCartCount();
-    attachQuantityEvents(); // Attacher les événements dès le départ
-    attachAddToCartEvents();
-    loadProductsFromURL();  // Charge les produits dynamiquement
+    loadProductsFromURL(); // Charge les produits dynamiquement
 });
 
 // Fonction pour charger les produits depuis l'URL
@@ -35,8 +33,7 @@ function loadProductsFromURL() {
                 productDiv.innerHTML = `
                     <h3>${product.name}</h3>
                     <p>Prix: ${product.price}€</p>
-                   
-                    
+
                     <!-- Quantité -->
                     <div class="quantity">
                         <button class="decrease" data-id="${product.id}">-</button>
@@ -49,74 +46,65 @@ function loadProductsFromURL() {
                 `;
                 container.appendChild(productDiv);
             });
-
-            attachQuantityEvents();  // Attache les événements pour ajuster la quantité
-            attachAddToCartEvents(); // Attache les événements pour ajouter au panier
         })
         .catch(error => console.error("Erreur lors du chargement des produits :", error));
 }
 
-// Fonction pour attacher les événements aux boutons "+" et "-"
-function attachQuantityEvents() {
-    document.querySelectorAll('.increase').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const quantitySpan = e.target.previousElementSibling;
-            let currentQuantity = parseInt(quantitySpan.textContent);
-            if (currentQuantity < 99) {  // Limiter la quantité à 99
-                quantitySpan.textContent = currentQuantity + 1;
-            }
-        });
-    });
+// Délégation des événements pour la gestion des quantités et du panier
+document.addEventListener("click", function(event) {
+    const target = event.target;
 
-    document.querySelectorAll('.decrease').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const quantitySpan = e.target.nextElementSibling;
-            let currentQuantity = parseInt(quantitySpan.textContent);
-            if (currentQuantity > 1) {  // Ne pas descendre en dessous de 1
-                quantitySpan.textContent = currentQuantity - 1;
-            }
-        });
-    });
-}
+    // Augmenter la quantité
+    if (target.classList.contains("increase")) {
+        const quantitySpan = target.previousElementSibling;
+        let currentQuantity = parseInt(quantitySpan.textContent);
+        if (currentQuantity < 99) {
+            quantitySpan.textContent = currentQuantity + 1;
+        }
+    }
 
-// Fonction pour attacher l'événement "Ajouter au panier"
-function attachAddToCartEvents() {
-    document.querySelectorAll(".add-to-cart").forEach(button => {
-        button.addEventListener("click", (e) => {
-            const productId = parseInt(e.target.getAttribute("data-id"));
-            const productName = e.target.getAttribute("data-name");
-            const productPrice = parseFloat(e.target.getAttribute("data-price"));
-            const quantity = parseInt(e.target.closest('.product').querySelector('.quantity-text').textContent);
+    // Diminuer la quantité
+    if (target.classList.contains("decrease")) {
+        const quantitySpan = target.nextElementSibling;
+        let currentQuantity = parseInt(quantitySpan.textContent);
+        if (currentQuantity > 1) {
+            quantitySpan.textContent = currentQuantity - 1;
+        }
+    }
 
-            
-            addProductToCart(productId, productName, productPrice, quantity);
-        });
-    });
-}
+    // Ajouter au panier
+    if (target.classList.contains("add-to-cart")) {
+        const productId = parseInt(target.getAttribute("data-id"));
+        const productName = target.getAttribute("data-name");
+        const productPrice = parseFloat(target.getAttribute("data-price"));
+        const quantityElement = target.closest(".product").querySelector(".quantity-text");
+        const quantity = quantityElement ? parseInt(quantityElement.textContent) : 1; // Sécurité
+
+        addProductToCart(productId, productName, productPrice, quantity);
+    }
+});
 
 // Fonction pour ajouter un produit au panier
 function addProductToCart(productId, productName, productPrice, quantity) {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const productIndex = cart.findIndex(product => product.id === productId);
 
     if (productIndex === -1) {
         cart.push({ id: productId, name: productName, price: productPrice, quantity: quantity });
     } else {
-        cart[productIndex].quantity += quantity;  // Incrémente la quantité si le produit est déjà dans le panier
+        cart[productIndex].quantity += quantity; // Incrémente la quantité si le produit est déjà dans le panier
     }
 
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();  // Mise à jour du nombre d'articles
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount(); // Mise à jour du nombre d'articles
 }
 
 // Mise à jour du nombre d'articles dans le panier
 function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const cartCount = cart.reduce((total, product) => total + product.quantity, 0);
-    const cartCountElement = document.getElementById('cart-count');
+    const cartCountElement = document.getElementById("cart-count");
     if (cartCountElement) {
         cartCountElement.textContent = cartCount;
     }
 }
-
-
