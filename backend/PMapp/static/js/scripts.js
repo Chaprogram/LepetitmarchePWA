@@ -88,31 +88,27 @@ document.addEventListener("click", function(event) {
 
 // Fonction pour ajouter un produit au panier
 function addProductToCart(productId, productName, productPrice, quantity) {
-    // Récupère le panier du localStorage ou un tableau vide si le panier n'existe pas
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    // Cherche si le produit existe déjà dans le panier
-    const productIndex = cart.findIndex(product => product.id === productId);
-
-    if (productIndex === -1) {
-        // Si le produit n'existe pas encore dans le panier, on l'ajoute
-        cart.push({ id: productId, name: productName, price: productPrice, quantity: quantity });
-    } else {
-        // Si le produit existe déjà, on incrémente la quantité
-        cart[productIndex].quantity += quantity;
-    }
-
-    // Sauvegarde le panier mis à jour dans le localStorage
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    // Mise à jour du nombre d'articles dans le panier
-    updateCartCount();
+    fetch('/api/add_to_cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            id: productId,
+            name: productName,
+            price: productPrice,
+            quantity: quantity,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Mise à jour du panier sur le client
+        updateCartCount(data.cartCount);
+    })
+    .catch(error => console.error('Erreur lors de l\'ajout au panier:', error));
 }
 
-// Mise à jour du nombre d'articles dans le panier
-function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const cartCount = cart.reduce((total, product) => total + product.quantity, 0);
+function updateCartCount(cartCount) {
     const cartCountElement = document.getElementById("cart-count");
     if (cartCountElement) {
         cartCountElement.textContent = cartCount;

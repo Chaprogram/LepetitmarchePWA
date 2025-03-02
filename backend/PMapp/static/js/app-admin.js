@@ -106,3 +106,47 @@ const setupLoadMore = (products) => {
     });
 };
 
+// Fonction pour ajouter un produit
+function addProduct(name, price, category) {
+    fetch('/api/ajouter_produit', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name: name,
+            price: price,
+            category: category,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Gérer la réponse du serveur après ajout du produit
+        if (data.success) {
+            alert("Produit ajouté avec succès!");
+            // Vous pouvez aussi réactualiser la liste des produits ici si nécessaire
+            loadProducts();
+        } else {
+            alert("Erreur lors de l'ajout du produit.");
+        }
+    })
+    .catch(error => {
+        console.error("Erreur lors de l'ajout du produit :", error);
+    });
+}
+
+// Ajout d'un événement au formulaire d'ajout de produit
+document.getElementById('addProductForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const price = parseFloat(document.getElementById('price').value);
+    const category = document.getElementById('category').value;
+
+    if (name && price && category) {
+        addProduct(name, price, category); // Appeler la fonction addProduct pour ajouter le produit
+    } else {
+        alert("Veuillez remplir tous les champs.");
+    }
+});
+
