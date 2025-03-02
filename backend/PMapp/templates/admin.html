@@ -65,7 +65,7 @@
     
         <!-- Liste des produits (sera remplie dynamiquement) -->
         <ul id="product-list"></ul>
-        
+        <button id="load-more" style="display: none;">Voir plus</button>
     </section>
     
 
@@ -107,18 +107,7 @@
 
 <!-- Scripts JavaScript -->
 <script src="{{ url_for('static', filename='js/app-admin.js') }}"></script>
-<script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
 
-<script>
-    // Remplacer par l'URL publique de ton application sur Render
-    var socket = io.connect("wss://lepetitmarche.be/admin");
-
-    socket.on('new_order', function(data) {
-        var newOrder = document.createElement('li');
-        newOrder.textContent = "Nouvelle commande : " + data.client_name + " - " + data.phone_number;
-        document.getElementById('notifications-list').appendChild(newOrder);
-    });
-</script>
 
 </body>
 </html>
