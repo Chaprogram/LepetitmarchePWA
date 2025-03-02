@@ -30,7 +30,8 @@
 
         <!-- Affichage du total du panier -->
         <p>Total : <span id="cart-total">{{ total }}€</span></p>
-
+        <p>Minimum 25€ et livraison gratuite à partir de 85€</p>
+        <p>Livraison : 0-3,50€</p>
         <button id="clear-cart">Vider le panier</button>
         <button onclick="window.location.href='/menu'">Retour à la boutique</button>
 
@@ -88,62 +89,7 @@
     <script src="{{url_for('static', filename='js/cart.js')}}"></script>
     
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let paymentOptions = document.querySelectorAll("input[name='payment-method']");
-            let payconiqQrDiv = document.getElementById("payconiq-qr");
-            let payconiqImage = document.getElementById("payconiq-image");
-        
-            paymentOptions.forEach(option => {
-                option.addEventListener("change", function () {
-                    if (this.value === "payconiq") {
-                        // Affiche le QR code Payconiq
-                        payconiqQrDiv.style.display = "block";
-                        payconiqImage.src = "/generate_payconiq_qr"; // URL pour générer le QR
-                    } else {
-                        // Cache le QR code
-                        payconiqQrDiv.style.display = "none";
-                    }
-                });
-            });
-        
-            document.getElementById("submit-order").addEventListener("click", function () {
-                let selectedPayment = document.querySelector("input[name='payment-method']:checked").value;
-                let deliveryAddress = document.getElementById("delivery-address").value;
-                let deliveryDate = document.getElementById("delivery-date").value;
-                let deliveryTime = document.getElementById("delivery-time").value;
-        
-                if (!deliveryAddress) {
-                    alert("Veuillez entrer une adresse de livraison.");
-                    return;
-                }
-        
-                let orderData = {
-                    payment_method: selectedPayment,
-                    delivery_address: deliveryAddress,
-                    delivery_date: deliveryDate,
-                    delivery_time: deliveryTime
-                };
-        
-                fetch("/submit_order", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(orderData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Commande validée !");
-                        window.location.href = "/confirmation";
-                    } else {
-                        alert("Erreur lors de la commande.");
-                    }
-                });
-            });
-        });
-        </script>
+    
         
 
 

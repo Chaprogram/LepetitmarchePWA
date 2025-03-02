@@ -20,7 +20,7 @@ const renderProducts = async () => {
     const productContainer = document.getElementById('product-container');
     const loadMoreBtn = document.getElementById("load-more");
 
-    if (!productList || !productContainer || !loadMoreBtn) {
+    if (!productList || !productContainer || !SeeMoreButton) {
         console.error("Erreur : Un élément de la page est introuvable.");
         return;
     }
