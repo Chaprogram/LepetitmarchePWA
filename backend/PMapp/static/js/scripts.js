@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
     updateCartCount();
-    loadProductsFromURL();  // Charge les produits après le chargement de la page
+    attachQuantityEvents(); // Attacher les événements dès le départ
+    attachAddToCartEvents();
+    loadProductsFromURL();  // Charge les produits dynamiquement
 });
 
 // Fonction pour charger les produits depuis l'URL
