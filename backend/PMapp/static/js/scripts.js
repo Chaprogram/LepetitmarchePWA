@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Fonction pour charger les produits depuis l'URL
 function loadProductsFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const categorie = urlParams.get("categorie");
+    const path = window.location.pathname; // Récupère le chemin de l'URL (ex: /chocolats)
+    const categorie = path.split('/').pop(); // Prend la dernière partie après le slash
 
     if (!categorie) {
         console.error("Aucune catégorie spécifiée dans l'URL.");
