@@ -659,17 +659,24 @@ def get_order_details():
     ]
 
 def send_confirmation_email(client_email, order):
-    subject = "Confirmation de votre commande"
-    body = f"Bonjour {order.client_name},\n\nVotre commande a bien été reçue.\n\nDétails de la commande :\n\n"
+    subject = f"Confirmation de votre commande #{order.id}"  # Ajout du numéro de commande
+    body = f"Bonjour {order.client_name},\n\n"
+    body += f"Votre commande #{order.id} a bien été reçue.\n\n"  # Ajout du numéro de commande
+    
+    body += "Détails de la commande :\n\n"
     
     for item in order.items:
         body += f"{item.product.name} - {item.quantity} x {item.price}€\n"
     
-    body += f"\nTotal de la commande : {order.total_price}€\n\nMerci pour votre commande !"
+    body += f"\nTotal de la commande : {order.total_price}€\n\n"
+    body += "En cas de problèmes, vous pouvez nous contacter au 0496 33 07 84.\n\n"  # Ajout du numéro du magasin
+    body += "Merci pour votre commande !\n\n"
+    body += "Merci,\nLe Petit Marché"  # Signature
     
     msg = Message(subject, recipients=[client_email])
     msg.body = body
     mail.send(msg)
+
 
 def send_admin_notification(order):
     admins_emails = ["charlinec03@gmail.com", "admin2@domain.com"]  # Liste des emails des administrateurs
@@ -678,8 +685,8 @@ def send_admin_notification(order):
     body = f"Une nouvelle commande a été passée par {order.client_name}.\n\n"
     
     # Ajout des infos du client
-    body += f"📍 Adresse : {order.client_address}, {order.client_postal_code}\n"
-    body += f"📞 Téléphone : {order.client_phone}\n"
+    body += f"📍 Adresse : {order.delivery_address}, {order.postal_code}\n"
+    body += f"📞 Téléphone : {order.phone_number}\n"
     body += f"📅 Heure de livraison : {order.delivery_time}\n\n"
 
     body += "Détails de la commande :\n\n"
@@ -693,6 +700,7 @@ def send_admin_notification(order):
         msg = Message(subject, recipients=[email])
         msg.body = body
         mail.send(msg)
+
 
     
 
