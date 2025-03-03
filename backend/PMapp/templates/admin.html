@@ -71,6 +71,15 @@
     <!-- Notifications des commandes -->
     <section id="notifications">
         <h2>Notifications des Commandes</h2>
+        {% for order in orders %}
+        <div>
+            <h3>Commande #{{ order.id }}</h3>
+            <p>Client : {{ order.client_name }}</p>
+            <p>Total : {{ order.total_price }}€</p>
+            <a href="{{ url_for('order_details', order_id=order.id) }}">Voir la commande</a>
+        </div>
+    {% endfor %}
+
         <ul id="notificationsList">
             <li>Aucune notification pour le moment.</li>
         </ul>

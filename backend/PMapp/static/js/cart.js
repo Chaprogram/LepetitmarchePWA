@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // Fonction pour envoyer la commande au backend
     document.getElementById("submit-order").addEventListener("click", function () {
         let cartTotal = getCartTotal();
 
@@ -87,17 +88,39 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("cart-items").innerHTML = ""; 
             document.getElementById("cart-total").textContent = "0€"; 
 
-            // Réinitialise toutes les variables liées au panier
-            let cart = []; // Vide le tableau du panier en mémoire
-            updateCart(cart); // Actualise le DOM et les données
-
-            alert("Votre panier a été vidé.");
+            // Réinitialise les données du panier dans le backend
+            fetch("/clear_cart", { method: "POST" }) // Envoie une requête POST pour vider le panier côté serveur
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Votre panier a été vidé.");
+                    } else {
+                        alert("Erreur lors de la suppression du panier.");
+                    }
+                });
         });
     }
 
     function updateCart(cart) {
         // Cette fonction est responsable de la mise à jour du DOM avec les nouveaux éléments du panier
-        // Par exemple, rafraîchir l'affichage du panier ou réinitialiser les éléments associés au panier.
-        // Assure-toi que tu remplaces les anciennes données par les nouvelles (vide ici).
+        let cartItemsContainer = document.getElementById("cart-items");
+        cartItemsContainer.innerHTML = ''; // Vide l'affichage des éléments
+
+        // Ajoute les éléments du panier récupérés depuis le backend
+        cart.forEach(product => {
+            let li = document.createElement('li');
+            li.classList.add('cart-item');
+            li.setAttribute('data-price', product.price);
+            li.setAttribute('data-quantity', product.quantity);
+            li.innerHTML = `
+                <span>${product.name}</span>
+                <span>Quantité : ${product.quantity}</span>
+                <span>${(product.price * product.quantity).toFixed(2)}€</span>
+            `;
+            cartItemsContainer.appendChild(li);
+        });
+
+        // Recalcule et met à jour le total
+        document.getElementById("cart-total").textContent = getCartTotal().toFixed(2) + "€";
     }
 });

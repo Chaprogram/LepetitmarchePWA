@@ -100,6 +100,19 @@ class ProductOrder(db.Model):
     items = db.Column(db.Text, nullable=False)  # Liste des articles sous forme de chaîne de caractères
     total_price = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(50), default="En attente")  # Par exemple, "En attente", "Livré"
-    
+    items = db.relationship('OrderItem', backref='order', lazy=True)
     def __repr__(self):
         return f"<ProductOrder {self.id}, {self.client_name}, {self.total_price}>"
+    
+
+class OrderItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('product_order.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    
+    product = db.relationship('Product', backref='order_items')
+
+    def __repr__(self):
+        return f"<OrderItem {self.product.name}, {self.quantity}, {self.price}>"

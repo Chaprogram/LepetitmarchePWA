@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
 import re  # Pour la validation des emails
 from PMapp import db, socketio, mail
-from PMapp.models import User, Product,Admin,Notification, Reservation,Order,ProductOrder
+from PMapp.models import User, Product,Admin,Notification, Reservation,Order,ProductOrder,OrderItem
 from datetime import datetime 
 from urllib.parse import quote
 import os
@@ -569,7 +569,47 @@ def add_to_cart():
 
     return jsonify({'message': 'Produit ajouté au panier', 'cart': cart})
 
+@main.route("/submit_order", methods=["POST"])
+def submit_order():
+    data = request.get_json()  # Récupère les données envoyées par le frontend
+    
+    # Calculer le total de la commande
+    total_price = sum(item['price'] * item['quantity'] for item in data['cart_items'])
 
+    # Créer la commande
+    order = ProductOrder(
+        client_name=data['client_name'],
+        postal_code=data['postal_code'],
+        email=data['email'],
+        phone_number=data['phone_number'],
+        payment_method=data['payment_method'],
+        delivery_address=data['delivery_address'],
+        delivery_date=datetime.strptime(data['delivery_date'], '%Y-%m-%d'),
+        delivery_time=data['delivery_time'],
+        total_price=total_price
+    )
+
+    # Ajouter la commande à la base de données
+    db.session.add(order)
+    db.session.commit()
+
+    # Enregistrer les articles de la commande
+    for item in data['cart_items']:
+        order_item = OrderItem(
+            order_id=order.id,
+            product_id=item['product_id'],
+            quantity=item['quantity'],
+            price=item['price']
+        )
+        db.session.add(order_item)
+    
+    db.session.commit()
+
+    # Envoyer la confirmation au client et notification aux admins
+    send_confirmation_email(data['email'], order)
+    send_admin_notification(order)
+
+    return jsonify(success=True, order_id=order.id)
 
 '''
 @main.route("/submit_order", methods=["POST"])
@@ -638,27 +678,36 @@ def submit_order():
 
 
 
-@main.route('/send_confirmation_email', methods=['POST'])
-def send_confirmation_email():
-    data = request.json  # On récupère les infos envoyées depuis le frontend
-    user_email = data.get("email")
-    order_details = data.get("order_details")  # Les détails de la commande
-
-    if not user_email:
-        return jsonify({"error": "Email requis"}), 400
-
-    try:
-        msg = Message(
-            "Confirmation de votre commande - Le Petit Marché",
-            recipients=[user_email]
-        )
-        msg.body = f"Merci pour votre commande ! Voici un récapitulatif :\n\n{order_details}"
-        mail.send(msg)
-        return jsonify({"message": "E-mail envoyé avec succès !"}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500 
+def send_confirmation_email(client_email, order):
+    subject = "Confirmation de votre commande"
+    body = f"Bonjour {order.client_name},\n\nVotre commande a bien été reçue.\n\nDétails de la commande :\n\n"
     
+    for item in order.items:
+        body += f"{item.product.name} - {item.quantity} x {item.price}€\n"
+    
+    body += f"\nTotal de la commande : {order.total_price}€\n\nMerci pour votre commande !"
+    
+    msg = Message(subject, recipients=[client_email])
+    msg.body = body
+    mail.send(msg)
+
+def send_admin_notification(order):
+    admins_emails = ["admin1@domain.com", "admin2@domain.com"]  # Liste des emails des administrateurs
+    
+    subject = f"Nouvelle commande {order.id}"
+    body = f"Une nouvelle commande a été passée par {order.client_name}.\n\nDétails de la commande :\n\n"
+    
+    for item in order.items:
+        body += f"{item.product.name} - {item.quantity} x {item.price}€\n"
+    
+    body += f"\nTotal de la commande : {order.total_price}€\n\nMerci de traiter cette commande."
+
+    for email in admins_emails:
+        msg = Message(subject, recipients=[email])
+        msg.body = body
+        mail.send(msg)
+
+
 @main.route('/process_payment', methods=['GET', 'POST'])
 def process_payment():
     # Ici, tu traiterais le paiement via l'API Payconiq
