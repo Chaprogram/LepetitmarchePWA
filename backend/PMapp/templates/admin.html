@@ -71,36 +71,32 @@
     <!-- Notifications des commandes -->
     <section id="notifications">
         <h2>Notifications des Commandes</h2>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>ID Commande</th>
-                    <th>Nom Client</th>
-                    <th>Adresse de Livraison</th>
-                    <th>Numéro de Téléphone</th>
-                    <th>Date de Livraison</th>
-                    <th>Total Commande</th>
-                    <th>Voir Détails</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders %}
-                    <tr>
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.client_name }}</td>
-                        <td>{{ order.delivery_address }}</td>
-                        <td>{{ order.phone_number }}</td>
-                        <td>{{ order.delivery_date }} à {{ order.delivery_time }}</td>
-                        <td>{{ order.total_price }}€</td>
-                        <td><a href="{{ url_for('order_details', order_id=order.id) }}">Voir détails</a></td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="7">Aucune commande à afficher.</td>
-                    </tr>
+        
+{% if orders %}
+<ul>
+    {% for order in orders %}
+        <li>
+            <strong>Commande #{{ order.id }}</strong><br>
+            Client : {{ order.client_name }}<br>
+            Adresse : {{ order.delivery_address }}<br>
+            Email : {{ order.email }}<br>
+            Téléphone : {{ order.phone_number }}<br>
+            Date de livraison : {{ order.delivery_date }}<br>
+            Heure de livraison : {{ order.delivery_time }}<br>
+            Produits :
+            <ul>
+                {% for item in order.items %}
+                    <li>{{ item.product.name }} - {{ item.quantity }} x {{ item.price }}€</li>
                 {% endfor %}
-            </tbody>
-        </table>
+            </ul>
+            <br>
+            <strong>Total : {{ order.total_price }}€</strong>
+        </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Aucune commande pour le moment.</p>
+{% endif %}
     
     </section>
 
