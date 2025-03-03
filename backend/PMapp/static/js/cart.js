@@ -26,18 +26,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    document.getElementById("submit-order").addEventListener("click", function () {
-        let cartTotal = getCartTotal(); // Récupère le total du panier
-
+    document.getElementById("submit-order").addEventListener("click", function (event) {
+        event.preventDefault(); // Empêche le comportement par défaut
+    
+        let cartTotal = getCartTotal();
         if (cartTotal < 25) {
             alert("Le montant minimum pour valider la commande est de 25 €.");
-            return; // Empêche la soumission de la commande si le total est inférieur à 25 €
+            return;
         }
-
         let selectedPayment = document.querySelector("input[name='payment-method']:checked").value;
-        let deliveryName = document.getElementById("delivery-name").value;
-        let deliveryPostalCode = document.getElementById("delivery-postal-code").value;
-        let deliveryEmail = document.getElementById("delivery-email").value;
+        let deliveryName = document.getElementById("client-name").value;
+        let deliveryPostalCode = document.getElementById("postal-code").value;
+        let deliveryEmail = document.getElementById("email").value;
         let deliveryPhone = document.getElementById("delivery-phone").value;  // Ajout du téléphone
         let deliveryAddress = document.getElementById("delivery-address").value;
         let deliveryDate = document.getElementById("delivery-date").value;
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
             postal_code: deliveryPostalCode,
             email: deliveryEmail,
             phone_number: deliveryPhone,  // Ajout du téléphone
-            payment_method: selectedPayment,
+            payment_method: document.querySelector("input[name='payment-method']:checked").value,
             delivery_address: deliveryAddress,
             delivery_date: deliveryDate,
             delivery_time: deliveryTime
@@ -77,4 +77,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+});
+
+document.getElementById("clear-cart").addEventListener("click", function () {
+    localStorage.removeItem("cart"); // Supprime les produits du panier
+    document.getElementById("cart-items").innerHTML = ""; // Vide l'affichage
+    document.getElementById("cart-total").textContent = "0€"; // Remet le total à 0
+    alert("Votre panier a été vidé.");
 });
