@@ -32,7 +32,7 @@
         <p>Total : <span id="cart-total">{{ total }}€</span></p>
         <p>Minimum 25€ et livraison gratuite à partir de 85€</p>
         <p>Livraison : 0-3,50€</p>
-        <form action="{{ url_for('clear_cart') }}" method="POST">
+        <form action="{{ url_for('main.clear_cart') }}" method="POST">
             <button type="submit" id="clear-cart">Vider le panier</button>
         </form>
         
