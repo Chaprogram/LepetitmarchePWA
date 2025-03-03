@@ -4,34 +4,25 @@ document.addEventListener("DOMContentLoaded", function () {
     let payconiqImage = document.getElementById("payconiq-image");
 
     // Fonction pour recalculer le total
-    function getCartTotal() {
-        let total = 0;
-        let cartItems = document.querySelectorAll("#cart-items li");
-    
-        cartItems.forEach(function(item) { 
-            let priceElement = item.querySelector(".price");
-    
-            if (!priceElement) {
-                console.error("Erreur : élément prix manquant dans le panier");
-                return;
-            }
-    
-            let priceMatch = priceElement.textContent.match(/[\d.]+/); // Extrait uniquement les nombres du prix affiché
-            let price = priceMatch ? parseFloat(priceMatch[0]) : 0;
-    
-            console.log(`Produit: ${item.dataset.productId}, Prix total: ${price}`);
-    
-            if (isNaN(price)) {
-                console.error("Prix invalide pour un produit.");
-                return;
-            }
-    
-            total += price; // On additionne directement le prix affiché (qui est déjà multiplié par la quantité)
-        });
-    
-        console.log("Total calculé :", total);
-        return total;
-    }
+    // Fonction pour recalculer le total
+function getCartTotal() {
+    let total = 0;
+    let cartItems = document.querySelectorAll("#cart-items li");
+    cartItems.forEach(function(item){ 
+        let quantity = parseInt(item.querySelector(".quantity").textContent.split(":")[1].trim());
+        let price = parseFloat(item.querySelector(".price").textContent.split("€")[0].trim());
+
+        // Vérifie que le prix et la quantité sont valides
+        if (isNaN(price) || isNaN(quantity)) {
+            console.error("Prix ou quantité invalide pour un produit.");
+            return;
+        }
+        total += price * quantity;  // Calculer correctement le total
+    });
+
+    return total;
+}
+
     
 
     // Écouter le changement du mode de paiement
@@ -82,18 +73,18 @@ document.addEventListener("DOMContentLoaded", function () {
         let items = [];
         let cartItems = document.querySelectorAll("#cart-items li");
         cartItems.forEach(function(item) {
-            let productId = item.dataset.productId;  // Assurez-vous d'avoir un data-product-id
-            let quantity = parseInt(item.querySelector(".quantity").textContent.split(":")[1].trim());
-            let price = parseFloat(item.querySelector(".price").textContent.split("€")[0].trim());
+        let productId = item.dataset.productId;  // Assurez-vous d'avoir un data-product-id
+        let quantity = parseInt(item.querySelector(".quantity").textContent.split(":")[1].trim());
+        let price = parseFloat(item.querySelector(".price").textContent.split("€")[0].trim());
 
-            if (!isNaN(price) && !isNaN(quantity)) {
-                items.push({
-                    product_id: productId,
-                    quantity: quantity,
-                    price: price
-                });
-            }
+        if (!isNaN(price) && !isNaN(quantity)) {
+        items.push({
+            product_id: productId,
+            quantity: quantity,
+            price: price  // Utiliser le prix unitaire
         });
+    }
+});
 
         // Créer l'objet de données à envoyer
         const OrderData = {
