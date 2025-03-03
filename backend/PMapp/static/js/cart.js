@@ -10,6 +10,12 @@ document.addEventListener("DOMContentLoaded", function () {
         cartItems.forEach(item => {
             let price = parseFloat(item.getAttribute("data-price"));
             let quantity = parseInt(item.getAttribute("data-quantity"));
+            
+            // Vérifier que le prix et la quantité sont valides
+            if (isNaN(price) || isNaN(quantity)) {
+                console.error("Prix ou quantité invalide pour un produit.");
+                return;
+            }
             total += price * quantity;
         });
         return total;
@@ -29,10 +35,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fonction pour envoyer la commande au backend
     document.getElementById("submit-order").addEventListener("click", function () {
         let cartTotal = getCartTotal();
+        console.log("Total du panier :", cartTotal); // Vérification du total
 
+        // Vérification du montant minimum de commande
         if (cartTotal < 25) {
             alert("Le montant minimum pour valider la commande est de 25 €.");
             return;
+        }
+
+        // Condition pour livraison gratuite à partir de 85€
+        if (cartTotal >= 85) {
+            alert("Félicitations ! La livraison est gratuite.");
         }
 
         let selectedPayment = document.querySelector("input[name='payment-method']:checked")?.value;
