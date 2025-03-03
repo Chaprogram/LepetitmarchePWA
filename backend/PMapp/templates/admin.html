@@ -71,18 +71,37 @@
     <!-- Notifications des commandes -->
     <section id="notifications">
         <h2>Notifications des Commandes</h2>
-        {% for order in orders %}
-        <div>
-            <h3>Commande #{{ order.id }}</h3>
-            <p>Client : {{ order.client_name }}</p>
-            <p>Total : {{ order.total_price }}€</p>
-            <a href="{{ url_for('order_details', order_id=order.id) }}">Voir la commande</a>
-        </div>
-    {% endfor %}
-
-        <ul id="notificationsList">
-            <li>Aucune notification pour le moment.</li>
-        </ul>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID Commande</th>
+                    <th>Nom Client</th>
+                    <th>Adresse de Livraison</th>
+                    <th>Numéro de Téléphone</th>
+                    <th>Date de Livraison</th>
+                    <th>Total Commande</th>
+                    <th>Voir Détails</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.client_name }}</td>
+                        <td>{{ order.delivery_address }}</td>
+                        <td>{{ order.phone_number }}</td>
+                        <td>{{ order.delivery_date }} à {{ order.delivery_time }}</td>
+                        <td>{{ order.total_price }}€</td>
+                        <td><a href="{{ url_for('order_details', order_id=order.id) }}">Voir détails</a></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7">Aucune commande à afficher.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
     </section>
 
     <!-- Réservations -->

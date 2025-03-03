@@ -238,25 +238,11 @@ def reservation_submit():
 
 
 
-@main.route('/test-email')
-def test_email():
-    msg = Message('Test Email', 
-                  sender='no-reply@lepetitmarche.be', 
-                  recipients=['ton-email@gmail.com'])
-    msg.body = 'Ceci est un test de l envoi d e-mails via Zoho et Flask.'
-    try:
-        mail.send(msg)
-        return 'E-mail envoyé avec succès !'
-    except Exception as e:
-        return f'Erreur lors de l\'envoi de l e-mail : {e}'
-
-
-
 
 @main.route('/admin')
 def admin():
-    produits = Product.query.all()
-    return render_template('admin.html',produits=produits)
+    Order = Product.query.all()
+    return render_template('admin.html',Order=Order)
 
 @main.route('/api/ajouter_produit', methods=['POST'])
 def ajouter_produit():
