@@ -657,30 +657,20 @@ def send_admin_notification(order):
     admins_emails = ["charlinec03@gmail.com", "admin2@domain.com"]  # Liste des emails des administrateurs
     
     subject = f"Nouvelle commande {order.id}"
+    body = f"Une nouvelle commande a été passée par {order.client_name}.\n\n"
     
-    # Ajout des informations du client
-    body = f"""
-    Une nouvelle commande a été passée par {order.client_name}.
-    
-    📍 Adresse de livraison :
-    {order.client_address}, {order.client_postal_code}
-    
-    ✉️ Email : {order.client_email}
-    📞 Téléphone : {order.client_phone}
-    
-    🚚 Jour et heure de livraison :
-    {order.delivery_date} à {order.delivery_time}
-    
-    🛒 Détails de la commande :
-    """
+    # Ajout des infos du client
+    body += f"📍 Adresse : {order.client_address}, {order.client_postal_code}\n"
+    body += f"📞 Téléphone : {order.client_phone}\n"
+    body += f"📅 Heure de livraison : {order.delivery_time}\n\n"
 
-    # Ajout des articles commandés
+    body += "Détails de la commande :\n\n"
+    
     for item in order.items:
-        body += f"- {item.product.name} - {item.quantity} x {item.price}€\n"
+        body += f"{item.product.name} - {item.quantity} x {item.price}€\n"
     
-    body += f"\n💰 Total de la commande : {order.total_price}€\n\nMerci de traiter cette commande."
+    body += f"\nTotal de la commande : {order.total_price}€\n\nMerci de traiter cette commande."
 
-    # Envoi de l'email à chaque administrateur
     for email in admins_emails:
         msg = Message(subject, recipients=[email])
         msg.body = body
