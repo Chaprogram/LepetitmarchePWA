@@ -93,7 +93,7 @@ console.log("Mode de paiement :", selectedPayment);
             delivery_address: deliveryAddress,
             delivery_date: deliveryDate,
             delivery_time: deliveryTime,
-            cart_items: cartItems
+            cart_items: OrderItem
         };
 
         console.log("Données envoyées au serveur :", orderData);
