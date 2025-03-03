@@ -569,47 +569,61 @@ def add_to_cart():
 
     return jsonify({'message': 'Produit ajouté au panier', 'cart': cart})
 
+
 @main.route("/submit_order", methods=["POST"])
 def submit_order():
-    data = request.get_json()  # Récupère les données envoyées par le frontend
-    print("Données reçues", data)
-    # Calculer le total de la commande
-    total_price = sum(item['price'] * item['quantity'] for item in data['cart_items'])
+    try:
+        # Récupère les données envoyées par le frontend
+        data = request.get_json()  
+        print("Données reçues :", data)
 
-    # Créer la commande
-    order = ProductOrder(
-        client_name=data['client_name'],
-        postal_code=data['postal_code'],
-        email=data['email'],
-        phone_number=data['phone_number'],
-        payment_method=data['payment_method'],
-        delivery_address=data['delivery_address'],
-        delivery_date=datetime.strptime(data['delivery_date'], '%Y-%m-%d'),
-        delivery_time=data['delivery_time'],
-        total_price=total_price
-    )
+        # Vérification que les données contiennent 'cart_items'
+        if not data or 'cart_items' not in data:
+            return jsonify({"success": False, "error": "Clé 'cart_items' manquante dans la requête"}), 400
 
-    # Ajouter la commande à la base de données
-    db.session.add(order)
-    db.session.commit()
+        # Calculer le total de la commande
+        total_price = sum(item['price'] * item['quantity'] for item in data['cart_items'])
 
-    # Enregistrer les articles de la commande
-    for item in data['cart_items']:
-        order_item = OrderItem(
-            order_id=order.id,
-            product_id=item['product_id'],
-            quantity=item['quantity'],
-            price=item['price']
+        # Créer la commande
+        order = ProductOrder(
+            client_name=data['client_name'],
+            postal_code=data['postal_code'],
+            email=data['email'],
+            phone_number=data['phone_number'],
+            payment_method=data['payment_method'],
+            delivery_address=data['delivery_address'],
+            delivery_date=datetime.strptime(data['delivery_date'], '%Y-%m-%d'),
+            delivery_time=data['delivery_time'],
+            total_price=total_price
         )
-        db.session.add(order_item)
-    
-    db.session.commit()
 
-    # Envoyer la confirmation au client et notification aux admins
-    send_confirmation_email(data['email'], order)
-    send_admin_notification(order)
+        # Ajouter la commande à la base de données
+        db.session.add(order)
+        db.session.commit()
 
-    return jsonify(success=True, order_id=order.id)
+        # Enregistrer les articles de la commande
+        for item in data['cart_items']:
+            order_item = OrderItem(
+                order_id=order.id,
+                product_id=item['product_id'],
+                quantity=item['quantity'],
+                price=item['price']
+            )
+            db.session.add(order_item)
+        
+        db.session.commit()
+
+        # Envoyer la confirmation au client et notification aux admins
+        send_confirmation_email(data['email'], order)
+        send_admin_notification(order)
+
+        # Retourner une réponse de succès avec l'ID de la commande
+        return jsonify({"success": True, "order_id": order.id}), 200
+
+    except Exception as e:
+        # Gestion des erreurs
+        print(f"Erreur lors de la commande : {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 @main.route('/clear-cart', methods=['POST'])
 def clear_cart():
@@ -640,7 +654,7 @@ def send_confirmation_email(client_email, order):
     mail.send(msg)
 
 def send_admin_notification(order):
-    admins_emails = ["admin1@domain.com", "admin2@domain.com"]  # Liste des emails des administrateurs
+    admins_emails = ["charlinec03@gmail.com", "admin2@domain.com"]  # Liste des emails des administrateurs
     
     subject = f"Nouvelle commande {order.id}"
     body = f"Une nouvelle commande a été passée par {order.client_name}.\n\nDétails de la commande :\n\n"
