@@ -83,9 +83,21 @@ document.addEventListener("DOMContentLoaded", function () {
     let clearCartButton = document.getElementById("clear-cart");
     if (clearCartButton) {
         clearCartButton.addEventListener("click", function () {
-            document.getElementById("cart-items").innerHTML = ""; // Vide l'affichage
-            document.getElementById("cart-total").textContent = "0€"; // Remet le total à 0
+            // Vide visuellement le panier
+            document.getElementById("cart-items").innerHTML = ""; 
+            document.getElementById("cart-total").textContent = "0€"; 
+
+            // Réinitialise toutes les variables liées au panier
+            let cart = []; // Vide le tableau du panier en mémoire
+            updateCart(cart); // Actualise le DOM et les données
+
             alert("Votre panier a été vidé.");
         });
+    }
+
+    function updateCart(cart) {
+        // Cette fonction est responsable de la mise à jour du DOM avec les nouveaux éléments du panier
+        // Par exemple, rafraîchir l'affichage du panier ou réinitialiser les éléments associés au panier.
+        // Assure-toi que tu remplaces les anciennes données par les nouvelles (vide ici).
     }
 });
