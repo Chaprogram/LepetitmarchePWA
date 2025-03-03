@@ -23,7 +23,8 @@
             <li data-product-id="{{ item.id }}"></lidata-product-id>>
                 <span class="name">{{ item.name }}</span> <!-- Nom du produit -->
                 <span class="quantity">Quantité : {{ item.quantity }}</span> <!-- Quantité -->
-                <span class="price">{{ item.price * item.quantity }}€</span> <!-- Prix total -->
+                <span class="price">{{ item.price }}€</span>
+ <!-- Prix total -->
             </li>
             
             {% endfor %}

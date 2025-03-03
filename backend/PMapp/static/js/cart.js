@@ -7,20 +7,32 @@ document.addEventListener("DOMContentLoaded", function () {
     function getCartTotal() {
         let total = 0;
         let cartItems = document.querySelectorAll("#cart-items li");
-        cartItems.forEach(function(item){ 
-            let quantity = parseInt(item.querySelector(".quantity").textContent.split(":")[1].trim());
-            let price = parseFloat(item.querySelector(".price").textContent.split("€")[0].trim());
-        
-            // Vérifie que le prix et la quantité sont valides
-            if (isNaN(price) || isNaN(quantity)) {
-                console.error("Prix ou quantité invalide pour un produit.");
+    
+        cartItems.forEach(function(item) { 
+            let priceElement = item.querySelector(".price");
+    
+            if (!priceElement) {
+                console.error("Erreur : élément prix manquant dans le panier");
                 return;
             }
-            total += price * quantity;
+    
+            let priceMatch = priceElement.textContent.match(/[\d.]+/); // Extrait uniquement les nombres du prix affiché
+            let price = priceMatch ? parseFloat(priceMatch[0]) : 0;
+    
+            console.log(`Produit: ${item.dataset.productId}, Prix total: ${price}`);
+    
+            if (isNaN(price)) {
+                console.error("Prix invalide pour un produit.");
+                return;
+            }
+    
+            total += price; // On additionne directement le prix affiché (qui est déjà multiplié par la quantité)
         });
     
+        console.log("Total calculé :", total);
         return total;
     }
+    
 
     // Écouter le changement du mode de paiement
     paymentOptions.forEach(option => {
