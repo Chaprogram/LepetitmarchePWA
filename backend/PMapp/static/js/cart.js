@@ -54,18 +54,35 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         let selectedPayment = document.querySelector("input[name='payment-method']:checked")?.value;
-        let deliveryName = document.getElementById("delivery-name")?.value;
-        let deliveryPostalCode = document.getElementById("delivery-postal-code")?.value;
-        let deliveryEmail = document.getElementById("delivery-email")?.value;
-        let deliveryPhone = document.getElementById("delivery-phone")?.value;
-        let deliveryAddress = document.getElementById("delivery-address")?.value;
-        let deliveryDate = document.getElementById("delivery-date")?.value;
-        let deliveryTime = document.getElementById("delivery-time")?.value;
+let deliveryName = document.getElementById("delivery-name")?.value;
+let deliveryPostalCode = document.getElementById("delivery-postal-code")?.value;
+let deliveryEmail = document.getElementById("delivery-email")?.value;
+let deliveryPhone = document.getElementById("delivery-phone")?.value;
+let deliveryAddress = document.getElementById("delivery-address")?.value;
+let deliveryDate = document.getElementById("delivery-date")?.value;
+let deliveryTime = document.getElementById("delivery-time")?.value;
 
-        if (!deliveryName || !deliveryPostalCode || !deliveryEmail || !deliveryPhone || !deliveryAddress) {
-            alert("Veuillez remplir tous les champs.");
-            return;
-        }
+// Vérification des champs obligatoires
+if (!deliveryName || !deliveryPostalCode || !deliveryEmail || !deliveryPhone || !deliveryAddress) {
+    alert("Veuillez remplir tous les champs.");
+    return;
+}
+
+// Ajouter une validation pour vérifier que la date et l'heure de livraison sont sélectionnées
+if (!deliveryDate || !deliveryTime) {
+    alert("Veuillez sélectionner une date et une heure de livraison.");
+    return;
+}
+
+// Affichage des informations dans la console pour vérification
+console.log("Nom du client :", deliveryName);
+console.log("Code postal :", deliveryPostalCode);
+console.log("Email :", deliveryEmail);
+console.log("Téléphone :", deliveryPhone);
+console.log("Adresse :", deliveryAddress);
+console.log("Date de livraison :", deliveryDate);
+console.log("Heure de livraison :", deliveryTime);
+console.log("Mode de paiement :", selectedPayment);
 
         let orderData = {
             client_name: deliveryName,

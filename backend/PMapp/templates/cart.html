@@ -42,21 +42,26 @@
         <!-- Formulaire pour la livraison -->
         <h2>Informations pour la livraison</h2>
         <div id="delivery-form">
-            <label for="client-name">Nom du client :</label>
-            <input type="text" id="client-name" placeholder="Votre nom complet" required>
+            <label for="delivery-name">Nom du client :</label>
+            <input type="text" id="delivery-name" placeholder="Votre nom complet" required>
+        
             <label for="delivery-address">Adresse :</label>
-            <input type="text" id="address" placeholder="Votre adresse complète" required>
-            <label for="postal-code">Code postal :</label>
-            <input type="text" id="postal-code" placeholder="Votre code postal" required>
-            <label for="email">Adresse e-mail :</label>
-            <input type="email" id="email" placeholder="Votre adresse e-mail" required>
+            <input type="text" id="delivery-address" placeholder="Votre adresse complète" required>
+        
+            <label for="delivery-postal-code">Code postal :</label>
+            <input type="text" id="delivery-postal-code" placeholder="Votre code postal" required>
+        
+            <label for="delivery-email">Adresse e-mail :</label>
+            <input type="email" id="delivery-email" placeholder="Votre adresse e-mail" required>
+        
             <label for="delivery-phone">Numéro de téléphone :</label>
-            <input type="tel" id="phone" placeholder="Votre numéro de téléphone" required>
+            <input type="tel" id="delivery-phone" placeholder="Votre numéro de téléphone" required>
+        
             <label for="delivery-date">Jour de livraison :</label>
-            <input type="date" id="date" required>
-
+            <input type="date" id="delivery-date" required>
+        
             <label for="delivery-time">Heure de livraison :</label>
-            <select id="time" required>
+            <select id="delivery-time" required>
                 <option value="19:00">19:00</option>
                 <option value="19:30">19:30</option>
                 <option value="20:00">20:00</option>
@@ -66,7 +71,7 @@
                 <option value="22:00">22:00</option>
             </select>
         </div>
-
+        
         <!-- Script pour définir la date de livraison par défaut -->
         <script>
             document.addEventListener("DOMContentLoaded", function () {
@@ -76,23 +81,24 @@
                 }
             });
         </script>
-
+        
         <!-- Section pour le choix de paiement -->
         <h3>Choisissez votre mode de paiement</h3>
-<div id="payment-options">
-    <label>
-        <input type="radio" name="payment-method" value="cash" checked> Payer en espèces (à la livraison)
-    </label>
-    <label>
-        <input type="radio" name="payment-method" value="payconiq"> Payer avec Payconiq
-    </label>
-</div>
-
-<!-- Zone pour afficher le QR Code Payconiq -->
-<div id="payconiq-qr" style="display: none; text-align: center;">
-    <h4>Scannez le QR Code avec Payconiq</h4>
-    <img id="payconiq-image" src="" alt="QR Code Payconiq" width="200">
-</div>
+        <div id="payment-options">
+            <label>
+                <input type="radio" name="payment-method" value="cash" checked> Payer en espèces (à la livraison)
+            </label>
+            <label>
+                <input type="radio" name="payment-method" value="payconiq"> Payer avec Payconiq
+            </label>
+        </div>
+        
+        <!-- Zone pour afficher le QR Code Payconiq -->
+        <div id="payconiq-qr" style="display: none; text-align: center;">
+            <h4>Scannez le QR Code avec Payconiq</h4>
+            <img id="payconiq-image" src="" alt="QR Code Payconiq" width="200">
+        </div>
+           
 
 <button id="submit-order">Valider la commande</button>
 
