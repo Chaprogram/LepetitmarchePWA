@@ -10,16 +10,21 @@ document.addEventListener("DOMContentLoaded", function () {
         cartItems.forEach(item => {
             let price = parseFloat(item.getAttribute("data-price"));
             let quantity = parseInt(item.getAttribute("data-quantity"));
-            
-            // Vérifier que le prix et la quantité sont valides
+    
+            console.log("Produit : ", item, "Prix : ", price, "Quantité : ", quantity); // Ajout du débogage
+    
+            // Vérifie que le prix et la quantité sont valides
             if (isNaN(price) || isNaN(quantity)) {
                 console.error("Prix ou quantité invalide pour un produit.");
                 return;
             }
             total += price * quantity;
         });
+    
+        console.log("Total recalculé du panier : ", total); // Ajoute un log pour afficher le total recalculé
         return total;
     }
+    
 
     paymentOptions.forEach(option => {
         option.addEventListener("change", function () {
@@ -38,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Total du panier :", cartTotal); // Vérification du total
 
         // Vérification du montant minimum de commande
+        console.log("Total du panier avant validation : ", cartTotal);
         if (cartTotal < 25) {
             alert("Le montant minimum pour valider la commande est de 25 €.");
             return;
