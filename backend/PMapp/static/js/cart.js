@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Félicitations ! La livraison est gratuite.");
         }
 
-        let selectedPayment = document.querySelector("input[name='payment-method']:checked")?.value;
+let selectedPayment = document.querySelector("input[name='payment-method']:checked")?.value;
 let deliveryName = document.getElementById("delivery-name")?.value;
 let deliveryPostalCode = document.getElementById("delivery-postal-code")?.value;
 let deliveryEmail = document.getElementById("delivery-email")?.value;
@@ -84,7 +84,7 @@ console.log("Date de livraison :", deliveryDate);
 console.log("Heure de livraison :", deliveryTime);
 console.log("Mode de paiement :", selectedPayment);
 
-        let orderData = {
+        let OrderData = {
             client_name: deliveryName,
             postal_code: deliveryPostalCode,
             email: deliveryEmail,
@@ -92,7 +92,8 @@ console.log("Mode de paiement :", selectedPayment);
             payment_method: selectedPayment,
             delivery_address: deliveryAddress,
             delivery_date: deliveryDate,
-            delivery_time: deliveryTime
+            delivery_time: deliveryTime,
+            cart_items: cartItems
         };
 
         console.log("Données envoyées au serveur :", orderData);

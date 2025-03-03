@@ -572,7 +572,7 @@ def add_to_cart():
 @main.route("/submit_order", methods=["POST"])
 def submit_order():
     data = request.get_json()  # Récupère les données envoyées par le frontend
-    
+    print("Données reçues", data)
     # Calculer le total de la commande
     total_price = sum(item['price'] * item['quantity'] for item in data['cart_items'])
 
