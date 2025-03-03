@@ -97,14 +97,14 @@ const items = [];  // Initialisation correcte
             items: items
         };
 
-        console.log("Données envoyées au serveur :", orderData);
+        console.log("Données envoyées au serveur :", OrderData);
 
         fetch("/submit_order", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(orderData)
+            body: JSON.stringify(OrderData)
         })
         .then(response => response.json())
         .then(data => {
