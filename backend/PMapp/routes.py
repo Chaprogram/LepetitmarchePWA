@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
 import re  # Pour la validation des emails
 from PMapp import db, socketio, mail
-from PMapp.models import User, Product, Admin, Notification, Reservation,ProductOrder, OrderItem
+from PMapp.models import User, Product, Admin, Notification, Reservation,ProductOrder, OrderItem, Order
 from datetime import datetime
 from urllib.parse import quote
 import os
@@ -254,7 +254,7 @@ def envoyer_email_admin(name, email, phone, commandes):
 # Route pour afficher la page admin
 @main.route('/admin')
 def admin():
-    orders = Product.query.all()
+    orders = Order.query.all()
     return render_template('admin.html', orders=orders)
 
 @main.route('/api/ajouter_produit', methods=['POST'])
