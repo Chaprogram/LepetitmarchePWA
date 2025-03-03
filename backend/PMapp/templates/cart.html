@@ -20,11 +20,12 @@
         <!-- Liste des produits dans le panier -->
         <ul id="cart-items">
             {% for item in cart %}
-                <li>
-                    <span>{{ item.name }}</span> <!-- Affiche le nom du produit -->
-                    <span>Quantité : {{ item.quantity }}</span> <!-- Affiche la quantité du produit -->
-                    <span>{{ item.price * item.quantity }}€</span> <!-- Affiche le prix total pour cet article -->
-                </li>
+            <li>
+                <span class="name">{{ item.name }}</span> <!-- Nom du produit -->
+                <span class="quantity">Quantité : {{ item.quantity }}</span> <!-- Quantité -->
+                <span class="price">{{ item.price * item.quantity }}€</span> <!-- Prix total -->
+            </li>
+            
             {% endfor %}
         </ul>
 
