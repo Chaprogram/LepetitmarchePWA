@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () { 
     let paymentOptions = document.querySelectorAll("input[name='payment-method']");
     let payconiqQrDiv = document.getElementById("payconiq-qr");
     let payconiqImage = document.getElementById("payconiq-image");
@@ -6,13 +6,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fonction pour recalculer le total en tenant compte des produits récupérés depuis le backend
     function getCartTotal() {
         let total = 0;
-        let cartItems = document.querySelectorAll(".cart-item"); // Sélectionne les produits affichés dans le panier
-        cartItems.forEach(item => {
-            let price = parseFloat(item.getAttribute("data-price"));
-            let quantity = parseInt(item.getAttribute("data-quantity"));
-    
+        let cartItems = document.querySelectorAll("#cart-items li"); // Sélectionne les produits affichés dans le panier
+        cartItems.forEach(function(item){ 
+            let quantity = parseInt(item.querySelector(".quantity").textContent.split(":")[1].trim()); // Récupère la quantité
+            let price = parseFloat(item.querySelector(".price").textContent.split("€")[0].trim()); // Récupère le prix
+        
             console.log("Produit : ", item, "Prix : ", price, "Quantité : ", quantity); // Ajout du débogage
-    
+        
             // Vérifie que le prix et la quantité sont valides
             if (isNaN(price) || isNaN(quantity)) {
                 console.error("Prix ou quantité invalide pour un produit.");
@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("Total recalculé du panier : ", total); // Ajoute un log pour afficher le total recalculé
         return total;
     }
-    
 
     paymentOptions.forEach(option => {
         option.addEventListener("change", function () {
@@ -38,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Fonction pour envoyer la commande au backend
-    document.getElementById("submit-order").addEventListener("click", function () {
+    document.getElementById("submit-order").addEventListener("click", function (e) {
         let cartTotal = getCartTotal();
         console.log("Total du panier :", cartTotal); // Vérification du total
 
@@ -120,26 +119,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    function updateCart(cart) {
-        // Cette fonction est responsable de la mise à jour du DOM avec les nouveaux éléments du panier
-        let cartItemsContainer = document.getElementById("cart-items");
-        cartItemsContainer.innerHTML = ''; // Vide l'affichage des éléments
-
-        // Ajoute les éléments du panier récupérés depuis le backend
-        cart.forEach(product => {
-            let li = document.createElement('li');
-            li.classList.add('cart-item');
-            li.setAttribute('data-price', product.price);
-            li.setAttribute('data-quantity', product.quantity);
-            li.innerHTML = `
-                <span>${product.name}</span>
-                <span>Quantité : ${product.quantity}</span>
-                <span>${(product.price * product.quantity).toFixed(2)}€</span>
-            `;
-            cartItemsContainer.appendChild(li);
-        });
-
-        // Recalcule et met à jour le total
-        document.getElementById("cart-total").textContent = getCartTotal().toFixed(2) + "€";
+    // Fonction pour mettre à jour le total dans l'élément HTML
+    function updateCartTotal() {
+        let total = getCartTotal(); // Récupère le total recalculé
+        document.getElementById("cart-total").textContent = total.toFixed(2) + "€"; // Met à jour l'affichage
     }
 });
