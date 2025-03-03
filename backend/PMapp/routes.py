@@ -479,6 +479,15 @@ def cart():
     total = sum(item['price'] * item['quantity'] for item in cart)
     return render_template('cart.html', cart=cart, total=total)
 
+@main.route("/get_cart", methods=["GET"])
+def get_cart():
+    cart = ProductOrder.query.all()  # Exemple si tu récupères les commandes en base de données
+    cart_data = [{"name": p.name, "quantity": p.quantity, "price": p.price} for p in cart]
+
+    print("Produits envoyés au frontend:", cart_data)  # 🔥 Log pour vérifier
+    return jsonify(cart_data)
+
+
 
 @main.route("/generate_payconiq_qr")
 def generate_payconiq_qr():
