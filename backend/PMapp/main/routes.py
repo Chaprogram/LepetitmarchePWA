@@ -241,8 +241,8 @@ def reservation_submit():
 
 @main.route('/admin')
 def admin():
-    Order = Product.query.all()
-    return render_template('admin.html',Order=Order)
+    orders = Product.query.all()
+    return render_template('admin.html',orders=orders)
 
 @main.route('/api/ajouter_produit', methods=['POST'])
 def ajouter_produit():
