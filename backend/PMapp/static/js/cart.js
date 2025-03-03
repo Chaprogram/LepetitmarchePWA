@@ -83,6 +83,7 @@ console.log("Adresse :", deliveryAddress);
 console.log("Date de livraison :", deliveryDate);
 console.log("Heure de livraison :", deliveryTime);
 console.log("Mode de paiement :", selectedPayment);
+const items = [];  // Initialisation correcte
 
         let OrderData = {
             client_name: deliveryName,
