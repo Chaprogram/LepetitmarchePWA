@@ -123,5 +123,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateCartTotal() {
         let total = getCartTotal(); // Récupère le total recalculé
         document.getElementById("cart-total").textContent = total.toFixed(2) + "€"; // Met à jour l'affichage
-    }
+    }// Si la fonction `getCartTotal()` est appelée dans plusieurs endroits, assure-toi de la gérer correctement :
+document.getElementById("clear-cart").addEventListener("click", function () {
+    // Recalcul du total après vidage du panier
+    updateCartTotal(); 
+});
 });
