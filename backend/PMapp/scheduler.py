@@ -1,5 +1,5 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from . import send_admin_report  # Assurez-vous que la fonction pour envoyer l'email est correctement importée
+from .utils import send_admin_report  # Assurez-vous que la fonction pour envoyer l'email est correctement importée
 
 def schedule_report(app):
     # Créer un planificateur en arrière-plan
