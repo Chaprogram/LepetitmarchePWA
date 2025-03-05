@@ -164,7 +164,7 @@ def reservation():
             db.session.commit()
 
             # Redirection vers la page de confirmation
-            return redirect(url_for('main.send_confirmation_emai', name=name, email=email_reservation, phone=phone, commandes="|".join(commandes)))
+            return redirect(url_for('main.reservation_submit', name=name, email=email_reservation, phone=phone, commandes="|".join(commandes)))
 
         except Exception as e:
             db.session.rollback()
