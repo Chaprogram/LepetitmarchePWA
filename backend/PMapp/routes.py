@@ -116,41 +116,19 @@ def check_session():
 
 
 
-
-def send_email_via_zoho(name, email, commandes):
-    # Configuration de l'e-mail
-    from_email = "no-reply@lepetitmarche.be"
-    to_email = "email"
-    subject = "Confirmation de votre commande - Le Petit Marché"
-    body = f"Bonjour {name},<br><br>Merci pour votre commande ! Voici les détails : <br>{commandes}"
-
-    # Création du message
-    msg = MIMEMultipart()
-    msg['From'] = from_email
-    msg['To'] = to_email
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'html'))
-
-    try:
-        # Connexion au serveur SMTP de Zoho
-        server = smtplib.SMTP('smtp.zoho.eu', 587)
-        server.starttls()
-        server.login(from_email, os.getenv('ZOHO_PASSWORD'))  # Mot de passe Zoho ou mot de passe spécifique à l'application
-        text = msg.as_string()
-        server.sendmail(from_email, to_email, text)
-        server.quit()
-        print(f"E-mail envoyé avec succès à {to_email}")
-    except Exception as e:
-        print(f"Erreur lors de l'envoi de l'e-mail : {e}")
-
-
 @main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
     if request.method == 'POST':
         try:
+            # Récupération des données du formulaire
             name = request.form.get('name')
             email_reservation = request.form.get('email')  # Correction ici
             phone = request.form.get('phone')
+
+            # Vérification des champs requis
+            if not name or not email_reservation or not phone:
+                flash("Tous les champs sont requis", "danger")
+                return redirect(url_for('main.reservation'))
 
             # Construction de la liste des commandes
             produits = {
@@ -171,6 +149,10 @@ def reservation():
                 if quantite > 0:
                     commandes.append(f"{quantite} x {nom_produit}")
 
+            if not commandes:
+                flash("Veuillez sélectionner au moins un produit.", "danger")
+                return redirect(url_for('main.reservation'))
+
             # Sauvegarde dans la base de données
             new_reservation = Reservation(
                 name=name,
@@ -181,11 +163,8 @@ def reservation():
             db.session.add(new_reservation)
             db.session.commit()
 
-            # Envoi de l'email via Zoho
-            send_email_via_zoho(name, email_reservation, ", ".join(commandes))  # Correction ici
-
             # Redirection vers la page de confirmation
-            return redirect(url_for('main.reservation_submit', name=name, email=email_reservation, phone=phone, commandes="|".join(commandes)))
+            return redirect(url_for('main.send_confirmation_emai', name=name, email=email_reservation, phone=phone, commandes="|".join(commandes)))
 
         except Exception as e:
             db.session.rollback()
@@ -194,6 +173,7 @@ def reservation():
             return redirect(url_for('main.reservation'))
 
     return render_template('reservation.html')
+
 
 @main.route('/reservation_submit')
 def reservation_submit():
