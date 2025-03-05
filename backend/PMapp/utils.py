@@ -1,7 +1,10 @@
 from flask_mail import Message
-from . import mail, app
+from . import create_app
 
 def send_admin_report():
+    # Créer l'application Flask
+    app = create_app()  # Utilisation de la fonction create_app pour obtenir l'instance de l'app
+
     # Créer le contenu du rapport
     report_content = "Ceci est votre rapport des réservations."
 
@@ -15,4 +18,5 @@ def send_admin_report():
 
     # Envoyer l'email dans le contexte de l'application Flask
     with app.app_context():
+        mail = app.extensions['mail']  # Accéder à l'extension Flask-Mail
         mail.send(msg)
