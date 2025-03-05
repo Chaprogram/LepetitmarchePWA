@@ -4,7 +4,7 @@ import os
 from waitress import serve
 import logging
 logging.basicConfig(level=logging.DEBUG)
-from scheduler import schedule_report
+from PMapp.scheduler import schedule_report
 
 # Créer l'application Flask
 
