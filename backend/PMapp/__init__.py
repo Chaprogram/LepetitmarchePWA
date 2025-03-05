@@ -2,9 +2,10 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_socketio import SocketIO
-from flask_mail import Mail
+from flask_mail import Mail, Message
 import os
 from dotenv import load_dotenv
+from . import mail, app 
 
 
 
@@ -44,12 +45,32 @@ def create_app():
     print(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
     print("DATABASE_URL: ", os.getenv("DATABASE_URL"))
 
+
+def send_admin_report():
+    # Créer le contenu du rapport
+    report_content = "Ceci est votre rapport des réservations."
+
+    # Créer le message d'email
+    msg = Message(
+        'Récapitulatif des réservations',
+        sender='your_email@example.com',
+        recipients=['charlinec03@gmail.com']
+    )
+    msg.body = report_content
+
+    # Envoyer l'email dans le contexte de l'application Flask
+    with app.app_context():
+        mail.send(msg)
+
     # Initialisation des extensions
     db.init_app(app)  
     socketio.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'
+
+
+
 
 
     # Vérifier la connexion à la base de données (pour le démarrage)

@@ -4,12 +4,16 @@ import os
 from waitress import serve
 import logging
 logging.basicConfig(level=logging.DEBUG)
+from . import schedule_report
 
 # Créer l'application Flask
 
 PMapp = create_app()
 
 migrate = Migrate(PMapp,db)
+
+schedule_report()
+
 
 port = int(os.environ.get("PORT", 5000)) 
 # Afficher les routes pour le débogage

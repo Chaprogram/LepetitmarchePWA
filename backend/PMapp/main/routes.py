@@ -18,6 +18,9 @@ from io import BytesIO
 from flask_socketio import emit
 
 
+
+
+
 from . import main  # Import du Blueprint déclaré dans main/__init__.py
  # Définir un blueprint
 main = Blueprint('main', __name__)
@@ -626,8 +629,13 @@ def clear_cart():
 
 
 
+from flask_mail import Message
+
 def send_confirmation_email(client_email, order):
-    subject = f"Confirmation de votre commande #{order.id}"  # Ajout du numéro de commande
+    # Sujet de l'email
+    subject = f"Confirmation de votre commande #{order.id}"
+
+    # Corps de l'email en texte brut
     body = f"Bonjour {order.client_name},\n\n"
     body += f"Votre commande #{order.id} a bien été reçue.\n\n"  # Ajout du numéro de commande
     
@@ -636,15 +644,28 @@ def send_confirmation_email(client_email, order):
     for item in order.items:
         body += f"{item.product.name} - {item.quantity} x {item.price}€\n"
     
-    body += f"\nTotal de la commande : {order.total_price}€\n\n"
-    body += "En cas de problèmes, vous pouvez nous contacter au 0496 33 07 84.\n\n"  # Ajout du numéro du magasin
-    body += "Merci pour votre commande !\n\n"
-    body += "Merci,\nLe Petit Marché"  # Signature
-    
+    # Création du message
     msg = Message(subject, recipients=[client_email])
-    msg.body = body
-    mail.send(msg)
 
+    # Définition du corps de l'email (texte brut et HTML)
+    msg.body = body  # Corps en texte brut
+    msg.html = f"""
+    <div style="font-family: Arial, sans-serif;">
+        <h2>Confirmation de votre commande</h2>
+        <p><strong>Merci pour votre commande, {order.client_name} !</strong></p>
+        <p><strong>Commande n°{order.id}</strong></p>
+        <p><strong>📦 Total : </strong>{order.total_price}€</p>
+        <p><strong>📅 Date de livraison :</strong> {order.delivery_date.strftime('%d/%m/%Y')}</p>
+        <p><strong>📍 Adresse de livraison : </strong>{order.delivery_address}</p>
+        <p>☎️ En cas de problème, contactez-nous au 0467 81 15 52.</p>
+        <p>Merci et à bientôt !</p>
+        <p><strong>Cordialement,</strong></p>
+        <p><i>✨ Le Petit Marché ✨</i></p>
+    </div>
+    """
+
+    # Envoi du message
+    mail.send(msg)
 
 def send_admin_notification(order):
     admins_emails = ["charlinec03@gmail.com", "admin2@domain.com"]  # Liste des emails des administrateurs
@@ -676,4 +697,55 @@ def process_payment():
     # Ici, tu traiterais le paiement via l'API Payconiq
     # Pour l'instant, nous affichons un message de succès pour la démonstration
     return render_template('payment_success.html')
+
+
+
+@main.route('/confirmation/<int:reservation_id>', methods=['GET', 'POST'])
+def send_confirmation_email(reservation_id):
+    # Récupérer la réservation à partir de la base de données
+    reservation = Reservation.query.get_or_404(reservation_id)
+    
+    # Détails de la commande et informations client
+    order_details = reservation.order_details
+    name = reservation.name
+    phone_number = reservation.phone_number
+    email_reservation = reservation.email_reservation
+
+    # Envoi de l'email de confirmation au client
+    msg_client = Message(
+        "Confirmation de votre commande - Le Petit Marché",
+        recipients=[email_reservation]
+    )
+    msg_client.body = f"Bonjour {name},\n\nVotre commande a bien été reçue.\nDétails de la commande : {order_details}\nMerci de votre confiance !"
+    mail.send(msg_client)
+
+    return "Confirmation envoyée au client", 200
+
+
+
+@main.route('/send_admin_report', methods=['GET'])
+def send_admin_report():
+    # On récupère les réservations du jour (en fonction de la date actuelle)
+    today = datetime.today().date()
+    reservations_today = Reservation.query.filter(Reservation.created_at.date() == today).all()
+    
+    # Création du contenu de l'email récapitulatif
+    email_body = "Récapitulatif des réservations pour aujourd'hui :\n\n"
+    
+    for reservation in reservations_today:
+        name = reservation.name
+        phone_number = reservation.phone_number
+        email_reservation = reservation.email_reservation
+        order_details = reservation.order_details
+        email_body += f"Nom : {name}\nTéléphone : {phone_number}\nEmail : {email_reservation}\nDétails de la commande : {order_details}\n\n"
+    
+    # Envoi de l'email à l'admin
+    msg_admin = Message(
+        "Récapitulatif des réservations - Le Petit Marché",
+        recipients=['charlinec03@gmail.com']  # Remplace avec l'email de l'admin
+    )
+    msg_admin.body = email_body
+    mail.send(msg_admin)
+
+    return "Email récapitulatif envoyé à l'admin", 200
 
