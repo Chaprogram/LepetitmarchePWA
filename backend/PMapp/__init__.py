@@ -2,20 +2,18 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_socketio import SocketIO
-from flask_mail import Mail, Message
+from flask_mail import Mail
 import os
 from dotenv import load_dotenv
-from . import mail, app 
 
-
-
-load_dotenv()
-# Initialisation des extensions
+# Initialisation des extensions, mais pas encore liées à l'application
 db = SQLAlchemy()
 socketio = SocketIO()
 mail = Mail()
 login_manager = LoginManager()
 
+# Charger les variables d'environnement
+load_dotenv()
 
 def create_app():
     # Créer l'application Flask
@@ -40,38 +38,15 @@ def create_app():
     app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_FROM_EMAIL')
     app.config['SESSION_COOKIE_SECURE'] = True 
 
-
-
-    print(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
-    print("DATABASE_URL: ", os.getenv("DATABASE_URL"))
-
-
-def send_admin_report():
-    # Créer le contenu du rapport
-    report_content = "Ceci est votre rapport des réservations."
-
-    # Créer le message d'email
-    msg = Message(
-        'Récapitulatif des réservations',
-        sender='your_email@example.com',
-        recipients=['charlinec03@gmail.com']
-    )
-    msg.body = report_content
-
-    # Envoyer l'email dans le contexte de l'application Flask
-    with app.app_context():
-        mail.send(msg)
-
     # Initialisation des extensions
-    db.init_app(app)  
+    db.init_app(app)
     socketio.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'
 
-
-
-
+    print(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
+    print("DATABASE_URL: ", os.getenv("DATABASE_URL"))
 
     # Vérifier la connexion à la base de données (pour le démarrage)
     with app.app_context():
@@ -91,6 +66,6 @@ def send_admin_report():
     # Importation et enregistrement des routes
     from PMapp.routes import main
     app.register_blueprint(main)
-    
 
     return app
+
