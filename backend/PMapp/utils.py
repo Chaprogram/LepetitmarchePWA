@@ -11,7 +11,7 @@ def send_admin_report():
     # Créer le message d'email
     msg = Message(
         'Récapitulatif des réservations',
-        sender='your_email@example.com',
+        sender='no-reply@lepetitmarche.be',
         recipients=['charlinec03@gmail.com']
     )
     msg.body = report_content
