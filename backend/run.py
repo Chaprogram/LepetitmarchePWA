@@ -12,7 +12,7 @@ PMapp = create_app()
 
 migrate = Migrate(PMapp,db)
 
-schedule_report(PMapp)
+schedule_report()
 
 
 port = int(os.environ.get("PORT", 5000)) 
