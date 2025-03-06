@@ -238,13 +238,14 @@ def reservation_submit(reservation_id):
         msg_client.body = f"Bonjour {name},\n\nVotre commande a bien été reçue.\nDétails de la commande : {order_details}\nMerci de votre confiance !"
         mail.send(msg_client)
 
-        # Retourner un message ou rediriger après l'envoi
-        return "Confirmation envoyée au client", 200
+        # Rediriger vers la page de confirmation avec un message de succès
+        return render_template('reservation_submit.html', name=name, email=email_reservation, commandes=order_details)
 
     except Exception as e:
         print(str(e))
         flash("Une erreur s'est produite lors de l'envoi de l'email.", "danger")
         return redirect(url_for('main.reservation'))
+
 
 
 
