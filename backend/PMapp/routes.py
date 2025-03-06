@@ -34,6 +34,24 @@ def menu():
     return render_template('menu.html', products=products)
 
 
+
+@main.route('/admin')
+@login_required
+def admin_page():
+    # Récupérer l'état des livraisons
+    delivery_status = DeliveryStatus.query.first()
+
+    # Si aucune entrée n'existe, on crée une nouvelle entrée avec un statut par défaut
+    if not delivery_status:
+        delivery_status = DeliveryStatus(status=True)  # Par défaut, les livraisons sont ouvertes
+        db.session.add(delivery_status)
+        db.session.commit()
+
+    # Récupérer les commandes pour les afficher dans la section "Notifications des Commandes"
+    orders = Order.query.all()  # Assure-toi d'importer le modèle Order
+
+    return render_template('admin.html', delivery_status=delivery_status, orders=orders)
+
 @main.route('/order/<int:order_id>', methods=['POST'])
 def process_order(order_id):
     order = ProductOrder.query.get_or_404(order_id)
@@ -257,7 +275,7 @@ def reservation_submit(reservation_id):
         reservation = Reservation.query.get_or_404(reservation_id)
 
         # Détails de la commande et informations client
-        order_details = reservation.order_details
+        order_details = reservation.order_details.split(',')
         name = reservation.name
         email_reservation = reservation.email_reservation
         phone_number = reservation.phone_number
