@@ -75,7 +75,7 @@
 </div>
 
 <!-- Formulaire pour changer le statut des livraisons -->
-<form action="{{ url_for('toggle_delivery') }}" method="POST">
+<form action="{{ url_for('main.toggle_delivery') }}" method="POST">
     <button type="submit">
         {% if delivery_status.status %}
             Fermer les livraisons

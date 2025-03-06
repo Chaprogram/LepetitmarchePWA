@@ -17,17 +17,17 @@
         </div>
         <h1>Merci pour votre commande, {{ name }} !</h1>
         <p>Un e-mail de confirmation a été envoyé à {{ email }}.</p>
-<p>Votre numéro de téléphone : {{ phone }}</p>
+        <p>Votre numéro de téléphone : {{ phone }}</p>
+    </header>
 
-<section class="order-summary">
-    <h2>Récapitulatif de votre commande :</h2>
-    <ul>
-        {% for commande in commandes.split(', ') %}
-            <li>{{ commande }}</li>
-        {% endfor %}
-    </ul>
-</section>
-
+    <section class="order-summary">
+        <h2>Récapitulatif de votre commande :</h2>
+        <ul>
+            {% for commande in commandes %}
+                <li>{{ commande }}</li>
+            {% endfor %}
+        </ul>
+    </section>
 
     <div class="button-container">
         <a href="{{ url_for('main.index') }}" class="btn-go-home">Retour sur la page d'accueil</a>
