@@ -35,9 +35,9 @@ def menu():
 
 
 
-@main.route('/admin')
+@main.route('/admin/board')
 @login_required
-def admin_page():
+def admin_board():
     # Récupérer l'état des livraisons
     delivery_status = DeliveryStatus.query.first()
 
