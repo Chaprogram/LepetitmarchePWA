@@ -290,6 +290,8 @@ def reservation():
             db.session.add(new_reservation)
             db.session.commit()
             flash(f"Réservation enregistrée, redirection vers la page de confirmation (ID: {new_reservation.id})", "success")
+            print(f"Redirection vers reservation_submit avec ID: {new_reservation.id}")
+
             # Redirection vers la page de confirmation avec l'ID de la réservation
             return redirect(url_for('main.reservation_submit', reservation_id=new_reservation.id))
 
@@ -312,6 +314,7 @@ def reservation_submit(reservation_id):
         name = reservation.name
         email_reservation = reservation.email_reservation
         phone_number = reservation.phone_number
+        print(f"Envoi de l'email à {email_reservation}...")
 
         # Envoi de l'email de confirmation au client
         msg_client = Message(
