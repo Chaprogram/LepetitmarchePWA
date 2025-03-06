@@ -123,10 +123,10 @@ def reservation():
             # Récupération des données du formulaire
             name = request.form.get('name')
             email_reservation = request.form.get('email')  # Correction ici
-            phone = request.form.get('phone')
+            phone_number = request.form.get('phone_number')
 
             # Vérification des champs requis
-            if not name or not email_reservation or not phone:
+            if not name or not email_reservation or not phone_number:
                 flash("Tous les champs sont requis", "danger")
                 return redirect(url_for('main.reservation'))
 
@@ -157,14 +157,14 @@ def reservation():
             new_reservation = Reservation(
                 name=name,
                 email_reservation=email_reservation,  # Correction ici
-                phone_number=phone,
+                phone_number=phone_number,
                 order_details=", ".join(commandes)  # Stocke sous forme de chaîne
             )
             db.session.add(new_reservation)
             db.session.commit()
 
             # Redirection vers la page de confirmation
-            return redirect(url_for('main.reservation_submit', name=name, email=email_reservation, phone=phone, commandes="|".join(commandes)))
+            return redirect(url_for('main.reservation_submit', reservation_id=new_reservation.id))
 
         except Exception as e:
             db.session.rollback()
@@ -177,12 +177,21 @@ def reservation():
 
 @main.route('/reservation_submit')
 def reservation_submit():
-    name = request.args.get('name')
-    email_reservation = request.args.get('email')  # Correction ici
-    phone = request.args.get('phone')
-    commandes = request.args.get('commandes', '').split('|')
+    # Récupération des paramètres via l'ID de la réservation
+    reservation_id = request.args.get('reservation_id')
+    reservation = Reservation.query.get_or_404(reservation_id)
 
-    return render_template('reservation_submit.html', name=name, email=email_reservation, phone=phone, commandes=commandes)
+    # Récupération des informations de la réservation
+    name = reservation.name
+    email_reservation = reservation.email_reservation
+    phone_number = reservation.phone_number
+    order_details = reservation.order_details
+
+    # Appeler la fonction pour envoyer l'email de confirmation
+    send_reservation_mail(reservation_id)
+
+    return render_template('reservation_submit.html', name=name, email=email_reservation, phone=phone_number, commandes=order_details)
+
 
 
 
@@ -651,9 +660,12 @@ def send_confirmation_email(email, order):
     body += f"Votre commande #{order.id} a bien été reçue.\n\n"  # Ajout du numéro de commande
     
     body += "Détails de la commande :\n\n"
-    order_items = OrderItem.query.filter_by(order_id=order.id).all()
-    for item in order.items:
-        body += f"{item.product.name} - {item.quantity} x {item.price}€\n"
+    
+    if not order.items:
+        body += "Aucun article trouvé dans la commande.\n"
+    else:
+        for item in order.items:  # Indentation de la boucle for
+            body += f"{item.product.name} - {item.quantity} x {item.price}€\n"
     
     # Création du message
     msg = Message(subject, recipients=[email])
@@ -667,7 +679,36 @@ def send_confirmation_email(email, order):
         <p><strong>Commande n°{order.id}</strong></p>
         <p><strong>📦 Total : </strong>{order.total_price}€</p>
         <p><strong>📅 Date de livraison :</strong> {order.delivery_date.strftime('%d/%m/%Y')}</p>
+        <p><strong>🕒 Heure de livraison : </strong>{order.delivery_time}</p>  <!-- Ajout de l'heure -->
         <p><strong>📍 Adresse de livraison : </strong>{order.delivery_address}</p>
+        
+        <h3>Détails de la commande :</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Produit</th>
+                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Quantité</th>
+                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Prix</th>
+            </tr>
+            """
+        
+    if not order.items:
+            msg.html += "<tr><td colspan='3' style='border: 1px solid #ddd; padding: 8px;'>Aucun produit trouvé dans la commande</td></tr>"
+    else:
+            # Indentation correcte pour la boucle for
+            for item in order.items:
+                msg.html += f"""
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">{item.product.name}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">{item.quantity}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">{item.price}€</td>
+                </tr>
+                """
+        
+        # Ajouter le total de la commande à la fin
+    msg.html += f"""
+        </table>
+        <p><strong>Total de la commande : </strong>{order.total_price}€</p>
+        
         <p>☎️ En cas de problème, contactez-nous au 0467 81 15 52.</p>
         <p>Merci et à bientôt !</p>
         <p><strong>Cordialement,</strong></p>
@@ -677,6 +718,7 @@ def send_confirmation_email(email, order):
 
     # Envoi du message
     mail.send(msg)
+
 
 def send_admin_notification(order):
     admins_emails = ["charlinec03@gmail.com", "admin2@domain.com"]  # Liste des emails des administrateurs
@@ -716,14 +758,20 @@ def process_payment():
 
 
 @main.route('/confirmation/<int:reservation_id>', methods=['GET', 'POST'])
-def send_reservationtion_email(reservation_id):
+def send_reservation_mail(reservation_id):
     # Récupérer la réservation à partir de la base de données
     reservation = Reservation.query.get_or_404(reservation_id)
-    
+
+    # Vérifier si le champ phone_number existe dans la réservation
+    if reservation.phone_number:
+        print(f"Phone number: {reservation.phone_number}")
+    else:
+        print("Phone number is not set!")
+
     # Détails de la commande et informations client
     order_details = reservation.order_details
     name = reservation.name
-    phone_number = reservation.phone_number
+    phone_number = reservation.phone_number  # Cela devrait fonctionner maintenant
     email_reservation = reservation.email_reservation
 
     # Envoi de l'email de confirmation au client
@@ -735,6 +783,7 @@ def send_reservationtion_email(reservation_id):
     mail.send(msg_client)
 
     return "Confirmation envoyée au client", 200
+
 
 
 @main.route('/send_admin_report', methods=['GET'])
