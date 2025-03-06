@@ -586,7 +586,7 @@ def submit_order():
         db.session.commit()
 
         # Envoyer la confirmation au client et notification aux admins
-        send_confirmation_email(data['email'], order)
+        send_confirmation_email(data['email'],order)
         send_admin_notification(order)
 
         # Retourner une réponse de succès avec l'ID de la commande
@@ -679,7 +679,7 @@ def process_payment():
 
 
 @main.route('/confirmation/<int:reservation_id>', methods=['GET', 'POST'])
-def send_confirmation_email(reservation_id):
+def send_reservation_mail(reservation_id):
     # Récupérer la réservation à partir de la base de données
     reservation = Reservation.query.get_or_404(reservation_id)
     
@@ -698,7 +698,24 @@ def send_confirmation_email(reservation_id):
     mail.send(msg_client)
 
     return "Confirmation envoyée au client", 200
+   # Récupérer la réservation à partir de la base de données
+    reservation = Reservation.query.get_or_404(reservation_id)
+    
+    # Détails de la commande et informations client
+    order_details = reservation.order_details
+    name = reservation.name
+    phone_number = reservation.phone_number
+    email_reservation = reservation.email_reservation
 
+    # Envoi de l'email de confirmation au client
+    msg_client = Message(
+        "Confirmation de votre commande - Le Petit Marché",
+        recipients=[email_reservation]
+    )
+    msg_client.body = f"Bonjour {name},\n\nVotre commande a bien été reçue.\nDétails de la commande : {order_details}\nMerci de votre confiance !"
+    mail.send(msg_client)
+
+    return "Confirmation envoyée au client", 200
 
 
 @main.route('/send_admin_report', methods=['GET'])

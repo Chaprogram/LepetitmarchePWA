@@ -588,13 +588,13 @@ def submit_order():
 
 @main.route('/commander', methods=['POST'])
 def commander():
-    client_email = request.form['email']
+    email = request.form['email']
     # Ici, tu ajoutes la logique pour traiter la commande
 
     # Créer l'e-mail de confirmation
     message = Message(
         'Confirmation de commande',
-        recipients=[client_email]
+        recipients=[email]
     )
     message.body = 'Merci pour votre commande !'
 
@@ -640,7 +640,7 @@ def get_order_details():
         {'name': 'Chocolat', 'price': 3.00, 'quantity': 1}
     ]
 
-from flask_mail import Message
+
 
 def send_confirmation_email(email, order):
     # Sujet de l'email
@@ -691,7 +691,7 @@ def send_admin_notification(order):
 
     body += "Détails de la commande :\n\n"
     order_items = OrderItem.query.filter_by(order_id=order.id).all()
-    
+
     for item in order.items:
         body += f"{item.product.name} - {item.quantity} x {item.price}€\n"
     
@@ -716,7 +716,7 @@ def process_payment():
 
 
 @main.route('/confirmation/<int:reservation_id>', methods=['GET', 'POST'])
-def send_confirmation_email(reservation_id):
+def send_reservationtion_email(reservation_id):
     # Récupérer la réservation à partir de la base de données
     reservation = Reservation.query.get_or_404(reservation_id)
     
