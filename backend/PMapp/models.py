@@ -62,7 +62,15 @@ class Reservation(db.Model):
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', backref='reservations')
 
+class DeliveryStatus(db.Model):
+    __tablename__ = 'delivery_status'
 
+    id = Column(Integer, primary_key=True)
+    status = Column(Boolean, default=True)  # True: Ouvert, False: Fermé
+    description = Column(String, nullable=True)
+
+    def __repr__(self):
+        return f"<DeliveryStatus(id={self.id}, status={self.status})>"
 
 
 class Admin(db.Model, UserMixin):
@@ -116,3 +124,6 @@ class OrderItem(db.Model):
 
     def __repr__(self):
         return f"<OrderItem {self.product.name}, {self.quantity}, {self.price}>"
+
+
+

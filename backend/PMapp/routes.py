@@ -62,6 +62,46 @@ def block_order(order_id):
     return redirect(url_for('main.admin'))
 
 
+@main.route('/admin/toggle_delivery', methods=['POST'])
+def toggle_delivery():
+    # Récupère le statut actuel
+    current_status = DeliveryStatus.query.first()
+
+    if current_status:
+        # Inverse le statut
+        current_status.status = not current_status.status
+    else:
+        # Si le statut n'existe pas encore, on le crée
+        new_status = DeliveryStatus(status=True)  # Par défaut ouvert
+        db.session.add(new_status)
+    
+    # Sauvegarde la modification
+    db.session.commit()
+
+    # Affiche un message de succès
+    flash('Statut des livraisons mis à jour avec succès.')
+
+    # Redirige vers le tableau de bord
+    return redirect(url_for('main.admin'))
+
+
+@app.route('/passer_commande', methods=['POST'])
+def passer_commande():
+    # Vérifie si les livraisons sont fermées
+    delivery_status = DeliveryStatus.query.first()
+    
+    if delivery_status and not delivery_status.status:
+        flash("Les livraisons sont fermées pour le moment. Veuillez réessayer plus tard.")
+        return redirect(url_for('menu'))
+
+    # Logique pour passer la commande
+    # (Si les livraisons sont ouvertes, on procède à la commande)
+    # ...
+
+    flash("Commande passée avec succès !")
+    return redirect(url_for('panier'))
+
+
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():

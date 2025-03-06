@@ -65,44 +65,25 @@
     </section>
     
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID de la commande</th>
-                <th>Nom du client</th>
-                <th>Statut de la commande</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for order in orders %}
-            <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.client_name }}</td>
-                <td>
-                    {% if order.is_blocked %}
-                        <span style="color: red;">Livraison fermée</span>
-                    {% else %}
-                        <span style="color: green;">Livraison ouverte</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <!-- Bouton pour changer l'état de la commande -->
-                    <form action="{{ url_for('block_order', order_id=order.id) }}" method="POST">
-                        <button type="submit">
-                            {% if order.is_blocked %}
-                                Ouvrir les livraisons
-                            {% else %}
-                                Fermer les livraisons
-                            {% endif %}
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+   <h2>Livraison</h2>
+   <div>
+    {% if delivery_status.status %}
+        <p style="color: green;">Les livraisons sont ouvertes.</p>
+    {% else %}
+        <p style="color: red;">Les livraisons sont fermées.</p>
+    {% endif %}
+</div>
 
+<!-- Formulaire pour changer le statut des livraisons -->
+<form action="{{ url_for('toggle_delivery') }}" method="POST">
+    <button type="submit">
+        {% if delivery_status.status %}
+            Fermer les livraisons
+        {% else %}
+            Ouvrir les livraisons
+        {% endif %}
+    </button>
+</form>
 
     <!-- Notifications des commandes -->
     <section id="notifications">
