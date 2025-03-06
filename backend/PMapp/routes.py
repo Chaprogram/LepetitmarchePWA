@@ -115,14 +115,13 @@ def check_session():
 
 
 
-
 @main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
     if request.method == 'POST':
         try:
             # Récupération des données du formulaire
             name = request.form.get('name')
-            email_reservation = request.form.get('email')  # Correction ici
+            email_reservation = request.form.get('email')
             phone_number = request.form.get('phone_number')
 
             # Vérification des champs requis
@@ -142,12 +141,12 @@ def reservation():
                 "Croissant Au Sucre": "quantity_croissant_au_sucre",
                 "Pain au Chocolat": "quantity_pain_au_chocolat",
                 "Moka": "quantity_moka",
-                "Boule de Berlin":"quantity_boule_de_berlin",
-                "Tarte au riz":"quantity_tarte_au_riz",
+                "Boule de Berlin": "quantity_boule_de_berlin",
+                "Tarte au riz": "quantity_tarte_au_riz",
                 "Eclair": "quantity_eclair",
-                "Gozette abricot":"quantity_gozette_abricot",
+                "Gozette abricot": "quantity_gozette_abricot",
                 "Gozette pomme": "quantity_gozette_pomme",
-                "Gozette cerise":"quantity_gozette_cerise",
+                "Gozette cerise": "quantity_gozette_cerise",
                 "Gozette prune": "quantity_gozette_prune"
             }
 
@@ -164,14 +163,14 @@ def reservation():
             # Sauvegarde dans la base de données
             new_reservation = Reservation(
                 name=name,
-                email_reservation=email_reservation,  # Correction ici
+                email_reservation=email_reservation,
                 phone_number=phone_number,
-                order_details=", ".join(commandes)  # Stocke sous forme de chaîne
+                order_details=", ".join(commandes)
             )
             db.session.add(new_reservation)
             db.session.commit()
 
-            # Redirection vers la page de confirmation
+            # Redirection vers la page de confirmation avec l'ID de la réservation
             return redirect(url_for('main.reservation_submit', reservation_id=new_reservation.id))
 
         except Exception as e:
@@ -183,34 +182,32 @@ def reservation():
     return render_template('reservation.html')
 
 
-@main.route('/reservation_submit')
-def reservation_submit():
-    # Récupérer l'ID de la réservation à partir des paramètres d'URL
-    reservation_id = request.args.get('reservation_id')
-    if not reservation_id:
-        flash("Réservation non trouvée", "danger")
+@main.route('/reservation_submit/<int:reservation_id>', methods=['GET', 'POST'])
+def reservation_submit(reservation_id):
+    try:
+        # Récupérer la réservation à partir de l'ID
+        reservation = Reservation.query.get_or_404(reservation_id)
+
+        # Détails de la commande et informations client
+        order_details = reservation.order_details
+        name = reservation.name
+        email_reservation = reservation.email_reservation
+
+        # Envoi de l'email de confirmation au client
+        msg_client = Message(
+            "Confirmation de votre commande - Le Petit Marché",
+            recipients=[email_reservation]
+        )
+        msg_client.body = f"Bonjour {name},\n\nVotre commande a bien été reçue.\nDétails de la commande : {order_details}\nMerci de votre confiance !"
+        mail.send(msg_client)
+
+        # Retourner un message ou rediriger après l'envoi
+        return "Confirmation envoyée au client", 200
+
+    except Exception as e:
+        print(str(e))
+        flash("Une erreur s'est produite lors de l'envoi de l'email.", "danger")
         return redirect(url_for('main.reservation'))
-
-    # Récupérer la réservation depuis la base de données
-    reservation = Reservation.query.get_or_404(reservation_id)
-
-    # Récupérer les informations de la réservation
-    name = reservation.name
-    email_reservation = reservation.email_reservation
-    phone_number = reservation.phone_number
-    order_details = reservation.order_details.split(", ")  # Transformer la chaîne en liste
-
-    # Appeler la fonction pour envoyer l'email de confirmation
-    send_reservation_mail(reservation_id)
-
-    # Passer les informations à la template
-    return render_template('reservation_submit.html', 
-                           name=name, 
-                           email=email_reservation, 
-                           phone=phone_number, 
-                           commandes=order_details)
-
-
 
 
 
@@ -776,32 +773,6 @@ def process_payment():
 
 
 
-@main.route('/confirmation/<int:reservation_id>', methods=['GET', 'POST'])
-def send_reservation_mail(reservation_id):
-    # Récupérer la réservation à partir de la base de données
-    reservation = Reservation.query.get_or_404(reservation_id)
-
-    # Vérifier si le champ phone_number existe dans la réservation
-    if reservation.phone_number:
-        print(f"Phone number: {reservation.phone_number}")
-    else:
-        print("Phone number is not set!")
-
-    # Détails de la commande et informations client
-    order_details = reservation.order_details
-    name = reservation.name
-    phone_number = reservation.phone_number  # Cela devrait fonctionner maintenant
-    email_reservation = reservation.email_reservation
-
-    # Envoi de l'email de confirmation au client
-    msg_client = Message(
-        "Confirmation de votre commande - Le Petit Marché",
-        recipients=[email_reservation]
-    )
-    msg_client.body = f"Bonjour {name},\n\nVotre commande a bien été reçue.\nDétails de la commande : {order_details}\nMerci de votre confiance !"
-    mail.send(msg_client)
-
-    return "Confirmation envoyée au client", 200
 
 
 
