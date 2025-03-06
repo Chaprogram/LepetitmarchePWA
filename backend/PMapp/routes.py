@@ -35,9 +35,14 @@ def menu():
 
 
 
-@main.route('/admin/board')
+@main.route('/admin')
 @login_required
-def admin_board():
+def admin_page():
+    print(f"Utilisateur connecté : {current_user.username}")  # Debug
+    if not current_user.is_admin:
+        flash("Accès non autorisé", "danger")
+        return redirect(url_for('main.index'))
+
     # Récupérer l'état des livraisons
     delivery_status = DeliveryStatus.query.first()
 
@@ -51,6 +56,7 @@ def admin_board():
     orders = ProductOrder.query.all()  # Assure-toi d'importer le modèle Order
 
     return render_template('admin.html', delivery_status=delivery_status, orders=orders)
+
 
 @main.route('/order/<int:order_id>', methods=['POST'])
 def process_order(order_id):
@@ -314,14 +320,6 @@ def logout():
     return redirect(url_for('main.login'))
 
 
-@main.route('/admin')
-@login_required
-def admin_page():
-    print(f"Utilisateur connecté : {current_user.username}")  # Debug
-    if not current_user.is_admin:
-        flash("Accès non autorisé", "danger")
-        return redirect(url_for('main.index'))
-    return render_template('admin.html')
 
 
 

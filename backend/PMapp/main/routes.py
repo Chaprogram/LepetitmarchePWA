@@ -37,10 +37,14 @@ def menu():
     return render_template('menu.html', products=products)
 
 
-
-@main.route('/admin/board')
+@main.route('/admin')
 @login_required
-def admin_board():
+def admin_page():
+    print(f"Utilisateur connecté : {current_user.username}")  # Debug
+    if not current_user.is_admin:
+        flash("Accès non autorisé", "danger")
+        return redirect(url_for('main.index'))
+
     # Récupérer l'état des livraisons
     delivery_status = DeliveryStatus.query.first()
 
@@ -211,14 +215,7 @@ def logout():
     return redirect(url_for('main.login'))
 
 
-@main.route('/admin')
-@login_required
-def admin_page():
-    print(f"Utilisateur connecté : {current_user.username}")  # Debug
-    if not current_user.is_admin:
-        flash("Accès non autorisé", "danger")
-        return redirect(url_for('main.index'))
-    return render_template('admin.html')
+
 
 
 
