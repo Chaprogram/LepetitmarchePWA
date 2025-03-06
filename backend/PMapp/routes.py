@@ -33,13 +33,6 @@ def menu():
     products = Product.query.all()
     return render_template('menu.html', products=products)
 
-@main.route('/admin/block_order/<int:order_id>', methods=['POST'])
-def block_order(order_id):
-    order = ProductOrder.query.get_or_404(order_id)
-    order.is_blocked = not order.is_blocked  # Inverse l'état de la commande
-    db.session.commit()
-    flash('Commande mise à jour avec succès.')
-    return redirect(url_for('main.admin'))  # Redirige vers le tableau de bord admin
 
 @main.route('/order/<int:order_id>', methods=['POST'])
 def process_order(order_id):
