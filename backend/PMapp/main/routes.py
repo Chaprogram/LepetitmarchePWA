@@ -51,7 +51,7 @@ def admin_board():
         db.session.commit()
 
     # Récupérer les commandes pour les afficher dans la section "Notifications des Commandes"
-    orders = Order.query.all()  # Assure-toi d'importer le modèle Order
+    orders = ProductOrder.query.all()  # Assure-toi d'importer le modèle Order
 
     return render_template('admin.html', delivery_status=delivery_status, orders=orders)
 
