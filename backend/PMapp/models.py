@@ -97,7 +97,6 @@ class ProductOrder(db.Model):
     delivery_address = db.Column(db.String(200), nullable=False)
     delivery_date = db.Column(db.Date, nullable=False)
     delivery_time = db.Column(db.String(50), nullable=False)
-    items = db.Column(db.Text, nullable=False)  # Liste des articles sous forme de chaîne de caractères
     total_price = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(50), default="En attente")  # Par exemple, "En attente", "Livré"
     items = db.relationship('OrderItem', backref='order', lazy=True)

@@ -651,7 +651,7 @@ def send_confirmation_email(email, order):
     body += f"Votre commande #{order.id} a bien été reçue.\n\n"  # Ajout du numéro de commande
     
     body += "Détails de la commande :\n\n"
-    
+    order_items = OrderItem.query.filter_by(order_id=order.id).all()
     for item in order.items:
         body += f"{item.product.name} - {item.quantity} x {item.price}€\n"
     
@@ -690,6 +690,7 @@ def send_admin_notification(order):
     body += f"📅 Heure de livraison : {order.delivery_time}\n\n"
 
     body += "Détails de la commande :\n\n"
+    order_items = OrderItem.query.filter_by(order_id=order.id).all()
     
     for item in order.items:
         body += f"{item.product.name} - {item.quantity} x {item.price}€\n"
