@@ -177,7 +177,15 @@ def reservation():
                 "Miche": "quantity_miche",
                 "Croissant Nature": "quantity_croissant_nature",
                 "Croissant Au Sucre": "quantity_croissant_au_sucre",
-                "Pain au Chocolat": "quantity_pain_au_chocolat"
+                "Pain au Chocolat": "quantity_pain_au_chocolat",
+                "Moka" :"quantity_moka",
+                "Boule de Berlin":"quantity_boule_de_berlin",
+                "Tarte au riz":"quantity_tarte_au_riz",
+                "Eclair": "quantity_eclair",
+                "Gozette abricot":"quantity_gozette_abricot",
+                "Gozette pomme": "quantity_gozette_pomme",
+                "Gozette cerise":"quantity_gozette_cerise",
+                "Gozette prune": "quantity_gozette_prune"
             }
 
             commandes = []
@@ -214,20 +222,31 @@ def reservation():
 
 @main.route('/reservation_submit')
 def reservation_submit():
-    # Récupération des paramètres via l'ID de la réservation
+    # Récupérer l'ID de la réservation à partir des paramètres d'URL
     reservation_id = request.args.get('reservation_id')
+    if not reservation_id:
+        flash("Réservation non trouvée", "danger")
+        return redirect(url_for('main.reservation'))
+
+    # Récupérer la réservation depuis la base de données
     reservation = Reservation.query.get_or_404(reservation_id)
 
-    # Récupération des informations de la réservation
+    # Récupérer les informations de la réservation
     name = reservation.name
     email_reservation = reservation.email_reservation
     phone_number = reservation.phone_number
-    order_details = reservation.order_details
+    order_details = reservation.order_details.split(", ")  # Transformer la chaîne en liste
 
     # Appeler la fonction pour envoyer l'email de confirmation
     send_reservation_mail(reservation_id)
 
-    return render_template('reservation_submit.html', name=name, email=email_reservation, phone=phone_number, commandes=order_details)
+    # Passer les informations à la template
+    return render_template('reservation_submit.html', 
+                           name=name, 
+                           email=email_reservation, 
+                           phone=phone_number, 
+                           commandes=order_details)
+
 
 
 
