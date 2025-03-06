@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
 import re  # Pour la validation des emails
 from PMapp import db, socketio, mail
-from PMapp.models import User, Product, Admin, Notification, Reservation,ProductOrder, OrderItem, Order
+from PMapp.models import User, Product, Admin, Notification, Reservation,ProductOrder, OrderItem, Order, DeliveryStatus
 from datetime import datetime
 from urllib.parse import quote
 import os
@@ -85,21 +85,21 @@ def toggle_delivery():
     return redirect(url_for('main.admin'))
 
 
-@app.route('/passer_commande', methods=['POST'])
+@main.route('/passer_commande', methods=['POST'])
 def passer_commande():
     # Vérifie si les livraisons sont fermées
     delivery_status = DeliveryStatus.query.first()
     
     if delivery_status and not delivery_status.status:
         flash("Les livraisons sont fermées pour le moment. Veuillez réessayer plus tard.")
-        return redirect(url_for('menu'))
+        return redirect(url_for('main.menu'))
 
     # Logique pour passer la commande
     # (Si les livraisons sont ouvertes, on procède à la commande)
     # ...
 
     flash("Commande passée avec succès !")
-    return redirect(url_for('panier'))
+    return redirect(url_for('main.cart'))
 
 
 
@@ -237,7 +237,7 @@ def reservation():
             )
             db.session.add(new_reservation)
             db.session.commit()
-
+            flash(f"Réservation enregistrée, redirection vers la page de confirmation (ID: {new_reservation.id})", "success")
             # Redirection vers la page de confirmation avec l'ID de la réservation
             return redirect(url_for('main.reservation_submit', reservation_id=new_reservation.id))
 
@@ -260,6 +260,7 @@ def reservation_submit(reservation_id):
         order_details = reservation.order_details
         name = reservation.name
         email_reservation = reservation.email_reservation
+        phone_number = reservation.phone_number
 
         # Envoi de l'email de confirmation au client
         msg_client = Message(
@@ -269,13 +270,21 @@ def reservation_submit(reservation_id):
         msg_client.body = f"Bonjour {name},\n\nVotre commande a bien été reçue.\nDétails de la commande : {order_details}\nMerci de votre confiance !"
         mail.send(msg_client)
 
-        # Rediriger vers la page de confirmation avec un message de succès
-        return render_template('reservation_submit.html', name=name, email=email_reservation, commandes=order_details)
+        # Retourner la page de confirmation avec les informations de la réservation
+        return render_template(
+            'reservation_submit.html',
+            name=name,
+            email=email_reservation,
+            phone=phone_number,
+            commandes=order_details
+        )
 
     except Exception as e:
         print(str(e))
         flash("Une erreur s'est produite lors de l'envoi de l'email.", "danger")
         return redirect(url_for('main.reservation'))
+
+
 
 
 

@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
 import re  # Pour la validation des emails
 from PMapp import db, socketio, mail
-from PMapp.models import User, Product,Admin,Notification, Reservation,Order,ProductOrder,OrderItem
+from PMapp.models import User, Product,Admin,Notification, Reservation,Order,ProductOrder,OrderItem,DeliveryStatus
 from datetime import datetime 
 from urllib.parse import quote
 import os
@@ -273,7 +273,7 @@ def reservation():
             )
             db.session.add(new_reservation)
             db.session.commit()
-
+            flash(f"Réservation enregistrée, redirection vers la page de confirmation (ID: {new_reservation.id})", "success")
             # Redirection vers la page de confirmation avec l'ID de la réservation
             return redirect(url_for('main.reservation_submit', reservation_id=new_reservation.id))
 
@@ -295,6 +295,7 @@ def reservation_submit(reservation_id):
         order_details = reservation.order_details
         name = reservation.name
         email_reservation = reservation.email_reservation
+        phone_number = reservation.phone_number
 
         # Envoi de l'email de confirmation au client
         msg_client = Message(
@@ -304,13 +305,20 @@ def reservation_submit(reservation_id):
         msg_client.body = f"Bonjour {name},\n\nVotre commande a bien été reçue.\nDétails de la commande : {order_details}\nMerci de votre confiance !"
         mail.send(msg_client)
 
-        # Rediriger vers la page de confirmation avec un message de succès
-        return render_template('reservation_submit.html', name=name, email=email_reservation, commandes=order_details)
+        # Retourner la page de confirmation avec les informations de la réservation
+        return render_template(
+            'reservation_submit.html',
+            name=name,
+            email=email_reservation,
+            phone=phone_number,
+            commandes=order_details
+        )
 
     except Exception as e:
         print(str(e))
         flash("Une erreur s'est produite lors de l'envoi de l'email.", "danger")
         return redirect(url_for('main.reservation'))
+
 
 
 
