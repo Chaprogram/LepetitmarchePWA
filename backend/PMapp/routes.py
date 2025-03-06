@@ -642,7 +642,7 @@ def get_order_details():
 
 from flask_mail import Message
 
-def send_confirmation_email(client_email, order):
+def send_confirmation_email(email, order):
     # Sujet de l'email
     subject = f"Confirmation de votre commande #{order.id}"
 
@@ -656,7 +656,7 @@ def send_confirmation_email(client_email, order):
         body += f"{item.product.name} - {item.quantity} x {item.price}€\n"
     
     # Création du message
-    msg = Message(subject, recipients=[client_email])
+    msg = Message(subject, recipients=[email])
 
     # Définition du corps de l'email (texte brut et HTML)
     msg.body = body  # Corps en texte brut
