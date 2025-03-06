@@ -2,7 +2,7 @@ from PMapp import db  # Importer `db` directement depuis `PMapp`
 from flask_login import UserMixin
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey,Boolean
 from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 
@@ -90,6 +90,7 @@ class Order(db.Model):
 class ProductOrder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     client_name = db.Column(db.String(100), nullable=False)
+    is_blocked = Column(Boolean, default=False)
     postal_code = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     phone_number = db.Column(db.String(20), nullable=False) 

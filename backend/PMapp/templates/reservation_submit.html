@@ -23,7 +23,7 @@
     <section class="order-summary">
         <h2>Récapitulatif de votre commande :</h2>
         <ul>
-            {% for commande in commandes %}
+            {% for commande in commandes.split(', ') %}
                 <li>{{ commande }}</li>
             {% endfor %}
         </ul>

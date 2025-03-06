@@ -36,6 +36,39 @@ def menu():
     products = Product.query.all()
     return render_template('menu.html', products=products)
 
+@main.route('/admin/block_order/<int:order_id>', methods=['POST'])
+def block_order(order_id):
+    order = ProductOrder.query.get_or_404(order_id)
+    order.is_blocked = not order.is_blocked  # Inverse l'état de la commande
+    db.session.commit()
+    flash('Commande mise à jour avec succès.')
+    return redirect(url_for('main.admin'))  # Redirige vers le tableau de bord admin
+
+@main.route('/order/<int:order_id>', methods=['POST'])
+def process_order(order_id):
+    order = ProductOrder.query.get_or_404(order_id)
+    if order.is_blocked:
+        flash('Désolé, les livraisons sont fermées.')
+        return redirect(url_for('main.menu'))  # Ou une autre page appropriée
+    # Code pour traiter la commande si elle n'est pas bloquée
+
+
+@main.route('/admin/block_order/<int:order_id>', methods=['POST'])
+def block_order(order_id):
+    # Récupère la commande par son ID
+    order = ProductOrder.query.get_or_404(order_id)
+    
+    # Change l'état de la commande
+    order.is_blocked = not order.is_blocked  # Inverse l'état de "is_blocked"
+    
+    # Sauvegarde les modifications
+    db.session.commit()
+
+    # Affiche un message de succès
+    flash('Statut de la commande mis à jour avec succès.')
+    
+    # Redirige vers le tableau de bord
+    return redirect(url_for('main.admin'))
 
 
 @main.route('/user')
