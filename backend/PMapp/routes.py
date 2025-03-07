@@ -267,7 +267,6 @@ def reservation():
 
     # Affichage de la page de réservation en GET
     return render_template('reservation.html')
-
 @main.route('/reservation_submit', methods=['GET', 'POST'])
 def reservation_submit():
     if request.method == 'POST':
@@ -275,19 +274,51 @@ def reservation_submit():
         name = request.form.get('name')
         email = request.form.get('email')
         phone = request.form.get('phone')
-        commandes = request.form.get('commandes')
-        # ... traitement de la commande
+        order_details = request.form.get('commandes')  # Cela contient normalement la liste des produits commandés
+         # Si tu as aussi un champ pour le total
+        
+        # Sauvegarder la commande dans la base de données
+        reservation = Reservation(
+            name=name,
+            email_reservation=email,
+            phone_number=phone,
+            order_details=order_details  # Enregistrer les détails de la commande
+        )
+        db.session.add(reservation)
+        db.session.commit()
 
-        return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
+        # Création du message
+        message = Message(
+            'Confirmation de commande',
+            recipients=['[email_reservation]']  # Remplace avec l'email de l'administrateur
+        )
+        message.body = f"""
+        Nouvelle commande reçue :
+
+        Nom: {name}
+        Email: {email}
+        Téléphone: {phone}
+        Détails de la commande:
+        {order_details}
+        
+
+        Merci pour votre réservation.
+        """
+        # Envoi de l'e-mail
+        mail.send(message)
+        
+        # Retourner la page de confirmation
+        return render_template('reservation_submit.html', name=name, email=email, phone=phone, order_details=order_details)
 
     # Gestion pour la méthode GET, afficher une page de confirmation par exemple
-    name = request.args.get('name')
-    email = request.args.get('email')
-    phone = request.args.get('phone')
-    commandes = request.form.get('commandes')
+    name = request.args.get('name', '')
+    email = request.args.get('email', '')
+    phone = request.args.get('phone', '')
+    order_details = request.args.get('commandes', '')  # À remplacer par des arguments GET si nécessaire
     
 
-    return render_template('reservation_submit.html', name=name, email=email, phone=phone,commandes=commandes)
+    return render_template('reservation_submit.html', name=name, email=email, phone=phone, order_details=order_details)
+
 
 
 
