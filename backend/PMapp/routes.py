@@ -266,7 +266,7 @@ def reservation():
         # Ici, tu pourras ajouter du code pour sauvegarder cette information dans ta base si tu le souhaites
 
         # Rediriger vers une page de confirmation
-        return redirect(url_for('main.confirmation', total=total_price))
+        return redirect(url_for('main.reservation_submit', total=total_price))
 
     # Affichage de la page de réservation en GET
     return render_template('reservation.html')

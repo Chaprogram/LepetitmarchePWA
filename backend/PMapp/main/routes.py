@@ -231,7 +231,7 @@ def get_notifications():
     except Exception as e:
         return jsonify({"message": f"Erreur : {str(e)}"}), 500
     
-    
+
 @main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
     if request.method == 'POST':
@@ -290,7 +290,7 @@ def reservation():
         # Ici, tu pourras ajouter du code pour sauvegarder cette information dans ta base si tu le souhaites
 
         # Rediriger vers une page de confirmation
-        return redirect(url_for('main.confirmation', total=total_price))
+        return redirect(url_for('main.reservation_submit', total=total_price))
 
     # Affichage de la page de réservation en GET
     return render_template('reservation.html')
