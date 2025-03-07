@@ -284,9 +284,10 @@ def reservation_submit():
     name = request.args.get('name')
     email = request.args.get('email')
     phone = request.args.get('phone')
+    commandes = request.form.get('commandes')
     
 
-    return render_template('reservation_submit.html', name=name, email=email, phone=phone)
+    return render_template('reservation_submit.html', name=name, email=email, phone=phone,commandes=commandes)
 
 
 
