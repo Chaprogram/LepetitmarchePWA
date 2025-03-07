@@ -88,7 +88,7 @@
             
             <div class="product" data-price="1.80">
                 <span class="product-name">Croissant Au Sucre</span>
-                <span class="product-price">1.70€</span> 
+                <span class="product-price">1.80€</span> 
                 <button type="button" class="increase">+</button>
                 <span class="quantity">0</span>
                 <input type="hidden" name="quantity_croissant_au_sucre" value="0"> 
@@ -207,6 +207,7 @@
                     let quantity = parseInt(quantityElement.textContent);
                     quantity++;
                     quantityElement.textContent = quantity;
+                    hiddenInput.value = quantity;
                     updateTotal();
                 });
     

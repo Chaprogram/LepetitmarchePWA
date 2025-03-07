@@ -221,7 +221,7 @@ def reservation():
                 flash("Tous les champs sont requis", "danger")
                 return redirect(url_for('main.reservation'))
 
-            # Construction de la liste des commandes
+            # Récupération des produits commandés
             produits = {
                 "Petit Pain Blanc": "quantity_petit_pain_blanc",
                 "Petit Pain Gris": "quantity_petit_pain_gris",
@@ -252,7 +252,7 @@ def reservation():
                 flash("Veuillez sélectionner au moins un produit.", "danger")
                 return redirect(url_for('main.reservation'))
 
-            # Sauvegarde dans la base de données
+            # Sauvegarde en base de données
             new_reservation = Reservation(
                 name=name,
                 email_reservation=email_reservation,
@@ -261,42 +261,53 @@ def reservation():
             )
             db.session.add(new_reservation)
             db.session.commit()
-            flash(f"Réservation enregistrée, redirection vers la page de confirmation (ID: {new_reservation.id})", "success")
 
-            # Redirection vers la page de confirmation avec l'ID de la réservation
+            flash("Réservation enregistrée avec succès.", "success")
+
+            # Redirection vers la page de confirmation
             return redirect(url_for('main.reservation_submit', reservation_id=new_reservation.id))
 
         except Exception as e:
             db.session.rollback()
-            print(str(e))
             flash("Une erreur s'est produite. Veuillez réessayer.", "danger")
             return redirect(url_for('main.reservation'))
 
     return render_template('reservation.html')
 
 
-@main.route('/reservation_submit/<int:reservation_id>', methods=['GET', 'POST'])
+
+@main.route('/reservation_submit/<int:reservation_id>', methods=['GET'])
 def reservation_submit(reservation_id):
     try:
-        # Récupérer la réservation à partir de l'ID
+        # Récupérer la réservation
         reservation = Reservation.query.get_or_404(reservation_id)
 
-        # Détails de la commande et informations client
+        # Détails de la commande
         order_details = reservation.order_details.split(',')
         name = reservation.name
         email_reservation = reservation.email_reservation
         phone_number = reservation.phone_number
-        print(f"Envoi de l'email à {email_reservation}...")
 
-        # Envoi de l'email de confirmation au client
+        # Envoi de l'e-mail de confirmation
         msg_client = Message(
-            "Confirmation de votre commande - Le Petit Marché",
+            subject="Confirmation de votre commande - Le Petit Marché",
             recipients=[email_reservation]
         )
-        msg_client.body = f"Bonjour {name},\n\nVotre commande a bien été reçue.\nDétails de la commande : {order_details}\nMerci de votre confiance !"
+        msg_client.body = f"""
+        Bonjour {name},
+
+        Nous avons bien reçu votre commande. Voici les détails :
+
+        {chr(10).join(order_details)}
+
+        Merci pour votre confiance !
+
+        L'équipe du Petit Marché
+        """
         mail.send(msg_client)
 
-        # Retourner la page de confirmation avec les informations de la réservation
+        flash("Un e-mail de confirmation a été envoyé.", "info")
+
         return render_template(
             'reservation_submit.html',
             name=name,
@@ -306,11 +317,8 @@ def reservation_submit(reservation_id):
         )
 
     except Exception as e:
-        print(str(e))
-        flash("Une erreur s'est produite lors de l'envoi de l'email.", "danger")
+        flash("Une erreur s'est produite lors de l'envoi de l'e-mail.", "danger")
         return redirect(url_for('main.reservation'))
-
-
 
 @main.route('/logout')
 def logout():
