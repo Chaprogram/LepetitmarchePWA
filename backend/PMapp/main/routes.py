@@ -232,94 +232,79 @@ def get_notifications():
         return jsonify({"message": f"Erreur : {str(e)}"}), 500
 
 
-
-
 @main.route('/reservation', methods=['GET', 'POST'])
 def reservation():
     if request.method == 'POST':
-        try:
-            # Récupération des données du formulaire
-            name = request.form.get('name')
-            email_reservation = request.form.get('email')
-            phone_number = request.form.get('phone_number')
+        # Récupération des données du formulaire
+        name = request.form.get('name')
+        email_reservation = request.form.get('email')
+        phone_number = request.form.get('phone_number')
 
-            # Vérification des champs requis
-            if not name or not email_reservation or not phone_number:
-                flash("Tous les champs sont requis", "danger")
-                return redirect(url_for('main.reservation'))
-
-            # Récupération des produits commandés
-            produits = {
-                "Petit Pain Blanc": "quantity_petit_pain_blanc",
-                "Petit Pain Gris": "quantity_petit_pain_gris",
-                "Grand Pain Blanc": "quantity_grand_pain_blanc",
-                "Grand Pain Gris": "quantity_grand_pain_gris",
-                "Baguette": "quantity_baguette",
-                "Miche": "quantity_miche",
-                "Croissant Nature": "quantity_croissant_nature",
-                "Croissant Au Sucre": "quantity_croissant_au_sucre",
-                "Pain au Chocolat": "quantity_pain_au_chocolat",
-                "Moka": "quantity_moka",
-                "Boule de Berlin": "quantity_boule_de_berlin",
-                "Tarte au riz": "quantity_tarte_au_riz",
-                "Eclair": "quantity_eclair",
-                "Gozette abricot": "quantity_gozette_abricot",
-                "Gozette pomme": "quantity_gozette_pomme",
-                "Gozette cerise": "quantity_gozette_cerise",
-                "Gozette prune": "quantity_gozette_prune"
-            }
-
-            commandes = []
-            for nom_produit, champ in produits.items():
-                quantite = int(request.form.get(champ, 0))
-                if quantite > 0:
-                    commandes.append(f"{quantite} x {nom_produit}")
-
-            if not commandes:
-                flash("Veuillez sélectionner au moins un produit.", "danger")
-                return redirect(url_for('main.reservation'))
-
-            # Sauvegarde en base de données
-            new_reservation = Reservation(
-                name=name,
-                email_reservation=email_reservation,
-                phone_number=phone_number,
-                order_details=", ".join(commandes)
-            )
-            db.session.add(new_reservation)
-            db.session.commit()
-
-            # Envoi de l'e-mail de confirmation
-            try:
-                msg = Message("Confirmation de votre réservation",
-                              sender=current_app.config['MAIL_USERNAME'],
-                              recipients=[email_reservation])
-                msg.body = f"""
-                Bonjour {name},
-
-                Votre réservation a bien été enregistrée. Voici le détail de votre commande :
-                
-                {chr(10).join(commandes)}
-
-                Merci pour votre confiance.
-
-                L'équipe du Petit Marché
-                """
-                mail.send(msg)
-                flash("Réservation enregistrée et e-mail de confirmation envoyé.", "success")
-            except Exception as e:
-                flash("Réservation enregistrée, mais l'e-mail de confirmation n'a pas pu être envoyé.", "warning")
-
-            # Redirection vers la page de confirmation
-            return redirect(url_for('main.reservation_submit', reservation_id=new_reservation.id))
-
-        except Exception as e:
-            db.session.rollback()
-            flash("Une erreur s'est produite. Veuillez réessayer.", "danger")
+        # Vérification des champs requis
+        if not name or not email_reservation or not phone_number:
+            flash("Tous les champs sont requis", "danger")
             return redirect(url_for('main.reservation'))
+
+        # Récupération des produits commandés
+        produits = {
+            "Petit Pain Blanc": "quantity_petit_pain_blanc",
+            "Petit Pain Gris": "quantity_petit_pain_gris",
+            "Grand Pain Blanc": "quantity_grand_pain_blanc",
+            "Grand Pain Gris": "quantity_grand_pain_gris",
+            "Baguette": "quantity_baguette",
+            "Miche": "quantity_miche",
+            "Croissant Nature": "quantity_croissant_nature",
+            "Pain au Chocolat": "quantity_pain_au_chocolat"
+        }
+
+        commandes = []
+        for nom_produit, champ in produits.items():
+            quantite = int(request.form.get(champ, 0))
+            if quantite > 0:
+                commandes.append(f"{quantite} x {nom_produit}")
+
+        if not commandes:
+            flash("Veuillez sélectionner au moins un produit.", "danger")
+            return redirect(url_for('main.reservation'))
+
+        # Sauvegarde en base de données
+        new_reservation = Reservation(
+            name=name,
+            email_reservation=email_reservation,
+            phone_number=phone_number,
+            order_details=", ".join(commandes)
+        )
+        db.session.add(new_reservation)
+        db.session.commit()
+
+        # Envoi de l'e-mail
+        send_reservation_email(name, email_reservation, commandes)
+
+        # Redirection vers la page de confirmation
+        return redirect(url_for('main.reservation_submit', reservation_id=new_reservation.id))
 
     return render_template('reservation.html')
 
+def send_reservation_email(name, email_reservation, commandes):
+    try:
+        msg = Message("Confirmation de votre réservation",
+                      sender=current_app.config['MAIL_USERNAME'],
+                      recipients=[email_reservation])
+        msg.body = f"""
+        Bonjour {name},
+
+        Votre réservation a bien été enregistrée. Voici le détail de votre commande :
+        
+        {chr(10).join(commandes)}
+
+        Merci pour votre confiance.
+
+        L'équipe du Petit Marché
+        """
+        mail.send(msg)
+        print("✅ E-mail envoyé avec succès")
+    except Exception as e:
+        print(f"❌ Erreur lors de l'envoi du mail : {e}")
 
 
 @main.route('/reservation_submit/<int:reservation_id>')
@@ -335,11 +320,6 @@ def reservation_submit(reservation_id):
                            email=reservation.email_reservation, 
                            phone=reservation.phone_number, 
                            commandes=commandes)
-
-
-
-
-
 
 
 
