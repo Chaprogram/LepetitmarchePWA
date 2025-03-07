@@ -237,66 +237,6 @@ def reservation():
             'gozette_prune': int(request.form.get('quantity_gozette_prune', 0))
         }
 
-        # Calculer le total
-        total_price = 0
-        product_prices = {
-            'petit_pain_blanc': 2.30,
-            'petit_pain_gris': 2.30,
-            'grand_pain_blanc': 2.90,
-            'grand_pain_gris': 2.90,
-            'baguette': 1.70,
-            'miche': 0.65,
-            'croissant_nature': 1.70,
-            'croissant_au_sucre': 1.80,
-            'pain_au_chocolat': 1.70,
-            'moka': 4.95,
-            'boule_de_berlin': 2.60,
-            'tarte_au_riz': 3.60,
-            'eclair': 2.60,
-            'gozette_abricot': 3.50,
-            'gozette_pomme': 3.50,
-            'gozette_cerise': 3.50,
-            'gozette_prune': 3.50
-        }
-
-        for product, price in product_prices.items():
-            total_price += quantities[product] * price
-
-        # Rediriger vers la page de confirmation avec le total calculé
-        return redirect(url_for('main.reservation_submit', total=total_price, name=name, email=email, phone=phone))
-
-    # Affichage de la page de réservation en GET
-    return render_template('reservation.html')
-
-@main.route('/reservation_submit', methods=['GET', 'POST'])
-def reservation_submit():
-    if request.method == 'POST':
-        # Récupérer les données du formulaire
-        name = request.form.get('name')
-        email = request.form.get('email')
-        phone = request.form.get('phone')
-
-        # Récupérer les quantités des produits
-        quantities = {
-            'petit_pain_blanc': int(request.form.get('quantity_petit_pain_blanc', 0)),
-            'petit_pain_gris': int(request.form.get('quantity_petit_pain_gris', 0)),
-            'grand_pain_blanc': int(request.form.get('quantity_grand_pain_blanc', 0)),
-            'grand_pain_gris': int(request.form.get('quantity_grand_pain_gris', 0)),
-            'baguette': int(request.form.get('quantity_baguette', 0)),
-            'miche': int(request.form.get('quantity_miche', 0)),
-            'croissant_nature': int(request.form.get('quantity_croissant_nature', 0)),
-            'croissant_au_sucre': int(request.form.get('quantity_croissant_au_sucre', 0)),
-            'pain_au_chocolat': int(request.form.get('quantity_pain_au_chocolat', 0)),
-            'moka': int(request.form.get('quantity_moka', 0)),
-            'boule_de_berlin': int(request.form.get('quantity_boule_de_berlin', 0)),
-            'tarte_au_riz': int(request.form.get('quantity_tarte_au_riz', 0)),
-            'eclair': int(request.form.get('quantity_eclair', 0)),
-            'gozette_abricot': int(request.form.get('quantity_gozette_abricot', 0)),
-            'gozette_pomme': int(request.form.get('quantity_gozette_pomme', 0)),
-            'gozette_cerise': int(request.form.get('quantity_gozette_cerise', 0)),
-            'gozette_prune': int(request.form.get('quantity_gozette_prune', 0))
-        }
-
         # Calculer le total et générer la liste des produits commandés
         total_price = 0
         product_prices = {
@@ -328,26 +268,33 @@ def reservation_submit():
                 total_price += price
 
         # Sauvegarder la commande dans la base de données
+        order_details = "; ".join(commandes)  # Convertir la liste en chaîne de caractères pour l'enregistrer
         reservation = Reservation(
             name=name,
             email_reservation=email,
             phone_number=phone,
-            order_details="; ".join(commandes)  # Enregistrer les détails de la commande
+            order_details=order_details  # Enregistrer les détails de la commande sous forme de chaîne
         )
         db.session.add(reservation)
         db.session.commit()
 
         # Passer les commandes et total à la page de confirmation
-        return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes, total_price=total_price)
+        return redirect(url_for('main.reservation_submit', name=name, email=email, phone=phone, order_details=order_details, total_price=total_price))
 
-    # Si méthode GET, récupérer les données via les paramètres d'URL
+    # Si méthode GET, afficher la page de réservation
+    return render_template('reservation.html')
+
+@main.route('/reservation_submit', methods=['GET'])
+def reservation_submit():
+    # Récupérer les données envoyées lors de la redirection
     name = request.args.get('name', '')
     email = request.args.get('email', '')
     phone = request.args.get('phone', '')
-    commandes = request.args.get('commandes', '')
+    order_details = request.args.get('order_details', '')
     total_price = request.args.get('total_price', '')
 
-    return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes, total_price=total_price)
+    return render_template('reservation_submit.html', name=name, email=email, phone=phone, order_details=order_details, total_price=total_price)
+
 
 
 

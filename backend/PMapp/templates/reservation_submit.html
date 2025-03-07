@@ -22,13 +22,15 @@
         <section class="order-summary">
             <h2>Récapitulatif de votre commande :</h2>
             <ul>
-                {% for commande in commandes %}
-                    <li>{{ commande }}</li>
+                {% for item in order_details.split('; ') %}
+                    <li>{{ item }}</li>
                 {% endfor %}
             </ul>
         </section>
     
-        <p><strong>Total: {{ total_price }}€</strong></p>
+        <p><strong>Total : {{ total_price }}€</strong></p>
+    
+    
     
     
     <div class="button-container">
