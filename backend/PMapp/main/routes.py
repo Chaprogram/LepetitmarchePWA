@@ -289,7 +289,26 @@ def reservation():
             db.session.add(new_reservation)
             db.session.commit()
 
-            flash("Réservation enregistrée avec succès.", "success")
+            # Envoi de l'e-mail de confirmation
+            try:
+                msg = Message("Confirmation de votre réservation",
+                              sender=current_app.config['MAIL_USERNAME'],
+                              recipients=[email_reservation])
+                msg.body = f"""
+                Bonjour {name},
+
+                Votre réservation a bien été enregistrée. Voici le détail de votre commande :
+                
+                {chr(10).join(commandes)}
+
+                Merci pour votre confiance.
+
+                L'équipe du Petit Marché
+                """
+                mail.send(msg)
+                flash("Réservation enregistrée et e-mail de confirmation envoyé.", "success")
+            except Exception as e:
+                flash("Réservation enregistrée, mais l'e-mail de confirmation n'a pas pu être envoyé.", "warning")
 
             # Redirection vers la page de confirmation
             return redirect(url_for('main.reservation_submit', reservation_id=new_reservation.id))
@@ -303,49 +322,19 @@ def reservation():
 
 
 
-@main.route('/reservation_submit/<int:reservation_id>', methods=['GET'])
+@main.route('/reservation_submit/<int:reservation_id>')
 def reservation_submit(reservation_id):
-    try:
-        # Récupérer la réservation
-        reservation = Reservation.query.get_or_404(reservation_id)
+    # Récupérer la réservation en base de données
+    reservation = Reservation.query.get_or_404(reservation_id)
 
-        # Détails de la commande
-        order_details = reservation.order_details.split(',')
-        name = reservation.name
-        email_reservation = reservation.email_reservation
-        phone_number = reservation.phone_number
+    # Transformer les détails de la commande en liste (car stockés sous forme de chaîne)
+    commandes = reservation.order_details.split(", ")
 
-        # Envoi de l'e-mail de confirmation
-        msg_client = Message(
-            subject="Confirmation de votre commande - Le Petit Marché",
-            recipients=[email_reservation]
-        )
-        msg_client.body = f"""
-        Bonjour {name},
-
-        Nous avons bien reçu votre commande. Voici les détails :
-
-        {chr(10).join(order_details)}
-
-        Merci pour votre confiance !
-
-        L'équipe du Petit Marché
-        """
-        mail.send(msg_client)
-
-        flash("Un e-mail de confirmation a été envoyé.", "info")
-
-        return render_template(
-            'reservation_submit.html',
-            name=name,
-            email=email_reservation,
-            phone=phone_number,
-            commandes=order_details
-        )
-
-    except Exception as e:
-        flash("Une erreur s'est produite lors de l'envoi de l'e-mail.", "danger")
-        return redirect(url_for('main.reservation'))
+    return render_template('reservation_submit.html', 
+                           name=reservation.name, 
+                           email=reservation.email_reservation, 
+                           phone=reservation.phone_number, 
+                           commandes=commandes)
 
 
 
