@@ -296,12 +296,12 @@ def reservation():
 @main.route('/reservation_submit', methods=['GET', 'POST'])
 def reservation_submit():
     if request.method == 'POST':
-        # Récupérer les données du formulaire et traiter la soumission
+        # Récupérer les données du formulaire
         name = request.form.get('name')
         email = request.form.get('email')
         phone = request.form.get('phone')
 
-        # Récupérer les quantités des produits depuis la demande
+        # Récupérer les quantités des produits
         quantities = {
             'petit_pain_blanc': int(request.form.get('quantity_petit_pain_blanc', 0)),
             'petit_pain_gris': int(request.form.get('quantity_petit_pain_gris', 0)),
@@ -373,6 +373,7 @@ def reservation_submit():
     total_price = request.args.get('total_price', '')
 
     return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes, total_price=total_price)
+
 
 
 
