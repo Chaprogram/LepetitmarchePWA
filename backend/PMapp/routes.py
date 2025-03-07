@@ -262,72 +262,33 @@ def reservation():
         for product, price in product_prices.items():
             total_price += quantities[product] * price
 
-        # Sauvegarder la réservation dans la base de données
-        # Ici, tu pourras ajouter du code pour sauvegarder cette information dans ta base si tu le souhaites
-
-        # Rediriger vers une page de confirmation
-        return redirect(url_for('main.reservation_submit', total=total_price))
+        # Rediriger vers la page de confirmation avec le total calculé
+        return redirect(url_for('main.reservation_submit', total=total_price, name=name, email=email, phone=phone))
 
     # Affichage de la page de réservation en GET
     return render_template('reservation.html')
 
-
-@main.route('/reservation_submit', methods=['POST'])
+@main.route('/reservation_submit', methods=['GET', 'POST'])
 def reservation_submit():
-    # Récupération des données du formulaire
-    name = request.form.get('name')
-    email = request.form.get('email')
-    phone = request.form.get('phone')
+    if request.method == 'POST':
+        # Récupérer les données du formulaire et traiter la soumission
+        name = request.form.get('name')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        commandes = request.form.get('commandes')
+        # ... traitement de la commande
+
+        return render_template('reservation_submit.html', name=name, email=email, phone=phone, commandes=commandes)
+
+    # Gestion pour la méthode GET, afficher une page de confirmation par exemple
+    name = request.args.get('name')
+    email = request.args.get('email')
+    phone = request.args.get('phone')
     
-    # Récupération des quantités de produits
-    product_quantities = {
-        'petit_pain_blanc': request.form.get('quantity_petit_pain_blanc', 0),
-        'petit_pain_gris': request.form.get('quantity_petit_pain_gris', 0),
-        'grand_pain_blanc': request.form.get('quantity_grand_pain_blanc', 0),
-        'grand_pain_gris': request.form.get('quantity_grand_pain_gris', 0),
-        'baguette': request.form.get('quantity_baguette', 0),
-        'miche': request.form.get('quantity_miche', 0),
-        'croissant_nature': request.form.get('quantity_croissant_nature', 0),
-        'croissant_au_sucre': request.form.get('quantity_croissant_au_sucre', 0),
-        'pain_au_chocolat': request.form.get('quantity_pain_au_chocolat', 0),
-        'moka': request.form.get('quantity_moka', 0),
-        'boule_de_berlin': request.form.get('quantity_boule_de_berlin', 0),
-        'tarte_au_riz': request.form.get('quantity_tarte_au_riz', 0),
-        'eclair': request.form.get('quantity_eclair', 0),
-        'gozette_abricot': request.form.get('quantity_gozette_abricot', 0),
-        'gozette_pomme': request.form.get('quantity_gozette_pomme', 0),
-        'gozette_cerise': request.form.get('quantity_gozette_cerise', 0),
-        'gozette_prune': request.form.get('quantity_gozette_prune', 0),
-    }
 
-    # Préparer les détails de la commande pour l'enregistrement dans la base de données
-    order_details = "\n".join([f"{product.replace('_', ' ').title()}: {quantity}" 
-                               for product, quantity in product_quantities.items() if int(quantity) > 0])
+    return render_template('reservation_submit.html', name=name, email=email, phone=phone)
 
-    # Créer une nouvelle réservation (commande) dans la base de données
-    reservation = Reservation(
-        name=name,
-        phone_number=phone,
-        email_reservation=email,
-        order_details=order_details
-    )
 
-    # Sauvegarder la commande dans la base de données
-    db.session.add(reservation)
-    db.session.commit()
-
-    # Préparer la liste des commandes à afficher
-    commandes = [f"{product.replace('_', ' ').title()}: {quantity}" 
-                 for product, quantity in product_quantities.items() if int(quantity) > 0]
-
-    # Renvoyer la confirmation à l'utilisateur
-    return render_template(
-        'reservation_submit.html',
-        name=name,
-        email=email,
-        phone=phone,
-        commandes=commandes
-    )
 
 @main.route('/logout')
 def logout():
